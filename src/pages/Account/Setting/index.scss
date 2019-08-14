@@ -1,0 +1,23 @@
+.page__account__setting {
+  padding: 16px 0;
+  overflow: hidden;
+  background: #fff;
+
+  .left, .right {
+    float: left;
+    margin-bottom: -1000px;
+    padding-bottom: 1000px;
+  }
+
+  .left {
+    float: left;
+    width: 224px;
+  }
+
+  .right {
+    width: 100%;
+    margin-left: -224px;
+    padding-right: 30px;
+    padding-left: 254px;
+  }
+}
