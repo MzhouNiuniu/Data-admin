@@ -3,13 +3,30 @@ export default {
 
   'menu.Article': '文章管理',
   'menu.Article.List': '文章列表',
-  'menu.Article.Form': '新增文章',
+  'menu.Article.Form': '添加文章',
   'menu.Article.FormEdit': '编辑文章',
   'menu.User': '用户管理',
   'menu.User.List': '用户列表',
+  'menu.User.Form': '添加用户',
   'menu.User.FormEdit': '编辑用户',
+  'menu.News': '新闻管理',
+  'menu.News.List': '新闻列表',
+  'menu.News.Form': '添加新闻',
+  'menu.News.FormEdit': '编辑新闻',
+  'menu.Organization': '机构管理',
+  'menu.Organization.List': '机构列表',
+  'menu.Organization.Form': '添加机构',
+  'menu.Organization.FormEdit': '编辑机构',
+  'menu.Expert': '专家管理',
+  'menu.Expert.List': '专家列表',
+  'menu.Expert.Form': '添加专家',
+  'menu.Expert.FormEdit': '编辑专家',
+
   'menu.Account': '个人中心',
-  'menu.Account.Setting': '账户设置',
+  'menu.Account.Setting': '账户管理',
+  'menu.System': '系统管理',
+  'menu.System.Page': '页面管理',
+  'menu.System.Role': '角色管理',
 
   'menu.more-blocks': '更多区块',
   'menu.home': '主页',
@@ -58,4 +75,4 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
-}
+};

@@ -1,7 +1,7 @@
 // import * as cookies from 'tiny-cookie'
-import { forEachRouteStruct } from '@utils/utils'
-import * as userService from '@/services/user'
-import { routerRedux } from 'dva/router'
+import { forEachRouteStruct } from '@utils/utils';
+import * as userService from '@/services/user';
+import { routerRedux } from 'dva/router';
 
 /**
  * cookie后端设置
@@ -9,13 +9,13 @@ import { routerRedux } from 'dva/router'
  * 无cookie：等价于未登录
  */
 function getLocaleUser() {
-  let currentUser = {}
+  let currentUser = {};
   try {
-    currentUser = JSON.parse(localStorage.getItem('TEST_USER') || '{}')
+    currentUser = JSON.parse(localStorage.getItem('TEST_USER') || '{}');
   } catch (e) {
-    currentUser = {}
+    currentUser = {};
   }
-  return currentUser
+  return currentUser;
 }
 
 const UserModel = {
@@ -30,34 +30,34 @@ const UserModel = {
     authRouteMap: {}, // 权限支持，键为路由path，值为1，树遍历优化
   },
   effects: {
-    * login({ payload, autoLogin }, { call, put }) {
-      const response = yield call(userService.login, payload)
+    *login({ payload, autoLogin }, { call, put }) {
+      const response = yield call(userService.login, payload);
       if (response.status !== 200) {
-        return Promise.reject(response)
+        return Promise.reject(response);
       }
       yield put({
         type: 'user/saveLoginFrom',
         payload: true,
-      })
+      });
       yield put({
         type: 'user/saveCurrentUser',
         payload: response.data,
-      })
+      });
       if (autoLogin) {
         yield put({
           type: 'user/saveLocaleUser',
-        })
+        });
       }
-      yield  put(
+      yield put(
         routerRedux.replace({
           pathname: '/',
-        })
-      )
+        }),
+      );
     },
-    * register({ payload }, { call, put }) {
-      const response = yield call(userService.register, payload)
+    *register({ payload }, { call, put }) {
+      const response = yield call(userService.register, payload);
       if (response.status !== 200) {
-        return Promise.reject(response)
+        return Promise.reject(response);
       }
 
       // 注册完成，调用登录接口，减少重复逻辑
@@ -65,82 +65,82 @@ const UserModel = {
         type: 'login',
         payload,
         autoLogin: true,
-      })
+      });
     },
 
-    * changePwd({ payload }, { call }) {
-      const response = yield call(userService.changePwd, payload)
-      console.log(response)
+    *changePwd({ payload }, { call }) {
+      const response = yield call(userService.changePwd, payload);
+      console.log(response);
     },
 
-    * logout({ payload }, { call, put }) {
+    *logout({ payload }, { call, put }) {
       // yield call(userService.logout, payload)
       yield put({
         type: 'user/clearLocaleUser',
-      })
+      });
       yield put(
         routerRedux.replace({
           pathname: '/Login',
-        })
-      )
+        }),
+      );
     },
 
-    * create({ payload }) {
-      return userService.create(payload)
+    *create({ payload }) {
+      return userService.register(payload);
     },
-    * list({ payload }) {
-      return userService.list(payload)
+    *list({ payload }) {
+      return userService.list(payload);
     },
-    * detail({ payload }) {
-      return userService.detail(payload)
+    *detail({ payload }) {
+      return userService.detail(payload);
     },
-    * update({ id, payload }) {
-      return userService.update(id, payload)
+    *update({ id, payload }) {
+      return userService.update(id, payload);
     },
-    * del({ payload }) {
-      return userService.del(payload)
+    *del({ payload }) {
+      return userService.del(payload);
     },
-    * refresh(_, { select, call, put }) {
-      const currentUser = yield select(state => state.user.currentUser)
-      const response = yield call(userService.detail, currentUser.id)
-      console.log(response)
+    *refresh(_, { select, call, put }) {
+      const currentUser = yield select(state => state.user.currentUser);
+      const response = yield call(userService.detail, currentUser._id);
       if (response.code === 200) {
         // yield put({
         //   type: 'user/saveCurrentUser',
         //   payload: response.data,
         // })
       } else {
-
       }
     },
-    * loadRoutes(_, { select, call, put }) {
-      const currentUser = yield select(state => state.user.currentUser)
-      console.log(currentUser)
+    *loadRoutes(_, { select, call, put }) {
+      const globalRouteMap = yield select(state => state.global.routeMap);
+      const currentUser = yield select(state => state.user.currentUser);
+      // console.log(currentUser)
 
-      const response = yield call(userService.loadRoutes)
-      if (response.code !== 200) return
-      const routes = response.data
-      const authRouteMap = {}
+      const response = yield call(userService.loadRoutes);
+      if (response.code !== 200) return;
+      const routes = response.data;
+      const authRouteMap = {};
 
-      forEachRouteStruct(routes, null, function (route, parent) {
+      forEachRouteStruct(routes, null, function(route, parent) {
         if (parent) {
-          route.path = parent.path + '/' + route.path
+          route.path = parent.path + '/' + route.path;
         }
 
-        if (route.name) {
-          if (parent && parent.name) {
-            route.locale = 'menu.' + parent.name + '.' + route.name
-          } else {
-            route.locale = 'menu.' + route.name
+        if (globalRouteMap[route.path]) {
+          const localeRoute = globalRouteMap[route.path];
+          // fix ant.design attrs
+          route.hideInMenu = localeRoute.hideInMenu;
+          if (localeRoute.locale) {
+            route.locale = localeRoute.locale;
           }
         }
-        authRouteMap[route.path] = route.path
 
+        authRouteMap[route.path] = 1;
         // fix，侧边栏需要用children
         if (route.routes) {
-          route.children = route.routes
+          route.children = route.routes;
         }
-      })
+      });
       yield put({
         type: 'saveRoutes',
         payload: {
@@ -148,7 +148,7 @@ const UserModel = {
           routes,
           authRouteMap,
         },
-      })
+      });
     },
   },
   reducers: {
@@ -158,33 +158,33 @@ const UserModel = {
         currentUser: {
           ...state.currentUser,
           ...payload,
-        }
-      }
+        },
+      };
     },
-    saveLoginFrom(state, { payload }) { // payload boolean
+    saveLoginFrom(state, { payload }) {
+      // payload boolean
       return {
         ...state,
         isFromLoginPage: payload,
-      }
+      };
     },
     saveLocaleUser(state) {
-      localStorage.setItem('TEST_USER', JSON.stringify(state.currentUser))
-      return state
+      localStorage.setItem('TEST_USER', JSON.stringify(state.currentUser));
+      return state;
     },
     clearLocaleUser(state, action) {
-      localStorage.removeItem('TEST_USER')
+      localStorage.removeItem('TEST_USER');
       return {
         ...state,
-        currentUser: {}
-      }
+        currentUser: {},
+      };
     },
     saveRoutes(state, action) {
       return {
         ...state,
         ...action.payload,
-      }
+      };
     },
-
 
     // 内置
     changeNotifyCount(state, action) {
@@ -195,8 +195,8 @@ const UserModel = {
           notifyCount: action.payload.totalCount,
           unreadCount: action.payload.unreadCount,
         },
-      }
+      };
     },
   },
-}
-export default UserModel
+};
+export default UserModel;

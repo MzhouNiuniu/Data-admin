@@ -1,33 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 
-const chartMap = {}
+const chartMap = {};
 
 if (typeof window !== 'undefined') {
-  window.addEventListener('resize', function () {
+  window.addEventListener('resize', function() {
     for (let k in chartMap) {
-      chartMap[k].resize()
+      chartMap[k].resize();
     }
-  })
+  });
 }
 
-export default function (Target) {
-  return class ChartHoc extends React.Component {
-    chartId = null
+export default function(Target) {
+  let chartId = null;
 
-    componentWillUnmount() {
-      if (!chartMap[this.chartId]) return
-      chartMap[this.chartId].dispose()
-      delete chartMap[this.chartId]
-      console.log('chartMap：\n', chartMap)
-    }
+  return React.memo(function(props) {
+    useEffect(function() {
+      return function() {
+        if (!chartMap[chartId]) return;
+        chartMap[chartId].dispose();
+        delete chartMap[chartId];
+        console.log('chartMap：\n', chartMap);
+      };
+    }, []);
 
-    registerChart = chart => {
-      this.chartId = chart.id
-      chartMap[chart.id] = chart
-    }
+    return <Target registerChart={registerChart} />;
 
-    render() {
-      return <Target registerChart={this.registerChart}></Target>
+    function registerChart(chart) {
+      chartId = chart.id;
+      chartMap[chart.id] = chart;
     }
-  }
+  });
 }

@@ -1,9 +1,10 @@
-const path = require('path')
-const PROJECT_ROOT = process.cwd()
+const path = require('path');
+const PROJECT_ROOT = process.cwd();
 module.exports = {
   resolve: {
     alias: {
       '@': path.resolve(PROJECT_ROOT, './src'),
+      '@constant': path.resolve(PROJECT_ROOT, './src/constant'),
       '@public': path.resolve(PROJECT_ROOT, './public'),
       '@components': path.resolve(PROJECT_ROOT, './src/components'),
       '@pages': path.resolve(PROJECT_ROOT, './src/pages'),
@@ -11,7 +12,7 @@ module.exports = {
       '@utils': path.resolve(PROJECT_ROOT, './src/utils'),
     },
   },
-}
+};
 
 /**
  * idea使用说明

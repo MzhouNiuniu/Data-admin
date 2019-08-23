@@ -1,16 +1,16 @@
-import React from 'react'
-import echarts from 'echarts'
-import publicService from '@services/public'
-import ChartLife from '@components/ChartLife'
+import React from 'react';
+import echarts from 'echarts';
+import ChartLife from '@components/ChartLife';
+import publicService from '@services/public';
 
 /**
  * block 代指了当前选择的项目
  * */
 @ChartLife
 class AbsorbedMap extends React.Component {
-  isLoading = false
+  isLoading = false;
 
-  chart = null
+  chart = null;
   chartOption = {
     tooltip: {
       trigger: 'item',
@@ -36,9 +36,9 @@ class AbsorbedMap extends React.Component {
           normal: {
             label: {
               show: true,
-              color: '#333'
+              color: '#333',
             },
-            borderWidth: 0
+            borderWidth: 0,
           },
           // emphasis: { label: { show: true } },
           // borderWidth: 0,
@@ -48,92 +48,105 @@ class AbsorbedMap extends React.Component {
       },
     ],
     animation: true,
-  }
+  };
 
-  currentBlockMap = {}
-  codeStack = []
-  currentCode = 100000 // CHINA_CODE
+  currentBlockMap = {};
+  nameStack = [];
+  codeStack = [];
+  lastBlockCode = 100000; // CHINA_CODE
+  state = {
+    lastBlockName: '中华人民共和国', // CHINA_NAME
+  };
 
   componentDidMount() {
-    const { registerChart } = this.props
-    const chart = this.chart = echarts.init(this.refs.chart)
-    registerChart(chart)
+    const { registerChart } = this.props;
+    const chart = (this.chart = echarts.init(this.refs.chart));
+    registerChart(chart);
 
-    chart.on('click', this.handlerChartClick)
-    this.loadMapByBlockName(this.currentCode) // CHINA_CODE
+    chart.on('click', this.handleChartClick);
+    this.loadMapByBlockName(this.lastBlockCode); // CHINA_CODE
   }
 
-  handlerChartClick = param => {
-    if (param.seriesName !== 'map') return
-    if (this.isLoading) return
-    const currentBlock = this.currentBlockMap[param.name]
-    if (currentBlock.properties.level === 'district') return // 观察数据，发现 level=district 时，为最小单位
+  handleChartClick = param => {
+    if (param.seriesName !== 'map') return;
+    if (this.isLoading) return;
+    const currentBlock = this.currentBlockMap[param.name];
+    if (currentBlock.properties.level === 'district') return; // 观察数据，发现 level=district 时，为最小单位
     // #点击事件开始
-    this.isLoading = true
-    this.codeStack.push(this.currentCode)
-    this.currentCode = currentBlock.properties.adcode
-    this.loadMapByBlockName(this.currentCode)
-      .then(() => {
-        // #点击事件结束
-        this.isLoading = false
-      })
-  }
+    this.isLoading = true;
+    const lastBlockCode = currentBlock.properties.adcode;
+    const lastBlockName = currentBlock.properties.name;
+    this.loadMapByBlockName(lastBlockCode).then(() => {
+      // #点击事件结束
+      this.codeStack.push(this.lastBlockCode);
+      this.nameStack.push(this.state.lastBlockName);
+      this.lastBlockCode = lastBlockCode;
+      this.setState({
+        lastBlockName,
+      });
+      this.isLoading = false;
+    });
+  };
 
-  handlerBack = () => {
-    if (this.codeStack.length < 1) return
-    this.currentCode = this.codeStack.pop()
-    this.loadMapByBlockName(this.currentCode)
-  }
+  handleBack = () => {
+    if (this.codeStack.length < 1) return;
+    this.lastBlockCode = this.codeStack.pop();
+    this.loadMapByBlockName(this.lastBlockCode);
+    this.setState({
+      lastBlockName: this.nameStack.pop(),
+    });
+  };
 
   genCurrentBlockMap = mapGeo => {
-    const { features } = mapGeo
-    const currentBlockMap = {}
+    const { features } = mapGeo;
+    const currentBlockMap = {};
     features.forEach(item => {
-      currentBlockMap[item.properties.name] = item
-    })
-    return currentBlockMap
-  }
+      currentBlockMap[item.properties.name] = item;
+    });
+    return currentBlockMap;
+  };
 
   loadMapByBlockName = async blockCode => {
-    let mapGeo = echarts.getMap(blockCode)
+    let mapGeo = echarts.getMap(blockCode);
     if (!mapGeo) {
-      mapGeo = await publicService.getGeoJSON(blockCode)
+      mapGeo = await publicService.getGeoJSON(blockCode);
       if (!mapGeo) {
-        this.currentCode = this.codeStack.pop()
-        return
+        return;
       }
-      echarts.registerMap(blockCode, mapGeo)
+      echarts.registerMap(blockCode, mapGeo);
     } else {
-      mapGeo = mapGeo.geoJson
+      mapGeo = mapGeo.geoJson;
     }
 
-    this.currentBlockMap = this.genCurrentBlockMap(mapGeo)
-    const { chart, chartOption } = this
-    chartOption.series[0].mapType = blockCode
+    this.currentBlockMap = this.genCurrentBlockMap(mapGeo);
+    const { chart, chartOption } = this;
+    chartOption.series[0].mapType = blockCode;
     // test data
     chartOption.series[0].data = [
       {
         name: mapGeo.features[0].properties.name,
-        value: 605.83
+        value: 605.83,
       },
-    ]
-    chart.setOption(chartOption, true)
-    this.chartOption = chartOption
-  }
+    ];
+    chart.setOption(chartOption, true);
+    this.chartOption = chartOption;
+  };
 
   render() {
     return (
       <>
-        <button onClick={this.handlerBack}>返回</button>
-        <div ref="chart" style={{
-          width: '100%',
-          height: '600px'
-        }}>
-        </div>
+        {this.state.lastBlockName}
+        <button onClick={this.handleBack}>返回</button>
+        <div
+          ref="chart"
+          style={{
+            width: '100%',
+            height: '600px',
+          }}
+        ></div>
       </>
-    )
+    );
   }
 }
 
-export default AbsorbedMap
-
+export default AbsorbedMap;

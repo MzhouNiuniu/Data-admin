@@ -19,12 +19,12 @@ module.exports = [
         component: './Welcome',
       },
       {
-        path: 'NoAuth',
+        path: '/NoAuth',
         name: '权限测试页',
         component: './NoAuth',
       },
       {
-        path: 'Exception',
+        path: '/Exception',
         name: 'Exception',
         routes: [
           {
@@ -47,7 +47,7 @@ module.exports = [
 
       /* 文章管理 */
       {
-        path: 'Article',
+        path: '/Article',
         name: 'Article',
         routes: [
           {
@@ -61,6 +61,7 @@ module.exports = [
             component: './Article/Form',
           },
           {
+            hideInMenu: true,
             path: 'Form/:id',
             name: 'FormEdit',
             component: './Article/Form',
@@ -69,7 +70,7 @@ module.exports = [
       },
       /* 用户管理 */
       {
-        path: 'User',
+        path: '/User',
         name: 'User',
         routes: [
           {
@@ -78,29 +79,91 @@ module.exports = [
             component: './User/List',
           },
           {
+            path: 'Form',
+            name: 'Form',
+            component: './User/Form',
+          },
+          {
+            hideInMenu: true,
             path: 'Form/:id',
             name: 'FormEdit',
             component: './User/Form',
           },
         ],
       },
-
-      /* demo */
+      /* 新闻管理 */
       {
-        path: 'Demo',
-        name: 'Demo',
+        path: '/News',
+        name: 'News',
         routes: [
           {
-            path: 'AbsorbedMap',
-            name: 'AbsorbedMap',
-            component: './Demo/AbsorbedMap',
+            path: 'List',
+            name: 'List',
+            component: './News/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './News/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './News/Form',
+          },
+        ],
+      },
+      /* 机构管理 */
+      {
+        path: '/Organization',
+        name: 'Organization',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './Organization/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './Organization/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Organization/Form',
+          },
+        ],
+      },
+      /* 专家管理 */
+      {
+        path: '/Expert',
+        name: 'Expert',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './Expert/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './Expert/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Expert/Form',
           },
         ],
       },
 
       /* 个人中心 */
       {
-        path: 'Account',
+        path: '/Account',
         name: 'Account',
         routes: [
           {
@@ -111,10 +174,41 @@ module.exports = [
         ],
       },
 
-      // /* 默认页，根据匹配规则，放在最后一个 */
-      // {
-      //   redirect: '/'
-      // },
+      /* 系统管理 */
+      {
+        path: '/System',
+        name: 'System',
+        routes: [
+          {
+            path: 'Page',
+            name: 'Page',
+            component: './System/Page',
+          },
+          {
+            path: 'Role',
+            name: 'Role',
+            component: './System/Role',
+          },
+        ],
+      },
+
+      /* demo */
+      {
+        path: '/Demo',
+        name: 'Demo',
+        routes: [
+          {
+            path: 'AbsorbedMap',
+            name: 'AbsorbedMap',
+            component: './Demo/AbsorbedMap',
+          },
+          {
+            path: 'PdfPreview',
+            name: 'PdfPreview',
+            component: './Demo/PdfPreview',
+          },
+        ],
+      },
     ],
   },
-]
+];

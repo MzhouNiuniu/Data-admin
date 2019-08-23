@@ -1,25 +1,30 @@
-import { Icon, Menu } from 'antd'
-import { formatMessage, getLocale, setLocale } from 'umi-plugin-react/locale'
-import React from 'react'
-import classNames from 'classnames'
-import HeaderDropdown from '../HeaderDropdown'
-import styles from './index.less'
+import { Icon, Menu } from 'antd';
+import { connect } from 'dva';
+import { formatMessage } from 'umi-plugin-react/locale';
+import React from 'react';
+import classNames from 'classnames';
+import HeaderDropdown from '../HeaderDropdown';
+import styles from './index.less';
 
 const SelectLang = props => {
-  const { className } = props
-  const selectedLang = getLocale()
+  const { global, className } = props;
+  const selectedLang = global.language;
+  const changeLang = ({ key }) => {
+    props.dispatch({
+      type: 'global/changeLang',
+      payload: key,
+    });
+  };
 
-  const changeLang = ({ key }) => setLocale(key, false)
-
-  const locales = ['zh-CN', 'en-US']
+  const locales = ['zh-CN', 'en-US'];
   const languageLabels = {
     'zh-CN': '简体中文',
     'en-US': 'English',
-  }
+  };
   const languageIcons = {
     'zh-CN': '🇨🇳',
     'en-US': '🇬🇧',
-  }
+  };
   const langMenu = (
     <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={changeLang}>
       {locales.map(locale => (
@@ -31,7 +36,7 @@ const SelectLang = props => {
         </Menu.Item>
       ))}
     </Menu>
-  )
+  );
   return (
     <HeaderDropdown overlay={langMenu} placement="bottomRight">
       <span className={classNames(styles.dropDown, className)}>
@@ -43,7 +48,7 @@ const SelectLang = props => {
         />
       </span>
     </HeaderDropdown>
-  )
-}
+  );
+};
 
-export default SelectLang
+export default connect(({ global }) => ({ global }))(SelectLang);

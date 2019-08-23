@@ -1,140 +1,133 @@
-import './Form.scss'
-import React from 'react'
-import propTypes from 'prop-types'
-import { connect } from 'dva'
-import UploadImageMultiple from '@components/UploadImage'
-import {
-  Form,
-  Input,
-  Button,
-  message, Icon,
-} from 'antd'
+import './Form.scss';
+import React from 'react';
+import propTypes from 'prop-types';
+import { connect } from 'dva';
+import UploadImageMultiple from '@components/Form/UploadImage';
+import { Form, Input, Button, message, Icon } from 'antd';
 
 @connect()
 @Form.create()
-class ArticleForm extends React.Component {
+class FormWidget extends React.Component {
   static propTypes = {
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
     onCancel: propTypes.func,
-  }
+  };
 
   static defaultProps = {
-    onClose() {
-    },
-    onCancel() {
-    },
-  }
+    onClose() {},
+    onCancel() {},
+  };
 
-  handlerSubmit = e => {
-    e.preventDefault()
-    const { form } = this.props
+  handleSubmit = e => {
+    e.preventDefault();
+    const { form } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
-        return
+        return;
       }
       if (!form.isFieldsTouched()) {
-        message.warn('表单未操作')
-        this.props.onCancel()
-        return
+        this.props.onCancel();
+        return;
       }
-      const { dispatch } = this.props
+      const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
           type: 'user/create',
-          payload: formData,
-        })
-          .then(res => {
-            if (res.code !== 200) {
-              message.warn(res.message)
-              return
-            }
-            this.props.onClose()
-          })
+          payload: {
+            userName: formData.userName,
+            password: formData.password,
+          },
+        }).then(res => {
+          if (res.status !== 200) {
+            message.warn(res.message);
+            return;
+          }
+          this.props.onClose();
+        });
       } else {
         dispatch({
           type: 'user/update',
           id: this.props.id,
           payload: formData,
-        })
-          .then(res => {
-            if (res.code !== 200) {
-              message.warn(res.message)
-              return
-            }
-            this.props.onClose(formData) // 编辑时将最新数据发送出去
-          })
+        }).then(res => {
+          if (res.code !== 200) {
+            message.warn(res.message);
+            return;
+          }
+          this.props.onClose(formData); // 编辑时将最新数据发送出去
+        });
       }
-    })
-  }
+    });
+  };
 
   componentDidMount() {
     if (this.props.id) {
-      const { dispatch } = this.props
+      const { dispatch } = this.props;
       dispatch({
         type: 'user/detail',
         payload: this.props.id,
-      })
-        .then(res => {
-          if (!res.data) {
-            message.error('文章不存在')
-            this.props.onCancel()
-            return
-          }
-          delete res.data.id
-          this.props.form.setFieldsValue(res.data)
-        })
+      }).then(res => {
+        if (!res.data) {
+          message.error('数据不存在');
+          this.props.onCancel();
+          return;
+        }
+        delete res.data.id;
+        this.props.form.setFieldsValue(res.data);
+      });
     }
   }
 
   render() {
-    const { form } = this.props
+    const { form } = this.props;
 
     return (
-      <Form onSubmit={this.handlerSubmit}>
-        <Form.Item label="用户名">
-          {form.getFieldDecorator('phone', {
-            rules: [{
-              required: true,
-              message: 'Please input your phone!'
-            }],
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Item label="头像" className="mb-6">
+          {form.getFieldDecorator('avatar')(<UploadImageMultiple />)}
+        </Form.Item>
+        <Form.Item label="账号">
+          {form.getFieldDecorator('userName', {
+            rules: [
+              {
+                required: true,
+                message: '请输入账号',
+              },
+            ],
           })(
             <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-              placeholder="Phone"
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="请输入账号"
             />,
           )}
         </Form.Item>
-        <Form.Item label="用户密码">
+        <Form.Item label="密码">
           {form.getFieldDecorator('password', {
-            rules: [{
-              required: true,
-              message: 'Please input your Password!'
-            }],
+            rules: [
+              {
+                required: true,
+                message: '请输入密码',
+              },
+            ],
           })(
             <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-              type="password"
-              placeholder="Password"
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="text"
+              placeholder="请输入密码"
             />,
           )}
-        </Form.Item>
-        <Form.Item label="用户头像">
-          {form.getFieldDecorator('avatar')(<UploadImageMultiple/>)}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             提交
           </Button>
           <span>&emsp;</span>
-          <Button onClick={this.props.onCancel}>
-            取消
-          </Button>
+          <Button onClick={this.props.onCancel}>取消</Button>
         </Form.Item>
       </Form>
-    )
+    );
   }
 }
 
-
-export default ArticleForm
+export default FormWidget;

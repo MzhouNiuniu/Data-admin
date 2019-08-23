@@ -1,0 +1,17 @@
+// 在antd form里使用时
+.ant-form-item {
+  .braft-editor {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+  }
+
+  .bf-content {
+    height: 390px;
+  }
+
+  .has-error {
+    .braft-editor {
+      border-color: #f5222d;
+    }
+  }
+}

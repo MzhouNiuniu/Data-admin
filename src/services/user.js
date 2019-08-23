@@ -1,36 +1,36 @@
-import request from '@/utils/request'
+import request from '@/utils/request';
 
-export async function login(payload) {
+export function login(payload) {
   return request('/a/user/login', {
     method: 'get',
     params: payload,
-  })
+  });
 }
 
-export async function register(payload) {
+export function register(payload) {
   return request('/a/user/reg', {
     method: 'post',
     data: payload,
-  })
+  });
 }
 
-export async function changePwd(payload) {
+export function changePwd(payload) {
   return request('/a/user/updateUser', {
     method: 'post',
     data: payload,
-  })
+  });
 }
 
-export async function logout(payload) {
+export function logout(payload) {
   return request('/a/user/reg', {
     method: 'post',
     data: payload,
-  })
+  });
 }
 
-export async function loadRoutes() {
+export function loadRoutes() {
   return new Promise(resolve => {
-    setTimeout(function () {
+    setTimeout(function() {
       const routes = [
         {
           path: '/',
@@ -53,7 +53,6 @@ export async function loadRoutes() {
               icon: 'smile',
             },
             {
-              hideInMenu: true,
               path: 'Form/:id',
               name: 'FormEdit',
               icon: 'smile',
@@ -71,13 +70,84 @@ export async function loadRoutes() {
               icon: 'smile',
             },
             {
-              hideInMenu: true,
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
               path: 'Form/:id',
               name: 'FormEdit',
               icon: 'smile',
             },
           ],
         },
+        {
+          path: '/News',
+          name: 'News',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: 'smile',
+            },
+          ],
+        },
+        {
+          path: '/Organization',
+          name: 'Organization',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: 'smile',
+            },
+          ],
+        },
+        {
+          path: '/Expert',
+          name: 'Expert',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: 'smile',
+            },
+          ],
+        },
+
         {
           path: '/Demo',
           name: 'Demo',
@@ -88,23 +158,10 @@ export async function loadRoutes() {
               name: 'AbsorbedMap',
               icon: 'smile',
             },
-          ],
-        },
-      ]
-
-      // 追加默认路由（主要判断权限的，默认是把所有路由加载了）
-      routes.push(
-        {
-          path: '/Exception',
-          routes: [
             {
-              path: '403',
-            },
-            {
-              path: '404',
-            },
-            {
-              path: '500',
+              path: 'PdfPreview',
+              name: 'PdfPreview',
+              icon: 'smile',
             },
           ],
         },
@@ -120,47 +177,69 @@ export async function loadRoutes() {
             },
           ],
         },
-      )
+        {
+          path: '/System',
+          name: 'System',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'Page',
+              name: 'Page',
+              icon: 'smile',
+            },
+            {
+              path: 'Role',
+              name: 'Role',
+              icon: 'smile',
+            },
+          ],
+        },
+      ];
+
+      // 追加默认路由（主要判断权限的，默认是把所有路由加载了）
+      routes.push({
+        path: '/Exception',
+        routes: [
+          {
+            path: '403',
+          },
+          {
+            path: '404',
+          },
+          {
+            path: '500',
+          },
+        ],
+      });
 
       resolve({
         code: 200,
         data: routes,
-      })
-    }, 1000)
-  })
+      });
+    }, 1000);
+  });
 }
 
-
-export async function update(id, payload) {
+export function update(id, payload) {
   return request('/mock/mock-update/user/' + id, {
     method: 'put',
     data: payload,
-  })
+  });
 }
 
-export async function detail(payload) {
-  return request('/mock/mock-detail/user/' + payload)
+export function detail(payload) {
+  return request('/mock/mock-detail/user/' + payload);
 }
 
-export async function create(payload) {
-  return request('/mock/mock-form/user', {
-    method: 'post',
-    data: payload,
-  })
-}
-
-export async function list(payload) {
+export function list(payload) {
   return request('/mock/mock-list/user', {
     params: payload,
-  })
+  });
 }
 
-export async function del(payload) {
+export function del(payload) {
   return request('/mock/mock-delete/user', {
     method: 'delete',
     data: payload,
-  })
+  });
 }
-
-
-

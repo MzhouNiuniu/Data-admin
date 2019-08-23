@@ -52,3 +52,163 @@ ol {
   }
 }
 
+/* custom global css */
+.pos-rel {
+  position: relative;
+}
+
+.pos-abs {
+  position: absolute;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.w100-max {
+  max-width: 100%;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.h100-max {
+  max-height: 100%;
+}
+
+.one-line-text {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.genEvenMargin(@n, @i: 0) when (@i =< @n) {
+  @current-px: @i * 1px !important;
+  .margin-@{i} {
+    margin: @current-px;
+  }
+  .mt-@{i} {
+    margin-top: @current-px;
+  }
+  .mr-@{i} {
+    margin-right: @current-px;
+  }
+  .mb-@{i} {
+    margin-bottom: @current-px;
+  }
+  .ml-@{i} {
+    margin-left: @current-px;
+  }
+  .genEvenMargin(@n, (@i+2));
+}
+
+.genEvenPadding(@n, @i: 0) when (@i =< @n) {
+  @current-px: @i * 1px !important;
+  .padding-@{i} {
+    padding: @current-px;
+  }
+  .pt-@{i} {
+    padding-top: @current-px;
+  }
+  .pr-@{i} {
+    padding-right: @current-px;
+  }
+  .pb-@{i} {
+    padding-bottom: @current-px;
+  }
+  .pl-@{i} {
+    padding-left: @current-px;
+  }
+  .genEvenPadding(@n, (@i+2));
+}
+
+.genEvenMargin(50);
+.genEvenPadding(50);
+
+/* ant.design */
+.ant-table {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.ie11,
+.ie10 {
+  .ant-form {
+    pointer-events: none;
+  }
+}
+
+.ant-form {
+  fieldset:disabled {
+    [class~='ant-form-item-control'] {
+      pointer-events: none;
+    }
+
+    /**
+    * 大部分组件基于input、select的，有大部分组件不需要处理
+    */
+
+    .ant-input,
+    .ant-input-number,
+    .ant-time-picker-input,
+    .ant-calendar-picker-input,
+    .ant-select-selection {
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+    }
+  }
+}
+
+.genAntBtn( @color1, @color2) {
+  color: #fff !important;
+  background-color: @color1;
+  border-color: @color1;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: @color2;
+    border-color: @color2;
+  }
+}
+
+.ant-modal.height-860px {
+  .ant-modal-body {
+    height: 860px;
+    overflow-y: auto;
+  }
+}
+
+.ant-btn.success {
+  .genAntBtn(#52c41a, #73d13d);
+}
+
+.ant-btn.warning {
+  .genAntBtn(#fa8c16, #ffa940);
+}
+
+.ant-btn.info {
+  .genAntBtn(#50bfff, #73ccff);
+}
+
+.ant-btn.danger {
+  .genAntBtn(#f56c6c, #f78989);
+}

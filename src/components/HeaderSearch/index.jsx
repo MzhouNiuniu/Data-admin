@@ -41,10 +41,6 @@ export default class HeaderSearch extends Component {
     });
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
   onKeyDown = e => {
     if (e.key === 'Enter') {
       const { onPressEnter } = this.props;
@@ -137,5 +133,9 @@ export default class HeaderSearch extends Component {
         </AutoComplete>
       </span>
     );
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
 }

@@ -1,0 +1,15 @@
+.basic-layout__route-tab {
+  margin: -24px -24px 24px;
+
+  .ant-tabs-bar {
+    margin: 0;
+  }
+
+  .ant-tabs-tabpane {
+    display: none;
+  }
+
+  .ant-tabs-tab {
+    border-radius: 0;
+  }
+}
