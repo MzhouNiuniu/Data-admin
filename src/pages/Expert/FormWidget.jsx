@@ -522,7 +522,7 @@ class FormWidget extends React.Component {
             <MultipleItemQueue
               disabled={!preview}
               buttonText="添加语言能力"
-              length={multipleItemQueueLength.languages}
+              queueLength={multipleItemQueueLength.languages}
             >
               {this.renderExpertLang}
             </MultipleItemQueue>
@@ -531,7 +531,7 @@ class FormWidget extends React.Component {
             <MultipleItemQueue
               disabled={!preview}
               buttonText="添加专业技术职称"
-              length={multipleItemQueueLength.professional}
+              queueLength={multipleItemQueueLength.professional}
             >
               {this.renderExpertTeah}
             </MultipleItemQueue>
@@ -540,7 +540,7 @@ class FormWidget extends React.Component {
             <MultipleItemQueue
               disabled={!preview}
               buttonText="添加职业资格"
-              length={multipleItemQueueLength.registered}
+              queueLength={multipleItemQueueLength.registered}
             >
               {this.renderExpertQuality}
             </MultipleItemQueue>
@@ -549,7 +549,7 @@ class FormWidget extends React.Component {
             <MultipleItemQueue
               disabled={!preview}
               buttonText="添加科研成果"
-              length={multipleItemQueueLength.achievement}
+              queueLength={multipleItemQueueLength.achievement}
             >
               {this.renderExpertProject}
             </MultipleItemQueue>

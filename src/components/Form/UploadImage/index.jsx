@@ -1,24 +1,23 @@
-import './index.scss'
-import React from 'react'
-import propTypes from 'prop-types'
-import {Upload, Icon, Modal} from 'antd'
+import './index.scss';
+import React from 'react';
+import propTypes from 'prop-types';
+import { Upload, Icon, Modal } from 'antd';
 
 const getLocaleFileList = props => {
-  const {multiple, value} = props
+  const { multiple, value } = props;
   if (!value) {
-    return []
+    return [];
   }
-  let fileList = value.split(',')
-    .map((item, index) => ({
-      uid: -(index + 1),
-      url: item,
-      status: 'done',
-    }))
+  let fileList = value.split(',').map((item, index) => ({
+    uid: -(index + 1),
+    url: item,
+    status: 'done',
+  }));
   if (fileList.length === 0) {
-    return fileList
+    return fileList;
   }
-  return !multiple ? [fileList[0]] : fileList
-}
+  return !multiple ? [fileList[0]] : fileList;
+};
 export default class UploadImageMultiple extends React.Component {
   static propTypes = {
     disabled: propTypes.bool,
@@ -27,20 +26,20 @@ export default class UploadImageMultiple extends React.Component {
     maxlength: propTypes.number,
     action: propTypes.string,
     onChange: propTypes.func,
-  }
+  };
   static defaultProps = {
     disabled: false,
     action: '/api/upload',
     multiple: false, // 是否可上传多张图片
     maxlength: 3,
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.state.isInit && this.props.value) {
       this.setState({
         isInit: true,
         fileList: getLocaleFileList(this.props),
-      })
+      });
     }
   }
 
@@ -52,7 +51,7 @@ export default class UploadImageMultiple extends React.Component {
       visible: false,
       src: '',
     },
-  }
+  };
 
   handleSlideOpen = file => {
     this.setState({
@@ -60,8 +59,8 @@ export default class UploadImageMultiple extends React.Component {
         visible: true,
         src: this.getFileUrl(file),
       },
-    })
-  }
+    });
+  };
 
   handleSlideClose = () => {
     this.setState({
@@ -69,53 +68,50 @@ export default class UploadImageMultiple extends React.Component {
         visible: false,
         src: '',
       },
-    })
-  }
+    });
+  };
 
   getFileUrl = file => {
-    return file.url || (file.response ? file.response.url : '')
-  }
+    return file.url || (file.response ? file.response.url : '');
+  };
 
-  handleChange = ({fileList}) => {
+  handleChange = ({ fileList }) => {
     this.setState({
       fileList,
-    })
-    if (this.props.onChange && this.isAllFileLoaded(fileList)) {
-      const value = fileList.reduce((acc, file) => (acc += this.getFileUrl(file) + ',', acc), '')
-        .slice(0, -1)
-      this.props.onChange(value)
+    });
+    if (this.props.onChange && this.checkIsAllFileLoaded(fileList)) {
+      const value = fileList
+        .reduce((acc, file) => ((acc += this.getFileUrl(file) + ','), acc), '')
+        .slice(0, -1);
+      this.props.onChange(value);
     }
-  }
+  };
 
-  /**
-   * flags
-   * isAllFileLoaded - 是否所有的文件都上传完成
-   * isShowUploadBtn - isShowUploadBtn
-   * */
-  isAllFileLoaded = (fileList = this.state.fileList) => {
-    if (fileList.length === 0) return true
-    return fileList.every(item => item.status === 'done')
-  }
+  /* 是否所有的文件都上传完成 */
+  checkIsAllFileLoaded = (fileList = this.state.fileList) => {
+    if (fileList.length === 0) return true;
+    return fileList.every(item => item.status === 'done');
+  };
 
-  isShowUploadBtn = () => {
+  checkIsShowUploadBtn = () => {
     if (!this.props.multiple) {
-      return this.state.fileList.length === 0
+      return this.state.fileList.length === 0;
     }
-    return this.state.fileList.length < this.props.maxlength
-  }
+    return this.state.fileList.length < this.props.maxlength;
+  };
 
   render() {
-    const {fileList, slide} = this.state
-    const {multiple, action, disabled} = this.props
+    const { fileList, slide } = this.state;
+    const { multiple, action, disabled } = this.props;
     return (
       <>
         <Modal
           visible={slide.visible}
           footer={null}
-          style={{top: '18%'}}
+          style={{ top: '18%' }}
           onCancel={this.handleSlideClose}
         >
-          <img alt="slide" style={{width: '100%'}} src={slide.src}/>
+          <img alt="slide" style={{ width: '100%' }} src={slide.src} />
         </Modal>
         <Upload
           disabled={disabled}
@@ -126,16 +122,14 @@ export default class UploadImageMultiple extends React.Component {
           onPreview={this.handleSlideOpen}
           multiple={multiple}
         >
-          {
-            this.isShowUploadBtn() && (
-              <div>
-                <Icon type="plus"/>
-                <div className="ant-upload-text">Upload</div>
-              </div>
-            )
-          }
+          {this.checkIsShowUploadBtn() && (
+            <div>
+              <Icon type="plus" />
+              <div className="ant-upload-text">Upload</div>
+            </div>
+          )}
         </Upload>
       </>
-    )
+    );
   }
 }

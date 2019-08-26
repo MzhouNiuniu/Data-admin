@@ -249,7 +249,7 @@ class FormWidget extends React.Component {
             <MultipleItemQueue
               disabled={!preview}
               buttonText="添加合作经验"
-              length={multipleItemQueueLength.experience}
+              queueLength={multipleItemQueueLength.experience}
             >
               {this.renderCooperation}
             </MultipleItemQueue>

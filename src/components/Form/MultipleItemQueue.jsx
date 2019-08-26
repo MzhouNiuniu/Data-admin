@@ -5,40 +5,53 @@ import { Button, Icon } from 'antd';
 class MultipleItemQueue extends React.Component {
   static propTypes = {
     disabled: propTypes.bool, // 行为：不展示Add按钮
-    length: propTypes.number,
+    queueLength: propTypes.number,
     buttonText: propTypes.string, // 添加按钮的文字
+    queueItemGetter: propTypes.func, // 向queue设置数据，默认用不到，queue其实可以使用数字代替
   };
 
   static defaultProps = {
     disabled: false,
-    length: 0,
+    queueLength: 0,
     buttonText: 'Add',
+    queueItemGetter() {
+      return 1;
+    },
   };
 
   state = {
     isInit: false,
-    queue: [], // 只是一个队列，不需要实际的值
+    queue: [],
   };
 
   componentDidUpdate() {
-    if (!this.state.isInit && this.props.length !== 0) {
+    if (!this.state.isInit && this.props.queueLength !== 0) {
+      const queue = [];
+      for (let i = 0; i < this.props.queueLength; i++) {
+        queue.push(this.props.queueItemGetter());
+      }
       this.setState({
         isInit: true,
-
-        queue: Array(this.props.length).fill(1),
+        queue,
       });
     }
   }
 
   addItem = () => {
-    this.state.queue.push(1);
+    const { queue } = this.state;
+    queue.push(this.props.queueItemGetter());
     this.setState({});
   };
 
   // 默认没有删除功能，因为无法控制slot进来的内容
   removeItem = index => {
-    this.state.queue.splice(index, 1);
+    const { queue } = this.state;
+    queue.splice(index, 1);
     this.setState({});
+  };
+
+  getQueue = () => {
+    return this.queue;
   };
 
   render() {
@@ -50,7 +63,7 @@ class MultipleItemQueue extends React.Component {
     return (
       <section>
         {/**
-         * 第二个参数为ctrl，提供addItem、removeItem方法
+         * 第二个参数为ctrl，提供addItem、removeItem、getQueue方法（暂时直接将组件实例暴露了出去）
          * */
         children(queue, this)}
         {disabled && (

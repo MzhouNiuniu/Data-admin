@@ -25,7 +25,7 @@ class Area extends React.Component {
     address: '',
   };
 
-  getIsLeaf(properties) {
+  checkIsLeaf(properties) {
     return properties.childrenNum === 0;
   }
 
@@ -36,7 +36,7 @@ class Area extends React.Component {
         adcode: properties.adcode,
         label: properties.name,
         value: properties.name,
-        isLeaf: this.getIsLeaf(properties),
+        isLeaf: this.checkIsLeaf(properties),
       };
     });
   }
@@ -52,7 +52,14 @@ class Area extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // 初始化
     if (!this.state.isInit && this.props.value && this.props.value[0]) {
-      this.recoverState();
+      this.setState({
+        isInit: true,
+      });
+      this.getOptionsByValue(this.props.value).then(options => {
+        this.setState({
+          options,
+        });
+      });
     }
   }
 
@@ -68,11 +75,10 @@ class Area extends React.Component {
       return this.transToOptions(res.features);
     });
   };
-  /**
-   * 回显模式，当获取到value时调用
-   * */
-  recoverState = async () => {
-    const { value } = this.props;
+
+  getOptionsByValue = async value => {
+    value = value || this.props.value;
+
     const area = value[0];
     this.state.area = area;
     this.state.address = value[1];
@@ -88,10 +94,7 @@ class Area extends React.Component {
       }
       currentBlock = currentBlock.children = await this.getOptions(currentBlock.adcode);
     }
-    this.setState({
-      isInit: true,
-      options,
-    });
+    return options;
   };
 
   handleAreaChange = (value, selectedOptions) => {
