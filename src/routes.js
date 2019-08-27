@@ -114,6 +114,80 @@ module.exports = [
           },
         ],
       },
+      /* 政策法规 */
+      {
+        path: '/Policy',
+        name: 'Policy',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './Policy/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './Policy/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Policy/Form',
+          },
+        ],
+      },
+      /* 行业案例 */
+      {
+        path: '/Profession',
+        name: 'Profession',
+        routes: [
+          {
+            path: 'Case',
+            name: 'Case',
+            routes: [
+              {
+                path: 'List',
+                name: 'List',
+                component: './Profession/Case/List',
+              },
+              {
+                path: 'Form',
+                name: 'Form',
+                component: './Profession/Case/Form',
+              },
+              {
+                hideInMenu: true,
+                path: 'Form/:id',
+                name: 'FormEdit',
+                component: './Profession/Case/Form',
+              },
+            ],
+          },
+          {
+            path: 'Report',
+            name: 'Report',
+            routes: [
+              {
+                path: 'List',
+                name: 'List',
+                component: './Profession/Report/List',
+              },
+              {
+                path: 'Form',
+                name: 'Form',
+                component: './Profession/Report/Form',
+              },
+              {
+                hideInMenu: true,
+                path: 'Form/:id',
+                name: 'FormEdit',
+                component: './Profession/Report/Form',
+              },
+            ],
+          },
+        ],
+      },
       /* 机构管理 */
       {
         path: '/Organization',
@@ -206,6 +280,12 @@ module.exports = [
             path: 'PdfPreview',
             name: 'PdfPreview',
             component: './Demo/PdfPreview',
+          },
+          {
+            hideInMenu: true,
+            path: 'ExpertPreview/:id',
+            name: 'ExpertPreview',
+            component: './Demo/ExpertPreview',
           },
         ],
       },

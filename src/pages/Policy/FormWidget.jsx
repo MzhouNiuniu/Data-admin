@@ -2,14 +2,12 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Form, Input, Button, message, Select } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import Editor from '@components/Form/Editor';
-import constant from '@constant';
 
 @connect()
 @Form.create()
 class FormWidget extends React.Component {
-  editor = null;
   static propTypes = {
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
@@ -32,14 +30,11 @@ class FormWidget extends React.Component {
         this.props.onCancel();
         return;
       }
-      // 提取图片
-      const firstImg = this.editor.getFirstImage();
-      alert('第一张图片，src = ' + firstImg);
 
       const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
-          type: 'news/create',
+          type: 'policy/create',
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
@@ -50,7 +45,7 @@ class FormWidget extends React.Component {
         });
       } else {
         dispatch({
-          type: 'news/update',
+          type: 'policy/update',
           id: this.props.id,
           payload: {
             id: this.props.id,
@@ -71,7 +66,7 @@ class FormWidget extends React.Component {
     if (this.props.id) {
       const { dispatch } = this.props;
       dispatch({
-        type: 'news/detail',
+        type: 'policy/detail',
         payload: this.props.id,
       }).then(res => {
         const formData = res.data && res.data[0];
@@ -100,23 +95,15 @@ class FormWidget extends React.Component {
             ],
           })(<Input placeholder="请输入标题" />)}
         </Form.Item>
-        <Form.Item label="类型">
-          {form.getFieldDecorator('type', {
+        <Form.Item label="文号">
+          {form.getFieldDecorator('title', {
             rules: [
               {
                 required: true,
-                message: '请选择类型',
+                message: '请输入文号',
               },
             ],
-          })(
-            <Select placeholder="请选择类型" style={{ width: '160px' }}>
-              {constant.news.type.map(item => (
-                <Select.Option key={item.value} value={item.value}>
-                  {item.label}
-                </Select.Option>
-              ))}
-            </Select>,
-          )}
+          })(<Input placeholder="请输入文号" />)}
         </Form.Item>
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {
@@ -126,7 +113,7 @@ class FormWidget extends React.Component {
                 message: '请输入内容',
               },
             ],
-          })(<Editor ref={ref => (this.editor = ref)} placeholder="请输入内容" />)}
+          })(<Editor placeholder="请输入内容" />)}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">

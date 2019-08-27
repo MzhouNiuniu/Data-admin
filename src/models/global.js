@@ -15,8 +15,8 @@ function genRouteMap(routes) {
   forEachUmiRouteStruct(routes, function(route, parent, prefix) {
     if (route.path === '/' && route.routes) return;
     if (route.name) {
-      if (parent && parent.name) {
-        route.locale = 'menu.' + parent.name + '.' + route.name;
+      if (parent && parent.locale) {
+        route.locale = parent.locale + '.' + route.name;
       } else {
         route.locale = 'menu.' + route.name;
       }

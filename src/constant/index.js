@@ -1,5 +1,5 @@
 export default {
-  JSON: {
+  public: {
     sex: [
       {
         label: '男',
@@ -10,6 +10,51 @@ export default {
         value: '女',
       },
     ],
+    status: {
+      audit: {
+        '0': '未审核',
+        '1': '通过',
+        '2': '未通过',
+      },
+    },
+  },
+  news: {
+    type: [
+      {
+        label: '行业动态',
+        value: '行业动态',
+      },
+      {
+        label: '城投动态',
+        value: '城投动态',
+      },
+      {
+        label: '智库动态',
+        value: '智库动态',
+      },
+      {
+        label: '项目动态',
+        value: '项目动态',
+      },
+    ],
+  },
+  profession: {
+    report: {
+      type: [
+        {
+          label: '专题报告',
+          value: '专题报告',
+        },
+        {
+          label: '定期报告',
+          value: '定期报告',
+        },
+      ],
+    },
+  },
+
+  // old
+  JSON: {
     degreeLevel: [
       {
         label: '学士学位',

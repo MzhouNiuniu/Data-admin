@@ -5,24 +5,29 @@ import moment from 'moment';
 const { RangePicker } = DatePicker;
 
 class HighRangePicker extends React.Component {
+  value = [];
+
+  onChange = (momentVal, val) => {
+    this.value = momentVal;
+    this.props.onChange && this.props.onChange(val);
+  };
+
   render() {
-    const props = { ...this.props };
+    const props = { ...this.props, onChange: this.onChange, value: this.value };
     if (!Array.isArray(props.value)) {
-      props.value = [];
-      if (this.props.onChange) {
-        setTimeout(() => {
-          this.props.onChange(props.value);
-        });
-        return null;
-      }
-    } else {
-      if (props.value[0]) {
-        props.value[0] = moment(props.value[0]);
-      }
-      if (props.value[1]) {
-        props.value[1] = moment(props.value[1]);
-      }
+      setTimeout(() => {
+        this.onChange(null, []);
+      });
+      return null;
     }
+    //
+    // else {
+    //   props.value = [
+    //     !props.value[0] ? null : moment(props.value[0]),
+    //     !props.value[1] ? null : moment(props.value[1]),
+    //   ]
+    // }
+
     return <RangePicker {...props} />;
   }
 }

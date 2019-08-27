@@ -2,8 +2,7 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer } from 'antd';
-import FormWidget from './FormWidget';
+import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
 import constant from '@constant';
 
 @Form.create({
@@ -54,31 +53,17 @@ class SearchForm extends React.Component {
 class BaseCrudList extends React.Component {
   columns = [
     {
-      width: 120,
-      title: '头像',
-      dataIndex: 'photos',
-      render(text) {
-        if (!text) {
-          return <p>暂未设置</p>;
-        }
-        return <img className="w100-max" src={text} alt="" />;
-      },
+      width: 260,
+      title: '标题',
+      dataIndex: 'title',
     },
     {
-      title: '姓名',
-      dataIndex: 'name',
+      title: '类型',
+      dataIndex: '_id',
     },
     {
-      title: '性别',
-      dataIndex: 'sex',
-    },
-    {
-      title: '个人简介',
-      dataIndex: 'current',
-    },
-    {
-      title: '研究方向',
-      dataIndex: 'direction',
+      title: '审核状态',
+      dataIndex: 'status',
     },
     {
       title: '创建时间',
@@ -103,8 +88,6 @@ class BaseCrudList extends React.Component {
                 <span>&emsp;</span>
               </>
             )}
-            <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
-            <span>&emsp;</span>
             <Button type="primary" onClick={() => this.handleEditItem(row)}>
               编辑
             </Button>
@@ -144,10 +127,6 @@ class BaseCrudList extends React.Component {
   state = {
     dataSource: [],
     selection: [],
-    formWidgetModal: {
-      visible: false,
-      row: null,
-    },
   };
 
   /* 处理dataSource中的数据项 */
@@ -172,7 +151,7 @@ class BaseCrudList extends React.Component {
       ...queryParams,
     };
     dispatch({
-      type: 'expert/list',
+      type: 'professionCase/list',
       payload: params,
     }).then(res => {
       if (res.status !== 200) return;
@@ -191,22 +170,6 @@ class BaseCrudList extends React.Component {
     this.props.history.push('Form');
   };
 
-  handlePreviewItem = row => {
-    this.setState({
-      formWidgetModal: {
-        visible: true,
-        row,
-      },
-    });
-  };
-  handleClosePreviewModal = () => {
-    this.setState({
-      formWidgetModal: {
-        visible: false,
-        row: null,
-      },
-    });
-  };
   handleEditItem = row => {
     this.props.history.push('Form/' + row._id);
   };
@@ -223,7 +186,7 @@ class BaseCrudList extends React.Component {
       onOk: () => {
         const { dispatch } = this.props;
         dispatch({
-          type: 'expert/audit',
+          type: 'professionCase/audit',
           payload: {
             id: row._id,
             status,
@@ -250,7 +213,7 @@ class BaseCrudList extends React.Component {
       onOk: () => {
         const { dispatch } = this.props;
         dispatch({
-          type: 'expert/del',
+          type: 'professionCase/del',
           payload: {
             id: rows._id,
           },
@@ -296,6 +259,12 @@ class BaseCrudList extends React.Component {
     this.loadDataSource(pagination.current, pagination.pageSize);
   };
 
+  handleUploadTplFile = info => {
+    if (info.file.status !== 'done') return;
+    const { defaultPagination } = this;
+    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
+  };
+
   componentDidMount() {
     this.loadDataSource();
   }
@@ -313,15 +282,24 @@ class BaseCrudList extends React.Component {
 
   render() {
     const { columns, config, pagination } = this;
-    const { dataSource, selection, formWidgetModal } = this.state;
+    const { dataSource, selection } = this.state;
 
     return (
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
           <Button type="primary" onClick={this.handleAddItem}>
-            添加专家
+            添加案例
           </Button>
+          <span>&emsp;</span>
+          <Upload
+            showUploadList={false}
+            name="file"
+            action="/a/professionCase/importExcel"
+            onChange={this.handleUploadTplFile}
+          >
+            <Button type="primary">导入案例</Button>
+          </Upload>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
@@ -331,16 +309,6 @@ class BaseCrudList extends React.Component {
           pagination={pagination}
           onChange={this.handleTableChange}
         />
-        <Drawer
-          placement="right"
-          title="查看详情"
-          width={900}
-          destroyOnClose
-          visible={formWidgetModal.visible}
-          onClose={this.handleClosePreviewModal}
-        >
-          {formWidgetModal.visible && <FormWidget preview id={formWidgetModal.row._id} />}
-        </Drawer>
       </Card>
     );
   }

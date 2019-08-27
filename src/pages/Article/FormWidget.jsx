@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Form, Input, Button, message } from 'antd';
 import Editor from '@components/Form/Editor';
-import UploadImageMultiple from '@components/Form/UploadImage';
+import UploadImage from '@components/Form/Upload/Image';
 
 @connect()
 @Form.create()
@@ -119,7 +119,7 @@ class FormWidget extends React.Component {
                 message: '请上传文章封面',
               },
             ],
-          })(<UploadImageMultiple multiple={true} />)}
+          })(<UploadImage multiple={true} />)}
         </Form.Item>
         <Form.Item {...formItemLayout}>
           <Button type="primary" htmlType="submit">

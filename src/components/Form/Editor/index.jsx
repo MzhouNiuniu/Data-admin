@@ -5,6 +5,15 @@ import propTypes from 'prop-types';
 import BraftEditor from 'braft-editor';
 import request from '@/utils/request';
 
+function extractFirstPicFromBraft(editor) {
+  const mediaList = editor.getFinderInstance().getItems();
+  const firstImg = mediaList.find(item => item.type === 'IMAGE');
+  if (!firstImg) {
+    return null;
+  }
+  return firstImg.url;
+}
+
 export default class Editor extends React.Component {
   static propTypes = {
     disabled: propTypes.bool,
@@ -19,9 +28,20 @@ export default class Editor extends React.Component {
     onChange() {},
   };
 
+  editor = null;
   state = {
     isInit: false,
     editorState: BraftEditor.createEditorState(this.props.value),
+  };
+  getMediaList = () => {
+    return this.editor.getFinderInstance().getItems();
+  };
+  getFirstImage = () => {
+    const firstImg = this.getMediaList().find(item => item.type === 'IMAGE');
+    if (!firstImg) {
+      return null;
+    }
+    return firstImg.url;
   };
 
   handleChange = editorState => {
@@ -70,6 +90,7 @@ export default class Editor extends React.Component {
     return (
       <div className="braft-editor">
         <BraftEditor
+          ref={ref => (this.editor = ref)}
           {...this.props}
           readOnly={this.props.disabled}
           value={editorState}

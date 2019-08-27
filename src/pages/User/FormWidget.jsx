@@ -2,7 +2,7 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import UploadImageMultiple from '@components/Form/UploadImage';
+import UploadImage from '@components/Form/Upload/Image';
 import { Form, Input, Button, message, Icon } from 'antd';
 
 @connect()
@@ -85,7 +85,7 @@ class FormWidget extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="头像" className="mb-6">
-          {form.getFieldDecorator('avatar')(<UploadImageMultiple />)}
+          {form.getFieldDecorator('avatar')(<UploadImage />)}
         </Form.Item>
         <Form.Item label="账号">
           {form.getFieldDecorator('userName', {

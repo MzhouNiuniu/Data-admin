@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip } from 'antd';
 import FormWidget from './FormWidget';
+import constant from '@constant';
 
 @Form.create({
   name: 'search',
@@ -51,14 +52,6 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
-  dict = {
-    status: {
-      '0': '未审核',
-      '1': '通过',
-      '2': '未通过',
-    },
-  };
-
   columns = [
     {
       title: '姓名',
@@ -93,10 +86,6 @@ class BaseCrudList extends React.Component {
     {
       title: '审核状态',
       dataIndex: 'status',
-    },
-    {
-      title: '创建人',
-      dataIndex: 'author.userName',
     },
     {
       title: '创建时间',
@@ -175,7 +164,7 @@ class BaseCrudList extends React.Component {
     }
 
     row._status = row.status;
-    row.status = this.dict.status[row.status] || row.status;
+    row.status = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 
@@ -350,10 +339,10 @@ class BaseCrudList extends React.Component {
           onChange={this.handleTableChange}
         />
         <Drawer
+          placement="right"
           title="查看详情"
           width={900}
           destroyOnClose
-          maskClosable={false}
           visible={formWidgetModal.visible}
           onClose={this.handleClosePreviewModal}
         >

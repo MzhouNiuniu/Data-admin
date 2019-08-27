@@ -2,9 +2,8 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Form, Input, Button, message, Select } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import Editor from '@components/Form/Editor';
-import constant from '@constant';
 
 @connect()
 @Form.create()
@@ -39,7 +38,7 @@ class FormWidget extends React.Component {
       const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
-          type: 'news/create',
+          type: 'professionCase/create',
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
@@ -50,7 +49,7 @@ class FormWidget extends React.Component {
         });
       } else {
         dispatch({
-          type: 'news/update',
+          type: 'professionCase/update',
           id: this.props.id,
           payload: {
             id: this.props.id,
@@ -71,7 +70,7 @@ class FormWidget extends React.Component {
     if (this.props.id) {
       const { dispatch } = this.props;
       dispatch({
-        type: 'news/detail',
+        type: 'professionCase/detail',
         payload: this.props.id,
       }).then(res => {
         const formData = res.data && res.data[0];
@@ -99,24 +98,6 @@ class FormWidget extends React.Component {
               },
             ],
           })(<Input placeholder="请输入标题" />)}
-        </Form.Item>
-        <Form.Item label="类型">
-          {form.getFieldDecorator('type', {
-            rules: [
-              {
-                required: true,
-                message: '请选择类型',
-              },
-            ],
-          })(
-            <Select placeholder="请选择类型" style={{ width: '160px' }}>
-              {constant.news.type.map(item => (
-                <Select.Option key={item.value} value={item.value}>
-                  {item.label}
-                </Select.Option>
-              ))}
-            </Select>,
-          )}
         </Form.Item>
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {

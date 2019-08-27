@@ -4,7 +4,6 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Drawer } from 'antd';
 import FormWidget from './FormWidget';
-import constant from '@constant';
 
 @Form.create({
   name: 'search',
@@ -52,15 +51,20 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
+  dict = {
+    status: {
+      '0': '未审核',
+      '1': '通过',
+      '2': '未通过',
+    },
+  };
+
   columns = [
     {
       width: 120,
       title: '头像',
       dataIndex: 'photos',
       render(text) {
-        if (!text) {
-          return <p>暂未设置</p>;
-        }
         return <img className="w100-max" src={text} alt="" />;
       },
     },
@@ -73,12 +77,32 @@ class BaseCrudList extends React.Component {
       dataIndex: 'sex',
     },
     {
-      title: '个人简介',
-      dataIndex: 'current',
+      title: '学历',
+      dataIndex: 'education',
     },
     {
-      title: '研究方向',
-      dataIndex: 'direction',
+      title: '学位',
+      dataIndex: 'degree',
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'mailbox',
+    },
+    {
+      title: '专家类型',
+      dataIndex: 'experType',
+    },
+    {
+      title: '擅长领域',
+      dataIndex: 'speciality',
+    },
+    {
+      title: '审核状态',
+      dataIndex: 'status',
+    },
+    {
+      title: '创建人',
+      dataIndex: 'author.userName',
     },
     {
       title: '创建时间',
@@ -91,18 +115,9 @@ class BaseCrudList extends React.Component {
         const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
+            <Button onClick={() => this.props.history.push('/Demo/ExpertPreview/' + row._id)}>
+              TEST前台查看
+            </Button>
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
             <span>&emsp;</span>
             <Button type="primary" onClick={() => this.handleEditItem(row)}>
@@ -112,6 +127,18 @@ class BaseCrudList extends React.Component {
             <Button type="danger" onClick={() => this.handleDelItem([row])}>
               删除
             </Button>
+            {status === '0' && (
+              <>
+                <span>&emsp;</span>
+                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
+                  审核通过
+                </Button>
+                <span>&emsp;</span>
+                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
+                  审核不通过
+                </Button>
+              </>
+            )}
           </>
         );
       },
@@ -157,7 +184,7 @@ class BaseCrudList extends React.Component {
     }
 
     row._status = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.status = this.dict.status[row.status] || row.status;
     return row;
   };
 

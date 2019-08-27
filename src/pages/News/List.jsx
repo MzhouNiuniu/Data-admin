@@ -3,6 +3,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
+import constant from '@constant';
 
 @Form.create({
   name: 'search',
@@ -50,27 +51,30 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
-  dict = {
-    status: {
-      '0': '未审核',
-      '1': '通过',
-      '2': '未通过',
-    },
-  };
-
   columns = [
+    {
+      width: 120,
+      title: '封面',
+      dataIndex: 'photos',
+      render(text) {
+        if (!text) {
+          return <p>暂未设置</p>;
+        }
+        return <img className="w100-max" src={text} alt="" />;
+      },
+    },
     {
       width: 260,
       title: '标题',
       dataIndex: 'title',
     },
     {
-      title: '审核状态',
-      dataIndex: 'status',
+      title: '类型',
+      dataIndex: '_id',
     },
     {
-      title: '创建人',
-      dataIndex: 'author.userName',
+      title: '审核状态',
+      dataIndex: 'status',
     },
     {
       title: '创建时间',
@@ -143,7 +147,7 @@ class BaseCrudList extends React.Component {
     }
 
     row._status = row.status;
-    row.status = this.dict.status[row.status] || row.status;
+    row.status = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 

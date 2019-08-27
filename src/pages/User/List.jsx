@@ -60,11 +60,11 @@ class UserList extends React.Component {
     },
     {
       width: 100,
-      title: '用户头像',
+      title: '头像',
       dataIndex: 'avatar',
       render: (text, row, index) => {
-        if (!row.avatar) {
-          return <p>暂无头像</p>;
+        if (!text) {
+          return <p>暂未设置</p>;
         }
         return <img src={row.avatar} width="100%" />;
       },
