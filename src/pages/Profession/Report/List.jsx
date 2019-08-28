@@ -2,7 +2,7 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import LinkButton from '@components/LinkButton';
@@ -34,6 +34,19 @@ class SearchForm extends React.Component {
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
+          <Form.Item label="类型">
+            {form.getFieldDecorator('type', {
+              initialValue: 0,
+            })(
+              <Select placeholder="请选择类型" className="w160px" allowClear={true}>
+                {constant.profession.report.type.map(item => (
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>,
+            )}
+          </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               查询
@@ -55,22 +68,22 @@ class BaseCrudList extends React.Component {
     {
       width: 90,
       title: '封面',
-      dataIndex: 'photos',
+      dataIndex: 'cover',
       render(text) {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
         return <img className="max-width-100" src={text} alt="" />;
       },
     },
     {
-      width: 260,
+      width: 220,
       title: '标题',
-      dataIndex: 'title',
+      dataIndex: 'name',
     },
     {
       title: '类型',
-      dataIndex: '_id',
+      dataIndex: 'cnType',
     },
     {
       title: '审核状态',
@@ -132,9 +145,7 @@ class BaseCrudList extends React.Component {
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    if (row.avatar) {
-      row.avatar = row.avatar.split(',')[0];
-    }
+    row.cnType = constant.profession.report.typeMap[row.type] || row.status;
     row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };

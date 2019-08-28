@@ -2,9 +2,10 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Tooltip } from 'antd';
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
+import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
 
 @Form.create({
@@ -53,13 +54,34 @@ class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
-      width: 260,
-      title: '标题',
-      dataIndex: 'title',
+      width: 90,
+      title: '封面',
+      dataIndex: 'cover',
+      render(text) {
+        if (!text) {
+          return '暂未设置';
+        }
+        return <img className="max-width-100" src={text} alt="" />;
+      },
     },
     {
-      title: '类型',
-      dataIndex: '_id',
+      width: 220,
+      title: '标题',
+      dataIndex: 'name',
+    },
+    {
+      width: 240,
+      title: '简介',
+      dataIndex: 'brief',
+      render(text) {
+        return (
+          <Tooltip title={text}>
+            <span className="one-line-text" style={{ width: '300px' }}>
+              {text}
+            </span>
+          </Tooltip>
+        );
+      },
     },
     {
       title: '审核状态',
@@ -79,6 +101,12 @@ class BaseCrudList extends React.Component {
               row={row}
               api="/a/expert/updateStatusById"
               status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/a/organization/stickById"
+              status={row.stick}
               finallyCallback={this.loadDataSource}
             />
             <LinkButton type="primary" to={`Form/${row._id}`}>
@@ -121,12 +149,7 @@ class BaseCrudList extends React.Component {
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    if (row.avatar) {
-      row.avatar = row.avatar.split(',')[0];
-    }
-
-    row.cnStatus = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 

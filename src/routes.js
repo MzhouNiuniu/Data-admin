@@ -44,30 +44,6 @@ module.exports = [
           },
         ],
       },
-
-      /* 文章管理 */
-      {
-        path: '/Article',
-        name: 'Article',
-        routes: [
-          {
-            path: 'List',
-            name: 'List',
-            component: './Article/List',
-          },
-          {
-            path: 'Form',
-            name: 'Form',
-            component: './Article/Form',
-          },
-          {
-            hideInMenu: true,
-            path: 'Form/:id',
-            name: 'FormEdit',
-            component: './Article/Form',
-          },
-        ],
-      },
       /* 用户管理 */
       {
         path: '/User',

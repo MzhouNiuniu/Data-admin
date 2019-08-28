@@ -64,7 +64,7 @@ class UserList extends React.Component {
       dataIndex: 'avatar',
       render: (text, row, index) => {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
         return <img src={row.avatar} width="100%" />;
       },

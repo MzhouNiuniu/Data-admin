@@ -18,11 +18,13 @@ class Area extends React.Component {
     disabled: false,
     onChange() {},
   };
+
   state = {
     isInit: false,
     options: [],
     area: [],
     address: '',
+    addressTouched: false,
   };
 
   checkIsLeaf(properties) {
@@ -52,9 +54,9 @@ class Area extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // 初始化
     if (!this.state.isInit && this.props.value && this.props.value[0]) {
-      const { value } = this.props;
       this.setState({
         isInit: true,
+        addressTouched: true,
       });
       this.getOptionsByValue(this.props.value).then(options => {
         this.setState(
@@ -118,6 +120,7 @@ class Area extends React.Component {
     this.setState(
       {
         address: e.currentTarget.value,
+        addressTouched: true,
       },
       this.setValue,
     );
@@ -127,6 +130,7 @@ class Area extends React.Component {
     /**
      * 数据格式：[[省、市、区],详细地址]
      * */
+    if (!this.state.addressTouched) return;
     if (this.state.area.length === 0 || !this.state.address) {
       this.props.onChange([]);
       return;

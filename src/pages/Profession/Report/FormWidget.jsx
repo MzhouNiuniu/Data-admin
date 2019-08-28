@@ -34,9 +34,7 @@ class FormWidget extends React.Component {
         return;
       }
       // 提取图片
-      const firstImg = this.editor.getFirstImage();
-      alert('第一张图片，src = ' + firstImg);
-
+      formData.cover = this.editor.getFirstImage();
       const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
@@ -91,18 +89,20 @@ class FormWidget extends React.Component {
     const { form } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="标题">
-          {form.getFieldDecorator('title', {
-            rules: [
-              {
-                required: true,
-                message: '请输入标题',
-              },
-            ],
-          })(<Input placeholder="请输入标题" />)}
-        </Form.Item>
         <Row>
-          <Col span={4}>
+          <Col span={19}>
+            <Form.Item label="标题">
+              {form.getFieldDecorator('name', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入标题',
+                  },
+                ],
+              })(<Input placeholder="请输入标题" />)}
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
             <Form.Item label="类型">
               {form.getFieldDecorator('type', {
                 rules: [
@@ -122,9 +122,11 @@ class FormWidget extends React.Component {
               )}
             </Form.Item>
           </Col>
-          <Col span={5} offset={1}>
+        </Row>
+        <Row>
+          <Col span={4}>
             <Form.Item label="研究人">
-              {form.getFieldDecorator('name', {
+              {form.getFieldDecorator('human', {
                 rules: [
                   {
                     required: true,
@@ -134,7 +136,7 @@ class FormWidget extends React.Component {
               })(<Input placeholder="请输入研究人" />)}
             </Form.Item>
           </Col>
-          <Col span={8} offset={1}>
+          <Col span={19} offset={1}>
             <Form.Item label="研究人所属机构">
               {form.getFieldDecorator('organization', {
                 rules: [
@@ -147,6 +149,16 @@ class FormWidget extends React.Component {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label="简介">
+          {form.getFieldDecorator('brief', {
+            rules: [
+              {
+                required: true,
+                message: '请输入简介',
+              },
+            ],
+          })(<Input.TextArea placeholder="请输入简介" />)}
+        </Form.Item>
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {
             rules: [
@@ -158,7 +170,7 @@ class FormWidget extends React.Component {
           })(<Editor ref={ref => (this.editor = ref)} placeholder="请输入内容" />)}
         </Form.Item>
         <Form.Item label="附件">
-          {form.getFieldDecorator('attachment')(<UploadFile multiple={true} />)}
+          {form.getFieldDecorator('accessory')(<UploadFile multiple={true} />)}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">

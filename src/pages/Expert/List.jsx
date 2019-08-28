@@ -60,7 +60,7 @@ class BaseCrudList extends React.Component {
       dataIndex: 'photos',
       render(text) {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
         return <img className="max-width-100" src={text} alt="" />;
       },

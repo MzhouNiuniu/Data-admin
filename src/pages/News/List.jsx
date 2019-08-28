@@ -37,7 +37,7 @@ class SearchForm extends React.Component {
           </Form.Item>
           <Form.Item label="类型">
             {form.getFieldDecorator('type', {
-              initialValue: '0',
+              initialValue: 0,
             })(
               <Select placeholder="请选择类型" className="w160px" allowClear={true}>
                 {constant.news.type.map(item => (
@@ -72,13 +72,13 @@ class BaseCrudList extends React.Component {
       dataIndex: 'cover',
       render(text) {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
         return <img className="max-width-100" src={text} alt="" />;
       },
     },
     {
-      width: 260,
+      width: 220,
       title: '标题',
       dataIndex: 'title',
     },

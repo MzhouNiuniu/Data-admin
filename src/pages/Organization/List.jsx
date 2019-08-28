@@ -71,7 +71,7 @@ class BaseCrudList extends React.Component {
       },
     },
     {
-      width: 300,
+      width: 240,
       title: '简介',
       dataIndex: 'intro',
       render(text) {

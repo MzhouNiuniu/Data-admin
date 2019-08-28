@@ -28,19 +28,19 @@ export default {
     type: [
       {
         label: '行业动态',
-        value: '0',
+        value: 0,
       },
       {
         label: '智库新闻',
-        value: '1',
+        value: 1,
       },
       {
         label: '智库动态',
-        value: '2',
+        value: 2,
       },
       {
         label: '项目动态',
-        value: '3',
+        value: 3,
       },
     ],
   },
@@ -55,36 +55,40 @@ export default {
     type: [
       {
         label: '政策法规',
-        value: '0',
+        value: 0,
       },
       {
         label: '指南标准',
-        value: '1',
+        value: 1,
       },
       {
         label: '国家性规范文件',
-        value: '2',
+        value: 2,
       },
       {
         label: '地方规范文件',
-        value: '3',
+        value: 3,
       },
       {
         label: '部门规范文件',
-        value: '4',
+        value: 4,
       },
     ],
   },
   profession: {
     report: {
+      typeMap: {
+        '0': '专题报告',
+        '1': '定期报告',
+      },
       type: [
         {
           label: '专题报告',
-          value: '专题报告',
+          value: 0,
         },
         {
           label: '定期报告',
-          value: '定期报告',
+          value: 1,
         },
       ],
     },
