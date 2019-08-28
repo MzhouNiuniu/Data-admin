@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
 import FormWidget from './FormWidget';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -88,9 +89,9 @@ class ArticleList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            <Button type="primary" href={`Form/${row._id}`}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="primary" onClick={() => this.openItemEditModal(row)}>
               此页编辑
@@ -168,10 +169,6 @@ class ArticleList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   openItemEditModal = row => {
@@ -268,7 +265,7 @@ class ArticleList extends React.Component {
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
-          <Button onClick={this.handleAddItem}>添加文章</Button>
+          <LinkButton to="Form"> 添加文章 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

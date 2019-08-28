@@ -6,6 +6,7 @@ import { Card, Table, Button, Form, Input, message, Modal, Upload, Select, Col }
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -39,7 +40,7 @@ class SearchForm extends React.Component {
           </Form.Item>
           <Form.Item label="类型">
             {form.getFieldDecorator('type', {
-              initialValue: 0,
+              initialValue: '0',
             })(
               <Select placeholder="请选择类型" className="w160px" allowClear={true}>
                 {constant.news.type.map(item => (
@@ -113,9 +114,9 @@ class BaseCrudList extends React.Component {
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
-            <Button type="primary" href={`Form/${row._id}`}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="danger" onClick={() => this.handleDelItem([row])}>
               删除
@@ -187,10 +188,6 @@ class BaseCrudList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   handleDelItem = rows => {
@@ -278,9 +275,7 @@ class BaseCrudList extends React.Component {
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
-          <Button type="primary" onClick={this.handleAddItem}>
-            添加新闻
-          </Button>
+          <LinkButton to="Form"> 添加新闻 </LinkButton>
           <span>&emsp;</span>
           <Upload
             showUploadList={false}

@@ -52,13 +52,21 @@ class Area extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // 初始化
     if (!this.state.isInit && this.props.value && this.props.value[0]) {
+      const { value } = this.props;
       this.setState({
         isInit: true,
       });
       this.getOptionsByValue(this.props.value).then(options => {
-        this.setState({
-          options,
-        });
+        this.setState(
+          {
+            options,
+          },
+          () => {
+            if (!this.props.disabled) {
+              this.setValue();
+            }
+          },
+        );
       });
     }
   }
@@ -117,9 +125,9 @@ class Area extends React.Component {
 
   setValue = () => {
     /**
-     * 约定，以数组的形式
+     * 数据格式：[[省、市、区],详细地址]
      * */
-    if (this.state.area.length === 0) {
+    if (this.state.area.length === 0 || !this.state.address) {
       this.props.onChange([]);
       return;
     }

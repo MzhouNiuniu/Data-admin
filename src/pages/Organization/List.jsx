@@ -7,6 +7,7 @@ import FormWidget from './FormWidget';
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -113,9 +114,9 @@ class BaseCrudList extends React.Component {
             />
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
             <span>&emsp;</span>
-            <Button type="primary" href={`Form/${row._id}`}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="danger" onClick={() => this.handleDelItem([row])}>
               删除
@@ -191,10 +192,6 @@ class BaseCrudList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   handlePreviewItem = row => {
@@ -293,9 +290,7 @@ class BaseCrudList extends React.Component {
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
-          <Button type="primary" onClick={this.handleAddItem}>
-            添加机构
-          </Button>
+          <LinkButton to="Form"> 添加机构 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

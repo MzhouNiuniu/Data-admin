@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
 import FormWidget from './FormWidget';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -161,10 +162,6 @@ class UserList extends React.Component {
     });
   };
 
-  handleAddItem = () => {
-    this.props.history.push('Form');
-  };
-
   openItemEditModal = row => {
     this.state.editModal.visible = true;
     this.state.editModal.row = row;
@@ -260,7 +257,7 @@ class UserList extends React.Component {
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
-          <Button onClick={this.handleAddItem}>添加用户</Button>
+          <LinkButton to="Form">添加用户</LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
