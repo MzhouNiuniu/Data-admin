@@ -59,7 +59,7 @@ class FormWidget extends React.Component {
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose();
@@ -74,7 +74,7 @@ class FormWidget extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose(formData); // 编辑时将最新数据发送出去

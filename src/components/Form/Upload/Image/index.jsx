@@ -29,7 +29,8 @@ class UploadImage extends React.Component {
   };
 
   beforeUpload = file => {
-    return file.type === 'image/jpeg' || file.type === 'image/png';
+    // 在回显时获取不到文件type，所有简单认为如果没有type也是图片..
+    return file.type === undefined || file.type === 'image/jpeg' || file.type === 'image/png';
   };
 
   render() {

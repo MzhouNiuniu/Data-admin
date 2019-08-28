@@ -85,15 +85,20 @@ export default class UploadImage extends React.Component {
   // customRequest = () => { }
 
   getLocaleFileList() {
-    const { multiple } = this.props;
+    const { multiple, valueType } = this.props;
     let { value } = this.props;
     if (!value) {
       return [];
     }
 
     // 修复将数据改为字符串之后的问题
-    if (typeof value === 'string') {
+    if (valueType === 'string') {
       value = value.split(',').map(item => ({
+        name: item,
+        url: item,
+      }));
+    } else if (valueType === 'array') {
+      value = value.map(item => ({
         name: item,
         url: item,
       }));

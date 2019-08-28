@@ -189,7 +189,7 @@ class UserList extends React.Component {
           payload: rows.map(item => item.id),
         }).then(res => {
           if (res.code !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           message.success(res.message);

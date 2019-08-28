@@ -6,6 +6,12 @@ import aboutService from '@services/system/about';
 
 @Form.create()
 class About extends React.Component {
+  state = {
+    disabled: false,
+    multipleItemQueueLength: {
+      accordion: 0,
+    },
+  };
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
@@ -16,9 +22,9 @@ class About extends React.Component {
       if (!form.isFieldsTouched()) {
         return;
       }
-      aboutService.create(formData).then(res => {
+      aboutService.update(formData).then(res => {
         if (res.status !== 200) {
-          message.warn(res.message);
+          message.error(res.message);
           return;
         }
         message.success(res.message);
@@ -26,7 +32,19 @@ class About extends React.Component {
     });
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    aboutService.detail().then(res => {
+      if (res.status !== 200) {
+        message.error(res.message);
+        this.setState({ disabled: true });
+        return;
+      }
+      const formData = res.data;
+      this.state.multipleItemQueueLength.accordion = formData.info.length;
+      this.setState({});
+      this.props.form.setFieldsValue(formData);
+    });
+  }
 
   removeMultipleItem = (fieldName, index, removeItem) => {
     // 更新表单值
@@ -54,7 +72,7 @@ class About extends React.Component {
           style={{ border: '1px solid rgb(217, 217, 217)', borderRadius: '4px' }}
         >
           <Form.Item label="公司名称" {...formItemLayout}>
-            {form.getFieldDecorator('info[' + index + '].name', {
+            {form.getFieldDecorator('info[' + index + '].company', {
               rules: [
                 {
                   required: true,
@@ -64,7 +82,7 @@ class About extends React.Component {
             })(<Input placeholder="请输入公司名称" />)}
           </Form.Item>
           <Form.Item label="公司简介" {...formItemLayout}>
-            {form.getFieldDecorator('info[' + index + '].name2', {
+            {form.getFieldDecorator('info[' + index + '].content', {
               rules: [
                 {
                   required: true,
@@ -86,21 +104,31 @@ class About extends React.Component {
   };
 
   render() {
+    const { disabled, multipleItemQueueLength } = this.state;
     const { form } = this.props;
     return (
       <Card title="关于我们">
         <Form onSubmit={this.handleSubmit} style={{ maxWidth: '1200px' }}>
           <Form.Item label="公司列表">
-            <MultipleItemQueue buttonText="添加公司">{this.renderAccordion}</MultipleItemQueue>
+            <MultipleItemQueue
+              buttonText="添加公司"
+              queueLength={multipleItemQueueLength.accordion}
+            >
+              {this.renderAccordion}
+            </MultipleItemQueue>
           </Form.Item>
           <Form.Item label="资质文件">
-            {form.getFieldDecorator('aptitude')(<UploadImage multiple={true} valueType="array" />)}
+            {form.getFieldDecorator('aptitude')(
+              <UploadImage multiple={true} valueType="array" maxlength={Infinity} />,
+            )}
           </Form.Item>
-          <Form.Item className="text-center" wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit">
-              保存
-            </Button>
-          </Form.Item>
+          {!disabled && (
+            <Form.Item className="text-center" wrapperCol={{ span: 24 }}>
+              <Button type="primary" htmlType="submit">
+                保存
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </Card>
     );

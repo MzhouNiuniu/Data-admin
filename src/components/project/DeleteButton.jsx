@@ -20,7 +20,7 @@ function onConfirm(props, status) {
     },
   }).then(res => {
     if (res.status !== 200) {
-      message.warn(res.message);
+      message.error(res.message);
       return;
     }
     message.success(res.message);
