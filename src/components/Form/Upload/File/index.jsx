@@ -4,8 +4,14 @@ import propTypes from 'prop-types';
 import { Upload, Icon, Button } from 'antd';
 
 /**
- * 原来在服务端存储：{name:'f1',url:'xxx.com/xxx.png'} 或者 [{name:'f1',url:'xxx.com/xxx.png'}]
- * 后来修改为存储字符串：xxx.com/xxx.png，多个以逗号分隔 xxx.com/xxx.png,xxx.com/xxx.png
+ * 服务端存储格式：{name:'f1',url:'xxx.com/xxx.png'} 或者 [{name:'f1',url:'xxx.com/xxx.png'}]
+ * 2019年8月27日
+ * 修改为存储字符串，格式为：xxx.com/xxx.png，多个以逗号分隔 xxx.com/xxx.png,xxx.com/xxx.png
+ * 2019年8月28日
+ * add propTypes.valueType
+ * string：xxx.com/xxx.png xxx.com/xxx.png,xxx.com/xxx.png
+ * array：xxx.com/xxx.png [xxx.com/xxx.png,xxx.com/xxx.png]
+ * raw：{name:'f1',url:'xxx.com/xxx.png'} [{name:'f1',url:'xxx.com/xxx.png'}]
  * */
 export default class UploadImage extends React.Component {
   static propTypes = {
@@ -13,6 +19,7 @@ export default class UploadImage extends React.Component {
     disabled: propTypes.bool,
     value: propTypes.oneOfType([propTypes.string, propTypes.object, propTypes.array]),
     multiple: propTypes.bool,
+    valueType: propTypes.oneOf(['string', 'array', 'raw']),
     maxlength: propTypes.number,
     action: propTypes.string,
     listType: propTypes.string,
@@ -26,6 +33,7 @@ export default class UploadImage extends React.Component {
     useBase64: false,
     disabled: false,
     multiple: false, // 是否可上传多张图片
+    valueType: 'string',
     action: '/api/upload',
     listType: 'picture',
     maxlength: 3,
@@ -129,19 +137,31 @@ export default class UploadImage extends React.Component {
     // 内部改变
     this.isInit = true;
 
-    const { multiple, onChange } = this.props;
+    const { multiple, onChange, valueType } = this.props;
     const { getFileInfo } = this;
     if (!fileList.length) {
       onChange(undefined);
       return;
     }
 
+    let value = null;
     // 将数据改为字符串
     if (!multiple) {
-      onChange(getFileInfo(fileList[0]).url);
+      value = getFileInfo(fileList[0]);
+      if (valueType !== 'raw') {
+        value = value.url;
+      }
     } else {
-      onChange(fileList.map(item => getFileInfo(item).url).join(','));
+      if (valueType === 'raw') {
+        value = fileList.map(item => getFileInfo(item));
+      } else {
+        value = fileList.map(item => getFileInfo(item).url);
+      }
+      if (valueType === 'string') {
+        value = value.join(',');
+      }
     }
+    onChange(value);
   };
 
   /* 是否所有的文件都上传完成 */

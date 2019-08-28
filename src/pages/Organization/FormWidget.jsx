@@ -247,7 +247,7 @@ class FormWidget extends React.Component {
           </Form.Item>
           <Form.Item label="合作经验">
             <MultipleItemQueue
-              disabled={!preview}
+              disabled={preview}
               buttonText="添加合作经验"
               queueLength={multipleItemQueueLength.experience}
             >
