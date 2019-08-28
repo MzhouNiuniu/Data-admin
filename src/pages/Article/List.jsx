@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
 import FormWidget from './FormWidget';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -17,21 +18,19 @@ class SearchForm extends React.Component {
     onSubmit() {},
     onReset() {},
   };
-  state = {
-    onSubmit: e => {
-      this.props.onSubmit(e, this.props.form);
-    },
-    onReset: e => {
-      this.props.onReset(e, this.props.form);
-    },
+
+  onSubmit = e => {
+    this.props.onSubmit(e, this.props.form);
+  };
+  onReset = e => {
+    this.props.onReset(e, this.props.form);
   };
 
   render() {
-    const { onSubmit, onReset } = this.state;
     const { form } = this.props;
     return (
       <div className="search-bar">
-        <Form layout="inline" onSubmit={onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item label="标题查询">
             {form.getFieldDecorator('title')(<Input placeholder="请输入文章标题" />)}
           </Form.Item>
@@ -43,7 +42,7 @@ class SearchForm extends React.Component {
               查询
             </Button>
             <span>&emsp;</span>
-            <Button onClick={onReset}>重置</Button>
+            <Button onClick={this.onReset}>重置</Button>
           </Form.Item>
         </Form>
       </div>
@@ -88,9 +87,9 @@ class ArticleList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            <Button type="primary" href={`Form/${row._id}`}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="primary" onClick={() => this.openItemEditModal(row)}>
               此页编辑
@@ -126,7 +125,7 @@ class ArticleList extends React.Component {
   pagination = JSON.parse(JSON.stringify(this.defaultPagination));
 
   queryParams = {
-    /* 见 SearchForm */
+    /* 见 SearchForm，下面是必填字段 */
   };
 
   state = {
@@ -168,10 +167,6 @@ class ArticleList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   openItemEditModal = row => {
@@ -268,7 +263,7 @@ class ArticleList extends React.Component {
       <Card className="page__list">
         <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
         <div className="operator-bar">
-          <Button onClick={this.handleAddItem}>添加文章</Button>
+          <LinkButton to="Form"> 添加文章 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

@@ -6,6 +6,7 @@ import { Card, Table, Button, Form, Input, message, Modal, Upload, Select, Col }
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -19,27 +20,24 @@ class SearchForm extends React.Component {
     onSubmit() {},
     onReset() {},
   };
-  state = {
-    onSubmit: e => {
-      this.props.onSubmit(e, this.props.form);
-    },
-    onReset: e => {
-      this.props.onReset(e, this.props.form);
-    },
+  onSubmit = e => {
+    this.props.onSubmit(e, this.props.form);
+  };
+  onReset = e => {
+    this.props.onReset(e, this.props.form);
   };
 
   render() {
-    const { onSubmit, onReset } = this.state;
     const { form } = this.props;
     return (
       <div className="search-bar">
-        <Form layout="inline" onSubmit={onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
           <Form.Item label="类型">
             {form.getFieldDecorator('type', {
-              initialValue: 0,
+              initialValue: '0',
             })(
               <Select placeholder="请选择类型" className="w160px" allowClear={true}>
                 {constant.news.type.map(item => (
@@ -55,7 +53,7 @@ class SearchForm extends React.Component {
               查询
             </Button>
             <span>&emsp;</span>
-            <Button onClick={onReset}>重置</Button>
+            <Button onClick={this.onReset}>重置</Button>
           </Form.Item>
         </Form>
       </div>
@@ -66,6 +64,7 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
+  searchForm = null;
   columns = [
     {
       width: 90,
@@ -113,9 +112,9 @@ class BaseCrudList extends React.Component {
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
-            <Button type="primary" href={`Form/${row._id}`}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="danger" onClick={() => this.handleDelItem([row])}>
               删除
@@ -146,11 +145,6 @@ class BaseCrudList extends React.Component {
   };
   pagination = JSON.parse(JSON.stringify(this.defaultPagination));
 
-  queryParams = {
-    /* 见 SearchForm */
-    keyWords: '',
-    type: '',
-  };
   state = {
     dataSource: [],
     selection: [],
@@ -164,14 +158,14 @@ class BaseCrudList extends React.Component {
   };
 
   loadDataSource = (page, size) => {
-    const { pagination, queryParams } = this;
+    const { pagination, searchForm } = this;
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
     const params = {
       page,
       limit: size,
-      ...queryParams,
+      ...searchForm.getFieldsValue(),
     };
     dispatch({
       type: 'news/list',
@@ -187,10 +181,6 @@ class BaseCrudList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   handleDelItem = rows => {
@@ -229,7 +219,6 @@ class BaseCrudList extends React.Component {
       if (err) {
         return;
       }
-      Object.assign(this.queryParams, formData);
       const { defaultPagination } = this;
       this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
     });
@@ -238,15 +227,6 @@ class BaseCrudList extends React.Component {
   handleSearchReset = (e, form) => {
     form.resetFields();
     this.handleSearch(e, form);
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    const otherParams = {};
-    if (sorter.field) {
-      otherParams['sort___' + sorter.field] = sorter.order === 'ascend' ? 'asc' : 'desc';
-    }
-    Object.assign(this.queryParams, otherParams);
-    this.loadDataSource(pagination.current, pagination.pageSize);
   };
 
   handleUploadTplFile = info => {
@@ -276,11 +256,13 @@ class BaseCrudList extends React.Component {
 
     return (
       <Card className="page__list">
-        <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
+        <SearchForm
+          ref={ref => (this.searchForm = ref)}
+          onSubmit={this.handleSearch}
+          onReset={this.handleSearchReset}
+        />
         <div className="operator-bar">
-          <Button type="primary" onClick={this.handleAddItem}>
-            添加新闻
-          </Button>
+          <LinkButton to="Form"> 添加新闻 </LinkButton>
           <span>&emsp;</span>
           <Upload
             showUploadList={false}
@@ -297,7 +279,7 @@ class BaseCrudList extends React.Component {
           dataSource={dataSource}
           {...config}
           pagination={pagination}
-          onChange={this.handleTableChange}
+          onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
       </Card>
     );
