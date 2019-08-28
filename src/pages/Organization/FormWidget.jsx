@@ -202,15 +202,15 @@ class FormWidget extends React.Component {
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit} style={{ maxWidth: '1200px' }}>
         <Fieldset disabled={preview}>
-          <Form.Item label="姓名">
+          <Form.Item label="机构名称">
             {form.getFieldDecorator('name', {
               rules: [
                 {
                   required: true,
-                  message: '请输入姓名',
+                  message: '请输入机构名称',
                 },
               ],
-            })(Fieldset.Field(<Input placeholder="请输入姓名" />))}
+            })(Fieldset.Field(<Input placeholder="请输入机构名称" />))}
           </Form.Item>
           <Form.Item label="机构网站">
             {form.getFieldDecorator('website', {

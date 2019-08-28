@@ -261,6 +261,11 @@ export function loadRoutes() {
           icon: 'smile',
           routes: [
             {
+              path: 'About',
+              name: 'About',
+              icon: 'smile',
+            },
+            {
               path: 'Page',
               name: 'Page',
               icon: 'smile',

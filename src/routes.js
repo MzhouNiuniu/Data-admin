@@ -254,6 +254,11 @@ module.exports = [
         name: 'System',
         routes: [
           {
+            path: 'About',
+            name: 'About',
+            component: './System/About',
+          },
+          {
             path: 'Page',
             name: 'Page',
             component: './System/Page',

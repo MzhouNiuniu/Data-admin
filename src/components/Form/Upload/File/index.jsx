@@ -9,6 +9,7 @@ import { Upload, Icon, Button } from 'antd';
  * */
 export default class UploadImage extends React.Component {
   static propTypes = {
+    useBase64: propTypes.bool,
     disabled: propTypes.bool,
     value: propTypes.oneOfType([propTypes.string, propTypes.object, propTypes.array]),
     multiple: propTypes.bool,
@@ -22,6 +23,7 @@ export default class UploadImage extends React.Component {
     beforeUpload: propTypes.func,
   };
   static defaultProps = {
+    useBase64: false,
     disabled: false,
     multiple: false, // 是否可上传多张图片
     action: '/api/upload',
@@ -40,10 +42,39 @@ export default class UploadImage extends React.Component {
   };
 
   isInit = false;
-  state = {
-    value: this.props.value,
-    fileList: this.getLocaleFileList(),
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value,
+      fileList: this.getLocaleFileList(),
+    };
+    if (this.props.useBase64) {
+      const getBase64 = (file, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(file);
+      };
+      this.customRequest = function({ file, onSuccess }) {
+        setTimeout(() => {
+          getBase64(file, function(base64) {
+            onSuccess({
+              name: file.name,
+              status: 'done',
+              url: base64,
+            });
+          });
+        });
+        return {
+          abort() {
+            console.log('upload progress is aborted.');
+          },
+        };
+      };
+    }
+  }
+
+  // customRequest = () => { }
 
   getLocaleFileList() {
     const { multiple } = this.props;
@@ -153,6 +184,7 @@ export default class UploadImage extends React.Component {
         listType={listType}
         action={action}
         fileList={fileList}
+        customRequest={this.customRequest}
         beforeUpload={beforeUpload}
         onPreview={onPreview}
         onChange={this.handleChange}

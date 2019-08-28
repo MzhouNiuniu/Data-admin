@@ -18,7 +18,7 @@ const Auth = props => {
   const { routeMap } = global;
   const { currentUser, authRouteMap } = user;
 
-  const isLogin = currentUser && currentUser.id;
+  const isLogin = currentUser && currentUser._id;
   if (!isLogin) {
     return <Redirect to="/Login" />;
   }

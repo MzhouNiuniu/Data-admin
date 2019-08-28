@@ -2,7 +2,7 @@ import './Form.scss';
 import React from 'react';
 import { connect } from 'dva';
 
-import { Card, message } from 'antd';
+import { Card, Form, message } from 'antd';
 import FormWidget from './FormWidget';
 
 class ArticleForm extends React.Component {
@@ -31,7 +31,9 @@ class ArticleForm extends React.Component {
     const { id } = this.state;
     return (
       <Card>
-        <FormWidget id={id} onClose={this.handleFormClose} onCancel={this.handleFormCancel} />
+        <div className="max-width-900px">
+          <FormWidget id={id} onClose={this.handleFormClose} onCancel={this.handleFormCancel} />
+        </div>
       </Card>
     );
   }

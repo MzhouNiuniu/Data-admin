@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
 import constant from '@constant';
+import AuditButton from '@components/project/AuditButton';
 
 @Form.create({
   name: 'search',
@@ -63,7 +64,7 @@ class BaseCrudList extends React.Component {
     },
     {
       title: '审核状态',
-      dataIndex: 'status',
+      dataIndex: 'cnStatus',
     },
     {
       title: '创建时间',
@@ -73,22 +74,15 @@ class BaseCrudList extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
-        const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <AuditButton
+              row={row}
+              api="/a/expert/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <Button type="primary" href={`Form/${row._id}`}>
               编辑
             </Button>
             <span>&emsp;</span>
@@ -135,7 +129,7 @@ class BaseCrudList extends React.Component {
       row.avatar = row.avatar.split(',')[0];
     }
 
-    row._status = row.status;
+    row.cnStatus = row.status;
     row.status = constant.public.status.audit[row.status] || row.status;
     return row;
   };
@@ -168,39 +162,6 @@ class BaseCrudList extends React.Component {
 
   handleAddItem = () => {
     this.props.history.push('Form');
-  };
-
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row._id);
-  };
-
-  /**
-   * @param {number} status - 状态，1通过 2未通过
-   * */
-  handleAuditItem = (row, status) => {
-    Modal.confirm({
-      title: status === 1 ? '通过？' : '不通过',
-      content: row.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'professionCase/audit',
-          payload: {
-            id: row._id,
-            status,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.warn(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
-      },
-    });
   };
 
   handleDelItem = rows => {

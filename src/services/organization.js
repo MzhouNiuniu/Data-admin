@@ -1,12 +1,5 @@
 import request from '@/utils/request';
 
-export function audit(payload) {
-  return request('/a/organization/updateStatusById', {
-    method: 'post',
-    data: payload,
-  });
-}
-
 export function update(payload) {
   return request('/a/organization/updateById', {
     method: 'post',

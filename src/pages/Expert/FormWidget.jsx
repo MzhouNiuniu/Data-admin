@@ -5,7 +5,6 @@ import { connect } from 'dva';
 import { Form, Input, Button, message, Select } from 'antd';
 import constant from '@constant';
 import UploadImage from '@components/Form/Upload/Image';
-import Fieldset from '@components/Form/Fieldset';
 
 @connect()
 @Form.create()
@@ -122,7 +121,7 @@ class FormWidget extends React.Component {
                 },
               ],
             })(
-              <Select placeholder="请选择性别" style={{ width: '160px' }}>
+              <Select placeholder="请选择性别" className="w160px">
                 {constant.public.sex.map(item => (
                   <Select.Option key={item.value} value={item.value}>
                     {item.label}
@@ -140,7 +139,7 @@ class FormWidget extends React.Component {
                   message: '请输入个人简介',
                 },
               ],
-            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入个人简介" />))}
+            })(<Input.TextArea rows={4} placeholder="请输入个人简介" />)}
           </Form.Item>
           <Form.Item label="个人经历">
             {form.getFieldDecorator('experience', {
@@ -151,7 +150,7 @@ class FormWidget extends React.Component {
                   message: '请输入个人经历',
                 },
               ],
-            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入个人经历" />))}
+            })(<Input.TextArea rows={4} placeholder="请输入个人经历" />)}
           </Form.Item>
           <Form.Item label="研究方向">
             {form.getFieldDecorator('direction', {
@@ -162,7 +161,7 @@ class FormWidget extends React.Component {
                   message: '请输入研究方向',
                 },
               ],
-            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入研究方向" />))}
+            })(<Input.TextArea rows={4} placeholder="请输入研究方向" />)}
           </Form.Item>
           <Form.Item label="研究成果">
             {form.getFieldDecorator('achievement', {
@@ -173,7 +172,7 @@ class FormWidget extends React.Component {
                   message: '请输入研究成果',
                 },
               ],
-            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入研究成果" />))}
+            })(<Input.TextArea rows={4} placeholder="请输入研究成果" />)}
           </Form.Item>
           {!preview && (
             <Form.Item className="text-center" wrapperCol={{ span: 24 }}>

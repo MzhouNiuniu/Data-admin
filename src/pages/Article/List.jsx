@@ -88,7 +88,7 @@ class ArticleList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <Button type="primary" href={`Form/${row._id}`}>
               编辑
             </Button>
             <span>&emsp;</span>
@@ -172,10 +172,6 @@ class ArticleList extends React.Component {
 
   handleAddItem = () => {
     this.props.history.push('Form');
-  };
-
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row.id);
   };
 
   openItemEditModal = row => {

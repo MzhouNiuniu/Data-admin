@@ -2,8 +2,10 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Upload } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Select, Col } from 'antd';
 import constant from '@constant';
+import AuditButton from '@components/project/AuditButton';
+import StickButton from '@components/project/StickButton';
 
 @Form.create({
   name: 'search',
@@ -35,6 +37,19 @@ class SearchForm extends React.Component {
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
+          <Form.Item label="类型">
+            {form.getFieldDecorator('type', {
+              initialValue: 0,
+            })(
+              <Select placeholder="请选择类型" className="w160px" allowClear={true}>
+                {constant.news.type.map(item => (
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>,
+            )}
+          </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               查询
@@ -53,14 +68,14 @@ class SearchForm extends React.Component {
 class BaseCrudList extends React.Component {
   columns = [
     {
-      width: 120,
+      width: 90,
       title: '封面',
-      dataIndex: 'photos',
+      dataIndex: 'cover',
       render(text) {
         if (!text) {
           return <p>暂未设置</p>;
         }
-        return <img className="w100-max" src={text} alt="" />;
+        return <img className="max-width-100" src={text} alt="" />;
       },
     },
     {
@@ -70,11 +85,11 @@ class BaseCrudList extends React.Component {
     },
     {
       title: '类型',
-      dataIndex: '_id',
+      dataIndex: 'cnType',
     },
     {
       title: '审核状态',
-      dataIndex: 'status',
+      dataIndex: 'cnStatus',
     },
     {
       title: '创建时间',
@@ -84,22 +99,21 @@ class BaseCrudList extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
-        const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <AuditButton
+              row={row}
+              api="/a/news/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/a/news/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
+            />
+            <Button type="primary" href={`Form/${row._id}`}>
               编辑
             </Button>
             <span>&emsp;</span>
@@ -134,6 +148,8 @@ class BaseCrudList extends React.Component {
 
   queryParams = {
     /* 见 SearchForm */
+    keyWords: '',
+    type: '',
   };
   state = {
     dataSource: [],
@@ -142,12 +158,8 @@ class BaseCrudList extends React.Component {
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    if (row.avatar) {
-      row.avatar = row.avatar.split(',')[0];
-    }
-
-    row._status = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.cnType = constant.news.typeMap[row.type] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 
@@ -179,39 +191,6 @@ class BaseCrudList extends React.Component {
 
   handleAddItem = () => {
     this.props.history.push('Form');
-  };
-
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row._id);
-  };
-
-  /**
-   * @param {number} status - 状态，1通过 2未通过
-   * */
-  handleAuditItem = (row, status) => {
-    Modal.confirm({
-      title: status === 1 ? '通过？' : '不通过',
-      content: row.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'news/audit',
-          payload: {
-            id: row._id,
-            status,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.warn(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
-      },
-    });
   };
 
   handleDelItem = rows => {

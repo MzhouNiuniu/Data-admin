@@ -5,6 +5,8 @@ import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip } from 'antd';
 import FormWidget from './FormWidget';
 import constant from '@constant';
+import AuditButton from '@components/project/AuditButton';
+import StickButton from '@components/project/StickButton';
 
 @Form.create({
   name: 'search',
@@ -85,7 +87,7 @@ class BaseCrudList extends React.Component {
     },
     {
       title: '审核状态',
-      dataIndex: 'status',
+      dataIndex: 'cnStatus',
     },
     {
       title: '创建时间',
@@ -95,24 +97,23 @@ class BaseCrudList extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
-        const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
+            <AuditButton
+              row={row}
+              api="/a/organization/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/a/organization/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
+            />
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
             <span>&emsp;</span>
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <Button type="primary" href={`Form/${row._id}`}>
               编辑
             </Button>
             <span>&emsp;</span>
@@ -162,9 +163,7 @@ class BaseCrudList extends React.Component {
     if (row.avatar) {
       row.avatar = row.avatar.split(',')[0];
     }
-
-    row._status = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 
@@ -211,38 +210,6 @@ class BaseCrudList extends React.Component {
       formWidgetModal: {
         visible: false,
         row: null,
-      },
-    });
-  };
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row._id);
-  };
-
-  /**
-   * @param {number} status - 状态，1通过 2未通过
-   * */
-  handleAuditItem = (row, status) => {
-    Modal.confirm({
-      title: status === 1 ? '通过？' : '不通过',
-      content: row.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'organization/audit',
-          payload: {
-            id: row._id,
-            status,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.warn(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
       },
     });
   };

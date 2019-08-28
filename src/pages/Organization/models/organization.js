@@ -1,4 +1,4 @@
-import { create, list, detail, update, del, audit } from '@services/organization';
+import { create, list, detail, update, del } from '@services/organization';
 
 export default {
   state: null,
@@ -17,9 +17,6 @@ export default {
     },
     *del({ payload }) {
       return del(payload);
-    },
-    *audit({ payload }) {
-      return audit(payload);
     },
   },
 };

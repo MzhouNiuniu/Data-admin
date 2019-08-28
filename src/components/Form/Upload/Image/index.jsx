@@ -39,6 +39,7 @@ class UploadImage extends React.Component {
       <section>
         <UploadFile
           {...this.props}
+          useBase64={true}
           listType="picture-card"
           uploadBtnRender={() => (
             <div>

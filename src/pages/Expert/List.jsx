@@ -2,9 +2,11 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Drawer, Popconfirm } from 'antd';
 import FormWidget from './FormWidget';
 import constant from '@constant';
+import AuditButton from '@components/project/AuditButton';
+import StickButton from '@components/project/StickButton';
 
 @Form.create({
   name: 'search',
@@ -54,14 +56,14 @@ class SearchForm extends React.Component {
 class BaseCrudList extends React.Component {
   columns = [
     {
-      width: 120,
+      width: 90,
       title: '头像',
       dataIndex: 'photos',
       render(text) {
         if (!text) {
           return <p>暂未设置</p>;
         }
-        return <img className="w100-max" src={text} alt="" />;
+        return <img className="max-width-100" src={text} alt="" />;
       },
     },
     {
@@ -81,6 +83,10 @@ class BaseCrudList extends React.Component {
       dataIndex: 'direction',
     },
     {
+      title: '审核状态',
+      dataIndex: 'cnStatus',
+    },
+    {
       title: '创建时间',
       dataIndex: 'releaseTime',
     },
@@ -88,24 +94,23 @@ class BaseCrudList extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
-        const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
+            <AuditButton
+              row={row}
+              api="/a/expert/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/a/expert/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
+            />
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
             <span>&emsp;</span>
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <Button type="primary" href={`Form/${row._id}`}>
               编辑
             </Button>
             <span>&emsp;</span>
@@ -155,9 +160,7 @@ class BaseCrudList extends React.Component {
     if (row.avatar) {
       row.avatar = row.avatar.split(',')[0];
     }
-
-    row._status = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 
@@ -204,38 +207,6 @@ class BaseCrudList extends React.Component {
       formWidgetModal: {
         visible: false,
         row: null,
-      },
-    });
-  };
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row._id);
-  };
-
-  /**
-   * @param {number} status - 状态，1通过 2未通过
-   * */
-  handleAuditItem = (row, status) => {
-    Modal.confirm({
-      title: status === 1 ? '通过？' : '不通过',
-      content: row.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'expert/audit',
-          payload: {
-            id: row._id,
-            status,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.warn(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
       },
     });
   };
