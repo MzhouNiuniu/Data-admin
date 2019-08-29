@@ -30,6 +30,12 @@ export default {
   'menu.Organization.List': '机构列表',
   'menu.Organization.Form': '添加机构',
   'menu.Organization.FormEdit': '编辑机构',
+
+  'menu.ProjectCooperation': '项目合作',
+  'menu.ProjectCooperation.List': '项目列表',
+  'menu.ProjectCooperation.Form': '项目添加项目',
+  'menu.ProjectCooperation.FormEdit': '编辑项目',
+  
   'menu.Expert': '专家管理',
   'menu.Expert.List': '专家列表',
   'menu.Expert.Form': '添加专家',

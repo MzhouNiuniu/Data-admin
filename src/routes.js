@@ -211,6 +211,23 @@ module.exports = [
           },
         ],
       },
+      /* 项目合作 */
+      {
+        path: '/ProjectCooperation',
+        name: 'ProjectCooperation',
+        routes: [
+          {
+          path: 'List',
+          name: 'List',
+          component: './ProjectCooperation/List',
+          },
+          {
+          path: 'Form',
+          name: 'Form',
+          component: './ProjectCooperation/Form'
+          }
+         ]
+      },
       /* 专家管理 */
       {
         path: '/Expert',

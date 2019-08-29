@@ -198,6 +198,26 @@ export function loadRoutes() {
             },
           ],
         },
+         /* 项目合作 */
+        {
+          path: '/ProjectCooperation',
+          name: 'ProjectCooperation',
+          icon: 'smile',
+          routes: [
+            {
+            path: 'List',
+            name: 'List',
+            icon: 'smile',
+            component: './ProjectCooperation/List',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+              component: './ProjectCooperation/Form'
+            }
+          ]
+        },
         {
           path: '/Expert',
           name: 'Expert',
