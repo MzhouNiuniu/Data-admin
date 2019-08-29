@@ -1,6 +1,4 @@
-import './Form.scss';
 import React from 'react';
-import { connect } from 'dva';
 
 import { Card, message } from 'antd';
 import FormWidget from './FormWidget';

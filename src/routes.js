@@ -44,29 +44,30 @@ module.exports = [
           },
         ],
       },
-      /* 用户管理 */
+      /* 城投数据 */
       {
-        path: '/User',
-        name: 'User',
+        path: '/CityInvest',
+        name: 'CityInvest',
         routes: [
           {
             path: 'List',
             name: 'List',
-            component: './User/List',
+            component: './CityInvest/List',
           },
           {
             path: 'Form',
             name: 'Form',
-            component: './User/Form',
+            component: './CityInvest/Form',
           },
           {
             hideInMenu: true,
             path: 'Form/:id',
             name: 'FormEdit',
-            component: './User/Form',
+            component: './CityInvest/Form',
           },
         ],
       },
+
       /* 新闻管理 */
       {
         path: '/News',
@@ -251,15 +252,26 @@ module.exports = [
         ],
       },
 
-      /* 个人中心 */
+      /* 用户管理 */
       {
-        path: '/Account',
-        name: 'Account',
+        path: '/User',
+        name: 'User',
         routes: [
           {
-            path: 'Setting',
-            name: 'Setting',
-            component: './Account/Setting',
+            path: 'List',
+            name: 'List',
+            component: './User/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './User/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './User/Form',
           },
         ],
       },
@@ -269,6 +281,11 @@ module.exports = [
         path: '/System',
         name: 'System',
         routes: [
+          {
+            path: 'FrontConfig',
+            name: 'FrontConfig',
+            component: './System/FrontConfig',
+          },
           {
             path: 'About',
             name: 'About',
@@ -283,6 +300,19 @@ module.exports = [
             path: 'Role',
             name: 'Role',
             component: './System/Role',
+          },
+        ],
+      },
+
+      /* 个人中心 */
+      {
+        path: '/Account',
+        name: 'Account',
+        routes: [
+          {
+            path: 'Setting',
+            name: 'Setting',
+            component: './Account/Setting',
           },
         ],
       },

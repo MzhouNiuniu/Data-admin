@@ -7,15 +7,22 @@ import publicService from '@services/public';
  * # 数据地址：~/public\geo-json
  * # 数据格式：[[地区],详细地址]
  * - [地区]：前三位是[省、市、区]，后面也许有其他的，取决于数据
+ * 2019年8月29日
+ * add propTypes.useAddress
+ * 默认开启，禁用之后数据格式为：[省市区]
  * */
 class Area extends React.Component {
   static propTypes = {
+    useAddress: propTypes.bool,
     disabled: propTypes.bool,
     value: propTypes.array,
+    placeholder: propTypes.string,
     onChange: propTypes.func,
   };
   static defaultProps = {
+    useAddress: true,
     disabled: false,
+    placeholder: '请选择所在地',
     onChange() {},
   };
 
@@ -89,9 +96,14 @@ class Area extends React.Component {
   getOptionsByValue = async value => {
     value = value || this.props.value;
 
-    const area = value[0];
+    let area = null;
+    if (this.props.useAddress) {
+      area = value[0];
+      this.state.address = value[1];
+    } else {
+      area = value;
+    }
     this.state.area = area;
-    this.state.address = value[1];
 
     const options = this.state.options.length !== 0 ? this.state.options : await this.getOptions();
     let currentBlock = options;
@@ -127,6 +139,10 @@ class Area extends React.Component {
   };
 
   setValue = () => {
+    if (!this.props.useAddress) {
+      this.props.onChange(this.state.area);
+      return;
+    }
     /**
      * 数据格式：[[省、市、区],详细地址]
      * */
@@ -135,13 +151,12 @@ class Area extends React.Component {
       this.props.onChange([]);
       return;
     }
-
     this.props.onChange([this.state.area, this.state.address]);
   };
 
   render() {
     const { options, area, address } = this.state;
-    const { className, style, disabled } = this.props;
+    const { className, style, disabled, useAddress, placeholder } = this.props;
     return (
       <div className={className} style={style}>
         <Cascader
@@ -151,15 +166,17 @@ class Area extends React.Component {
           onChange={this.handleAreaChange}
           loadData={this.loadData}
           changeOnSelect
-          placeholder="请选择所在地"
+          placeholder={placeholder}
         />
-        <Input.TextArea
-          disabled={disabled}
-          rows={2}
-          value={address}
-          onChange={this.handleAddressChange}
-          placeholder="请输入详细地址"
-        />
+        {useAddress && (
+          <Input.TextArea
+            disabled={disabled}
+            rows={2}
+            value={address}
+            onChange={this.handleAddressChange}
+            placeholder="请输入详细地址"
+          />
+        )}
       </div>
     );
   }

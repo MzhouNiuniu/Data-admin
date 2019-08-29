@@ -128,7 +128,7 @@ class BaseCrudList extends React.Component {
 
   config = {
     bordered: true,
-    size: 'middle',
+    size: 'small',
     rowKey: '_id',
     rowSelection: {
       onChange: (keys, rows) => {

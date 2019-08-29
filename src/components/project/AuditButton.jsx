@@ -1,6 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { Form, Button, Modal, message, Input } from 'antd';
+import { Form, Button, Modal, message, Input, Dropdown, Icon, Menu } from 'antd';
+import Permission from '@components/Permission';
 import request from '@/utils/request';
 
 const RejectForm = Form.create({ name: 'audit' })(function(props) {
@@ -122,16 +123,24 @@ class AuditButton extends React.Component {
     if (status !== 0) {
       return null;
     }
+    const menu = (
+      <Menu>
+        <Menu.Item key="resolve" onClick={this.handleClickResolveBtn}>
+          通过
+        </Menu.Item>
+        <Menu.Item key="reject" onClick={this.handleClickRejectBtn}>
+          不通过
+        </Menu.Item>
+      </Menu>
+    );
     return (
-      <>
-        <Button.Group>
-          <Button className="success" onClick={this.handleClickResolveBtn}>
-            审核通过
+      <Permission permission={['admin']}>
+        <Dropdown overlay={menu} trigger={['click']}>
+          <Button className="info">
+            审核
+            <Icon type="down-circle" theme="twoTone" />
           </Button>
-          <Button className="warning" onClick={this.handleClickRejectBtn}>
-            审核驳回
-          </Button>
-        </Button.Group>
+        </Dropdown>
         <Modal destroyOnClose visible={visible} footer={null} onCancel={this.handleCloseRejectForm}>
           <RejectForm
             onSubmit={this.handleRejectFormSubmit}
@@ -139,7 +148,7 @@ class AuditButton extends React.Component {
           />
         </Modal>
         {status === 0 && <span>&emsp;</span>}
-      </>
+      </Permission>
     );
   }
 }

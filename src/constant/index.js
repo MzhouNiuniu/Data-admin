@@ -18,6 +18,60 @@ export default {
       },
     },
   },
+  cityInvest: {
+    govLevel: [
+      {
+        label: '省',
+        value: '省',
+      },
+      {
+        label: '市',
+        value: '市',
+      },
+      {
+        label: '区',
+        value: '区',
+      },
+    ],
+    mainType: [
+      {
+        label: '城投',
+        value: '城投',
+      },
+      {
+        label: '新区城投',
+        value: '新区城投',
+      },
+      {
+        label: '交投',
+        value: '交投',
+      },
+      {
+        label: '水投',
+        value: '水投',
+      },
+      {
+        label: '文旅投',
+        value: '文旅投',
+      },
+      {
+        label: '工投',
+        value: '工投',
+      },
+      {
+        label: '农投',
+        value: '农投',
+      },
+      {
+        label: '地铁',
+        value: '地铁',
+      },
+      {
+        label: '其他',
+        value: '其他',
+      },
+    ],
+  },
   news: {
     typeMap: {
       '0': '行业动态',

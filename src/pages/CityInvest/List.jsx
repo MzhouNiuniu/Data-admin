@@ -2,8 +2,7 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip } from 'antd';
-import FormWidget from './FormWidget';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
@@ -36,6 +35,19 @@ class SearchForm extends React.Component {
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
+          <Form.Item label="类型">
+            {form.getFieldDecorator('type', {
+              initialValue: 0,
+            })(
+              <Select placeholder="请选择类型" className="w160px" allowClear={true}>
+                {constant.policy.type.map(item => (
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>,
+            )}
+          </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               查询
@@ -55,34 +67,17 @@ class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
-      title: '姓名',
+      width: 220,
+      title: '标题',
       dataIndex: 'name',
     },
     {
-      width: 160,
-      title: '机构网站',
-      dataIndex: 'website',
-      render(text) {
-        return (
-          <a href={text} target="_blank">
-            {text}
-          </a>
-        );
-      },
+      title: '文号',
+      dataIndex: 'reference',
     },
     {
-      width: 240,
-      title: '简介',
-      dataIndex: 'intro',
-      render(text) {
-        return (
-          <Tooltip title={text}>
-            <span className="one-line-text" style={{ width: '300px' }}>
-              {text}
-            </span>
-          </Tooltip>
-        );
-      },
+      title: '类型',
+      dataIndex: 'cnType',
     },
     {
       title: '审核状态',
@@ -100,18 +95,16 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/a/organization/updateStatusById"
+              api="/a/expert/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
             <StickButton
               row={row}
-              api="/a/organization/stickById"
+              api="/a/expert/stickById"
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
-            <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
-            <span>&emsp;</span>
             <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
             </LinkButton>
@@ -148,17 +141,11 @@ class BaseCrudList extends React.Component {
   state = {
     dataSource: [],
     selection: [],
-    formWidgetModal: {
-      visible: false,
-      row: null,
-    },
   };
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    if (row.avatar) {
-      row.avatar = row.avatar.split(',')[0];
-    }
+    row.cnType = constant.policy.typeMap[row.type] || row.status;
     row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
@@ -174,7 +161,7 @@ class BaseCrudList extends React.Component {
       ...searchForm.getFieldsValue(),
     };
     dispatch({
-      type: 'organization/list',
+      type: 'cityInvest/list',
       payload: params,
     }).then(res => {
       if (res.status !== 200) return;
@@ -189,23 +176,6 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handlePreviewItem = row => {
-    this.setState({
-      formWidgetModal: {
-        visible: true,
-        row,
-      },
-    });
-  };
-  handleClosePreviewModal = () => {
-    this.setState({
-      formWidgetModal: {
-        visible: false,
-        row: null,
-      },
-    });
-  };
-
   handleDelItem = rows => {
     rows = rows[0]; // 暂时没有批量
     Modal.confirm({
@@ -216,7 +186,7 @@ class BaseCrudList extends React.Component {
       onOk: () => {
         const { dispatch } = this.props;
         dispatch({
-          type: 'organization/del',
+          type: 'cityInvest/del',
           payload: {
             id: rows._id,
           },
@@ -252,6 +222,12 @@ class BaseCrudList extends React.Component {
     this.handleSearch(e, form);
   };
 
+  handleUploadTplFile = info => {
+    if (info.file.status !== 'done') return;
+    const { defaultPagination } = this;
+    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
+  };
+
   componentDidMount() {
     this.loadDataSource();
   }
@@ -269,7 +245,7 @@ class BaseCrudList extends React.Component {
 
   render() {
     const { columns, config, pagination } = this;
-    const { dataSource, selection, formWidgetModal } = this.state;
+    const { dataSource, selection } = this.state;
 
     return (
       <Card className="page__list">
@@ -279,7 +255,16 @@ class BaseCrudList extends React.Component {
           onReset={this.handleSearchReset}
         />
         <div className="operator-bar">
-          <LinkButton to="Form"> 添加机构 </LinkButton>
+          <LinkButton to="Form"> 添加公司 </LinkButton>
+          <span>&emsp;</span>
+          <Upload
+            showUploadList={false}
+            name="file"
+            action="/a/cityInvest/importExcel"
+            onChange={this.handleUploadTplFile}
+          >
+            <Button type="primary">导入公司</Button>
+          </Upload>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
@@ -289,16 +274,6 @@ class BaseCrudList extends React.Component {
           pagination={pagination}
           onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
-        <Drawer
-          placement="right"
-          title="查看详情"
-          width={900}
-          destroyOnClose
-          visible={formWidgetModal.visible}
-          onClose={this.handleClosePreviewModal}
-        >
-          {formWidgetModal.visible && <FormWidget preview id={formWidgetModal.row._id} />}
-        </Drawer>
       </Card>
     );
   }

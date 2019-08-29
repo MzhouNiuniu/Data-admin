@@ -1,10 +1,10 @@
 export default {
   'menu.welcome': '欢迎',
 
-  'menu.User': '用户管理',
-  'menu.User.List': '用户列表',
-  'menu.User.Form': '添加用户',
-  'menu.User.FormEdit': '编辑用户',
+  'menu.CityInvest': '城投数据',
+  'menu.CityInvest.List': '公司列表',
+  'menu.CityInvest.Form': '添加公司',
+  'menu.CityInvest.FormEdit': '编辑公司',
 
   'menu.News': '新闻管理',
   'menu.News.List': '新闻列表',
@@ -46,12 +46,19 @@ export default {
   'menu.Expert.Form': '添加专家',
   'menu.Expert.FormEdit': '编辑专家',
 
-  'menu.Account': '个人中心',
-  'menu.Account.Setting': '账户管理',
+  'menu.User': '用户管理',
+  'menu.User.List': '用户列表',
+  'menu.User.Form': '添加用户',
+  'menu.User.FormEdit': '编辑用户',
+
   'menu.System': '系统管理',
+  'menu.System.FrontConfig': '前台配置',
   'menu.System.About': '关于我们',
   'menu.System.Page': '页面管理',
   'menu.System.Role': '角色管理',
+
+  'menu.Account': '个人中心',
+  'menu.Account.Setting': '账户管理',
 
   'menu.more-blocks': '更多区块',
   'menu.home': '主页',

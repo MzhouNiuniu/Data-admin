@@ -1,0 +1,12 @@
+.page__list {
+  .search-bar, .operator-bar {
+    margin-bottom: 16px;
+  }
+}
+
+.page__list__edit-modal {
+  .ant-modal-content {
+    height: 700px;
+    overflow-y: auto;
+  }
+}

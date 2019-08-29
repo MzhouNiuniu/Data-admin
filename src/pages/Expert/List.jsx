@@ -66,6 +66,7 @@ class BaseCrudList extends React.Component {
       },
     },
     {
+      width: 220,
       title: '姓名',
       dataIndex: 'name',
     },
@@ -74,10 +75,7 @@ class BaseCrudList extends React.Component {
       dataIndex: 'sex',
     },
     {
-      title: '个人简介',
-      dataIndex: 'current',
-    },
-    {
+      width: 220,
       title: '研究方向',
       dataIndex: 'direction',
     },
@@ -124,7 +122,7 @@ class BaseCrudList extends React.Component {
 
   config = {
     bordered: true,
-    size: 'middle',
+    size: 'small',
     rowKey: '_id',
     rowSelection: {
       onChange: (keys, rows) => {

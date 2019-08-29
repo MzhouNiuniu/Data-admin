@@ -98,7 +98,7 @@ class UserList extends React.Component {
   ];
   config = {
     bordered: true,
-    size: 'middle',
+    size: 'small',
     rowKey: 'id',
     rowSelection: {
       onChange: (keys, rows) => {

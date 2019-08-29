@@ -38,8 +38,8 @@ export function loadRoutes() {
           icon: 'smile',
         },
         {
-          path: '/User',
-          name: 'User',
+          path: '/CityInvest',
+          name: 'CityInvest',
           icon: 'smile',
           routes: [
             {
@@ -265,13 +265,23 @@ export function loadRoutes() {
           ],
         },
         {
-          path: '/Account',
-          name: 'Account',
+          path: '/User',
+          name: 'User',
           icon: 'smile',
           routes: [
             {
-              path: 'Setting',
-              name: 'Setting',
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
               icon: 'smile',
             },
           ],
@@ -281,6 +291,11 @@ export function loadRoutes() {
           name: 'System',
           icon: 'smile',
           routes: [
+            {
+              path: 'FrontConfig',
+              name: 'FrontConfig',
+              icon: 'smile',
+            },
             {
               path: 'About',
               name: 'About',
@@ -294,6 +309,18 @@ export function loadRoutes() {
             {
               path: 'Role',
               name: 'Role',
+              icon: 'smile',
+            },
+          ],
+        },
+        {
+          path: '/Account',
+          name: 'Account',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'Setting',
+              name: 'Setting',
               icon: 'smile',
             },
           ],

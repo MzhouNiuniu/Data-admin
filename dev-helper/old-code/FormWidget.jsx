@@ -130,7 +130,7 @@ class FormWidget extends React.Component {
         type="close-circle"
         className="pos-abs right-0 top-0 pt-6 pr-6 cursor-pointer"
         style={{ fontSize: '20px' }}
-        onClick={() => this.removeMultipleItem('languages', index, removeItem)}
+        onClick={() => this.removeMultipleItem(fieldName, index, removeItem)}
       />
     );
   };
