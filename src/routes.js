@@ -193,16 +193,39 @@ module.exports = [
         name: 'ProjectCooperation',
         routes: [
           {
-          path: 'List',
-          name: 'List',
-          component: './ProjectCooperation/List',
+            path: 'List',
+            name: 'List',
+            component: './ProjectCooperation/List',
           },
           {
-          path: 'Form',
-          name: 'Form',
-          component: './ProjectCooperation/Form'
-          }
-         ]
+            path: 'Form',
+            name: 'Form',
+            component: './ProjectCooperation/Form',
+          },
+        ],
+      },
+      /* 杂志管理 */
+      {
+        path: '/Magazine',
+        name: 'Magazine',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './Magazine/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './Magazine/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Magazine/Form',
+          },
+        ],
       },
       /* 专家管理 */
       {

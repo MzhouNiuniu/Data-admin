@@ -176,25 +176,48 @@ export function loadRoutes() {
             },
           ],
         },
-         /* 项目合作 */
+        /* 项目合作 */
         {
           path: '/ProjectCooperation',
           name: 'ProjectCooperation',
           icon: 'smile',
           routes: [
             {
-            path: 'List',
-            name: 'List',
-            icon: 'smile',
-            component: './ProjectCooperation/List',
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+              component: './ProjectCooperation/List',
             },
             {
               path: 'Form',
               name: 'Form',
               icon: 'smile',
-              component: './ProjectCooperation/Form'
-            }
-          ]
+              component: './ProjectCooperation/Form',
+            },
+          ],
+        },
+
+        {
+          path: '/Magazine',
+          name: 'Magazine',
+          icon: 'smile',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: 'smile',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: 'smile',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: 'smile',
+            },
+          ],
         },
         {
           path: '/Expert',

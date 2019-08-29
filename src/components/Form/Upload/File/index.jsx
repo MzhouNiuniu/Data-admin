@@ -12,6 +12,9 @@ import { Upload, Icon, Button } from 'antd';
  * string：xxx.com/xxx.png xxx.com/xxx.png,xxx.com/xxx.png
  * array：xxx.com/xxx.png [xxx.com/xxx.png,xxx.com/xxx.png]
  * raw：{name:'f1',url:'xxx.com/xxx.png'} [{name:'f1',url:'xxx.com/xxx.png'}]
+ * 2019年8月29日
+ * add propTypes.valueSplitSymbol
+ * 当 valueType === 'string' && multiple === true时，值的分割符号（不能动态设置）
  * */
 export default class UploadImage extends React.Component {
   static propTypes = {
@@ -20,6 +23,7 @@ export default class UploadImage extends React.Component {
     value: propTypes.oneOfType([propTypes.string, propTypes.object, propTypes.array]),
     multiple: propTypes.bool,
     valueType: propTypes.oneOf(['string', 'array', 'raw']),
+    valueSplitSymbol: propTypes.string, // valueType === 'string'
     maxlength: propTypes.number,
     action: propTypes.string,
     listType: propTypes.string,
@@ -50,6 +54,7 @@ export default class UploadImage extends React.Component {
   };
 
   isInit = false;
+  valueSplitSymbol = this.props.valueSplitSymbol || ',';
 
   constructor(props) {
     super(props);
@@ -58,6 +63,7 @@ export default class UploadImage extends React.Component {
       fileList: this.getLocaleFileList(),
     };
     if (this.props.useBase64) {
+      this.valueSplitSymbol = '#';
       const getBase64 = (file, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
@@ -91,20 +97,21 @@ export default class UploadImage extends React.Component {
       return [];
     }
 
-    // 修复将数据改为字符串之后的问题
-    if (valueType === 'string') {
-      value = value.split(',').map(item => ({
-        name: item,
-        url: item,
-      }));
-    } else if (valueType === 'array') {
-      value = value.map(item => ({
-        name: item,
-        url: item,
-      }));
-    } else {
-      if (!multiple) {
+    if (!multiple) {
+      if (valueType === 'raw') {
         value = [value];
+      } else {
+        if (valueType === 'array') {
+          value = value[0];
+        }
+
+        value = [this.transToFileInfo(value)];
+      }
+    } else {
+      if (valueType === 'string') {
+        value = value.split(this.valueSplitSymbol).map(this.transToFileInfo);
+      } else if (valueType === 'array') {
+        value = value.map(this.transToFileInfo);
       }
     }
 
@@ -112,12 +119,19 @@ export default class UploadImage extends React.Component {
       uid: -(index + 1),
       name: item.name,
       url: item.url,
-      thumbUrl: item.url, // fix image
+      // thumbUrl: item.url, // IE8/9 不支持浏览器本地缩略图展示（Ref），可以写 thumbUrl 属性来代替。
       status: 'done',
     }));
     return fileList;
   }
 
+  /* 可以存储在服务端的数据格式 */
+  transToFileInfo = url => {
+    return {
+      name: url,
+      url: url,
+    };
+  };
   getFileInfo = file => {
     return {
       name: file.name,
@@ -163,7 +177,7 @@ export default class UploadImage extends React.Component {
         value = fileList.map(item => getFileInfo(item).url);
       }
       if (valueType === 'string') {
-        value = value.join(',');
+        value = value.join(this.valueSplitSymbol);
       }
     }
     onChange(value);

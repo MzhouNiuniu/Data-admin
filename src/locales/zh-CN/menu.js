@@ -1,17 +1,21 @@
 export default {
   'menu.welcome': '欢迎',
+
   'menu.User': '用户管理',
   'menu.User.List': '用户列表',
   'menu.User.Form': '添加用户',
   'menu.User.FormEdit': '编辑用户',
+
   'menu.News': '新闻管理',
   'menu.News.List': '新闻列表',
   'menu.News.Form': '添加新闻',
   'menu.News.FormEdit': '编辑新闻',
+
   'menu.Policy': '政策管理',
   'menu.Policy.List': '政策列表',
   'menu.Policy.Form': '添加政策',
   'menu.Policy.FormEdit': '编辑政策',
+
   'menu.Profession': '行业研究',
   'menu.Profession.Case': '行业案例管理',
   'menu.Profession.Case.List': '行业案例列表',
@@ -21,6 +25,7 @@ export default {
   'menu.Profession.Report.List': '研究报告列表',
   'menu.Profession.Report.Form': '添加研究报告',
   'menu.Profession.Report.FormEdit': '编辑研究报告',
+
   'menu.Organization': '机构管理',
   'menu.Organization.List': '机构列表',
   'menu.Organization.Form': '添加机构',
@@ -30,7 +35,12 @@ export default {
   'menu.ProjectCooperation.List': '项目列表',
   'menu.ProjectCooperation.Form': '项目添加项目',
   'menu.ProjectCooperation.FormEdit': '编辑项目',
-  
+
+  'menu.Magazine': '杂志管理',
+  'menu.Magazine.List': '杂志列表',
+  'menu.Magazine.Form': '添加杂志',
+  'menu.Magazine.FormEdit': '编辑杂志',
+
   'menu.Expert': '专家管理',
   'menu.Expert.List': '专家列表',
   'menu.Expert.Form': '添加专家',
