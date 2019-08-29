@@ -32,9 +32,7 @@ class FormWidget extends React.Component {
         return;
       }
       // 提取图片
-      const firstImg = this.editor.getFirstImage();
-      alert('第一张图片，src = ' + firstImg);
-
+      formData.cover = this.editor.getFirstImage();
       const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
@@ -42,7 +40,7 @@ class FormWidget extends React.Component {
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose();
@@ -57,7 +55,7 @@ class FormWidget extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose(formData); // 编辑时将最新数据发送出去
@@ -90,7 +88,7 @@ class FormWidget extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="标题">
-          {form.getFieldDecorator('title', {
+          {form.getFieldDecorator('name', {
             rules: [
               {
                 required: true,
@@ -98,6 +96,16 @@ class FormWidget extends React.Component {
               },
             ],
           })(<Input placeholder="请输入标题" />)}
+        </Form.Item>
+        <Form.Item label="简介">
+          {form.getFieldDecorator('brief', {
+            rules: [
+              {
+                required: true,
+                message: '请输入简介',
+              },
+            ],
+          })(<Input.TextArea placeholder="请输入简介" />)}
         </Form.Item>
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {

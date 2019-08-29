@@ -2,8 +2,9 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Form, Input, Button, message } from 'antd';
+import { Row, Col, Form, Input, Button, message, Select } from 'antd';
 import Editor from '@components/Form/Editor';
+import constant from '@constant/index';
 
 @connect()
 @Form.create()
@@ -38,7 +39,7 @@ class FormWidget extends React.Component {
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose();
@@ -53,7 +54,7 @@ class FormWidget extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose(formData); // 编辑时将最新数据发送出去
@@ -85,18 +86,42 @@ class FormWidget extends React.Component {
     const { form } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="标题">
-          {form.getFieldDecorator('title', {
-            rules: [
-              {
-                required: true,
-                message: '请输入标题',
-              },
-            ],
-          })(<Input placeholder="请输入标题" />)}
-        </Form.Item>
+        <Row>
+          <Col span={19}>
+            <Form.Item label="标题">
+              {form.getFieldDecorator('name', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入标题',
+                  },
+                ],
+              })(<Input placeholder="请输入标题" />)}
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item label="类型">
+              {form.getFieldDecorator('type', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择类型',
+                  },
+                ],
+              })(
+                <Select placeholder="请选择类型">
+                  {constant.policy.type.map(item => (
+                    <Select.Option key={item.value} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>,
+              )}
+            </Form.Item>
+          </Col>
+        </Row>
         <Form.Item label="文号">
-          {form.getFieldDecorator('title', {
+          {form.getFieldDecorator('reference', {
             rules: [
               {
                 required: true,
@@ -105,6 +130,7 @@ class FormWidget extends React.Component {
             ],
           })(<Input placeholder="请输入文号" />)}
         </Form.Item>
+
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {
             rules: [

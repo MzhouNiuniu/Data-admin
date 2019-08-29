@@ -2,9 +2,12 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Drawer, Popconfirm } from 'antd';
 import FormWidget from './FormWidget';
 import constant from '@constant';
+import AuditButton from '@components/project/AuditButton';
+import StickButton from '@components/project/StickButton';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -18,21 +21,18 @@ class SearchForm extends React.Component {
     onSubmit() {},
     onReset() {},
   };
-  state = {
-    onSubmit: e => {
-      this.props.onSubmit(e, this.props.form);
-    },
-    onReset: e => {
-      this.props.onReset(e, this.props.form);
-    },
+  onSubmit = e => {
+    this.props.onSubmit(e, this.props.form);
+  };
+  onReset = e => {
+    this.props.onReset(e, this.props.form);
   };
 
   render() {
-    const { onSubmit, onReset } = this.state;
     const { form } = this.props;
     return (
       <div className="search-bar">
-        <Form layout="inline" onSubmit={onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
@@ -41,7 +41,7 @@ class SearchForm extends React.Component {
               查询
             </Button>
             <span>&emsp;</span>
-            <Button onClick={onReset}>重置</Button>
+            <Button onClick={this.onReset}>重置</Button>
           </Form.Item>
         </Form>
       </div>
@@ -52,16 +52,17 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
+  searchForm = null;
   columns = [
     {
-      width: 120,
+      width: 90,
       title: '头像',
       dataIndex: 'photos',
       render(text) {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
-        return <img className="w100-max" src={text} alt="" />;
+        return <img className="max-width-100" src={text} alt="" />;
       },
     },
     {
@@ -81,6 +82,10 @@ class BaseCrudList extends React.Component {
       dataIndex: 'direction',
     },
     {
+      title: '审核状态',
+      dataIndex: 'cnStatus',
+    },
+    {
       title: '创建时间',
       dataIndex: 'releaseTime',
     },
@@ -88,26 +93,25 @@ class BaseCrudList extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
-        const status = row._status;
         return (
           <>
-            {status === '0' && (
-              <>
-                <Button className="success" onClick={() => this.handleAuditItem(row, 1)}>
-                  审核通过
-                </Button>
-                <span>&emsp;</span>
-                <Button className="warning" onClick={() => this.handleAuditItem(row, 2)}>
-                  审核不通过
-                </Button>
-                <span>&emsp;</span>
-              </>
-            )}
+            <AuditButton
+              row={row}
+              api="/a/expert/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/a/expert/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
+            />
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
             <span>&emsp;</span>
-            <Button type="primary" onClick={() => this.handleEditItem(row)}>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
-            </Button>
+            </LinkButton>
             <span>&emsp;</span>
             <Button type="danger" onClick={() => this.handleDelItem([row])}>
               删除
@@ -138,9 +142,6 @@ class BaseCrudList extends React.Component {
   };
   pagination = JSON.parse(JSON.stringify(this.defaultPagination));
 
-  queryParams = {
-    /* 见 SearchForm */
-  };
   state = {
     dataSource: [],
     selection: [],
@@ -155,21 +156,19 @@ class BaseCrudList extends React.Component {
     if (row.avatar) {
       row.avatar = row.avatar.split(',')[0];
     }
-
-    row._status = row.status;
-    row.status = constant.public.status.audit[row.status] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
 
   loadDataSource = (page, size) => {
-    const { pagination, queryParams } = this;
+    const { pagination, searchForm } = this;
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
     const params = {
       page,
       limit: size,
-      ...queryParams,
+      ...searchForm.getFieldsValue(),
     };
     dispatch({
       type: 'expert/list',
@@ -187,10 +186,6 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handleAddItem = () => {
-    this.props.history.push('Form');
-  };
-
   handlePreviewItem = row => {
     this.setState({
       formWidgetModal: {
@@ -204,38 +199,6 @@ class BaseCrudList extends React.Component {
       formWidgetModal: {
         visible: false,
         row: null,
-      },
-    });
-  };
-  handleEditItem = row => {
-    this.props.history.push('Form/' + row._id);
-  };
-
-  /**
-   * @param {number} status - 状态，1通过 2未通过
-   * */
-  handleAuditItem = (row, status) => {
-    Modal.confirm({
-      title: status === 1 ? '通过？' : '不通过',
-      content: row.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'expert/audit',
-          payload: {
-            id: row._id,
-            status,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.warn(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
       },
     });
   };
@@ -256,7 +219,7 @@ class BaseCrudList extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           message.success(res.message);
@@ -276,7 +239,6 @@ class BaseCrudList extends React.Component {
       if (err) {
         return;
       }
-      Object.assign(this.queryParams, formData);
       const { defaultPagination } = this;
       this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
     });
@@ -285,15 +247,6 @@ class BaseCrudList extends React.Component {
   handleSearchReset = (e, form) => {
     form.resetFields();
     this.handleSearch(e, form);
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    const otherParams = {};
-    if (sorter.field) {
-      otherParams['sort___' + sorter.field] = sorter.order === 'ascend' ? 'asc' : 'desc';
-    }
-    Object.assign(this.queryParams, otherParams);
-    this.loadDataSource(pagination.current, pagination.pageSize);
   };
 
   componentDidMount() {
@@ -317,11 +270,13 @@ class BaseCrudList extends React.Component {
 
     return (
       <Card className="page__list">
-        <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
+        <SearchForm
+          ref={ref => (this.searchForm = ref)}
+          onSubmit={this.handleSearch}
+          onReset={this.handleSearchReset}
+        />
         <div className="operator-bar">
-          <Button type="primary" onClick={this.handleAddItem}>
-            添加专家
-          </Button>
+          <LinkButton to="Form"> 添加专家 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
@@ -329,7 +284,7 @@ class BaseCrudList extends React.Component {
           dataSource={dataSource}
           {...config}
           pagination={pagination}
-          onChange={this.handleTableChange}
+          onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
         <Drawer
           placement="right"

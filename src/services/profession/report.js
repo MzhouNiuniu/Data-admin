@@ -1,38 +1,31 @@
 import request from '@utils/request';
 
-export function audit(payload) {
-  return request('/a/news/updateStatusById', {
-    method: 'post',
-    data: payload,
-  });
-}
-
 export function update(payload) {
-  return request('/a/news/updateById', {
+  return request('/a/researchReport/updateById', {
     method: 'post',
     data: payload,
   });
 }
 
 export function detail(payload) {
-  return request('/a/news/getDetails?id=' + payload);
+  return request('/a/researchReport/getDetails?id=' + payload);
 }
 
 export function create(payload) {
-  return request('/a/news/publish', {
+  return request('/a/researchReport/publish', {
     method: 'post',
     data: payload,
   });
 }
 
 export function list(payload) {
-  return request('/a/news/getList', {
+  return request('/a/researchReport/getList', {
     params: payload,
   });
 }
 
 export function del(payload) {
-  return request('/a/news/delById', {
+  return request('/a/researchReport/delById', {
     method: 'post',
     data: payload,
   });

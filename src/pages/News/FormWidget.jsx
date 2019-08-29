@@ -2,7 +2,7 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Form, Input, Button, message, Select } from 'antd';
+import { Row, Col, Form, Input, Button, message, Select } from 'antd';
 import Editor from '@components/Form/Editor';
 import constant from '@constant';
 
@@ -33,9 +33,7 @@ class FormWidget extends React.Component {
         return;
       }
       // 提取图片
-      const firstImg = this.editor.getFirstImage();
-      alert('第一张图片，src = ' + firstImg);
-
+      formData.cover = this.editor.getFirstImage();
       const { dispatch } = this.props;
       if (!this.props.id) {
         dispatch({
@@ -43,7 +41,7 @@ class FormWidget extends React.Component {
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose();
@@ -58,7 +56,7 @@ class FormWidget extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose(formData); // 编辑时将最新数据发送出去
@@ -90,33 +88,49 @@ class FormWidget extends React.Component {
     const { form } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="标题">
-          {form.getFieldDecorator('title', {
+        <Row>
+          <Col span={19}>
+            <Form.Item label="标题">
+              {form.getFieldDecorator('title', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入标题',
+                  },
+                ],
+              })(<Input placeholder="请输入标题" />)}
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item label="类型">
+              {form.getFieldDecorator('type', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择类型',
+                  },
+                ],
+              })(
+                <Select placeholder="请选择类型">
+                  {constant.news.type.map(item => (
+                    <Select.Option key={item.value} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>,
+              )}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label="来源">
+          {form.getFieldDecorator('source', {
             rules: [
               {
                 required: true,
-                message: '请输入标题',
+                message: '请输入来源',
               },
             ],
-          })(<Input placeholder="请输入标题" />)}
-        </Form.Item>
-        <Form.Item label="类型">
-          {form.getFieldDecorator('type', {
-            rules: [
-              {
-                required: true,
-                message: '请选择类型',
-              },
-            ],
-          })(
-            <Select placeholder="请选择类型" style={{ width: '160px' }}>
-              {constant.news.type.map(item => (
-                <Select.Option key={item.value} value={item.value}>
-                  {item.label}
-                </Select.Option>
-              ))}
-            </Select>,
-          )}
+          })(<Input placeholder="请输入来源" />)}
         </Form.Item>
         <Form.Item label="内容">
           {form.getFieldDecorator('content', {

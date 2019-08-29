@@ -38,28 +38,6 @@ export function loadRoutes() {
           icon: 'smile',
         },
         {
-          path: '/Article',
-          name: 'Article',
-          icon: 'smile',
-          routes: [
-            {
-              path: 'List',
-              name: 'List',
-              icon: 'smile',
-            },
-            {
-              path: 'Form',
-              name: 'Form',
-              icon: 'smile',
-            },
-            {
-              path: 'Form/:id',
-              name: 'FormEdit',
-              icon: 'smile',
-            },
-          ],
-        },
-        {
           path: '/User',
           name: 'User',
           icon: 'smile',
@@ -280,6 +258,11 @@ export function loadRoutes() {
           name: 'System',
           icon: 'smile',
           routes: [
+            {
+              path: 'About',
+              name: 'About',
+              icon: 'smile',
+            },
             {
               path: 'Page',
               name: 'Page',

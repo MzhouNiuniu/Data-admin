@@ -36,16 +36,16 @@ const UserModel = {
         return Promise.reject(response);
       }
       yield put({
-        type: 'user/saveLoginFrom',
+        type: 'saveLoginFrom',
         payload: true,
       });
       yield put({
-        type: 'user/saveCurrentUser',
+        type: 'saveCurrentUser',
         payload: response.data,
       });
       if (autoLogin) {
         yield put({
-          type: 'user/saveLocaleUser',
+          type: 'saveLocaleUser',
         });
       }
       yield put(
@@ -76,7 +76,7 @@ const UserModel = {
     *logout({ payload }, { call, put }) {
       // yield call(userService.logout, payload)
       yield put({
-        type: 'user/clearLocaleUser',
+        type: 'clearLocaleUser',
       });
       yield put(
         routerRedux.replace({
@@ -105,7 +105,7 @@ const UserModel = {
       const response = yield call(userService.detail, currentUser._id);
       if (response.code === 200) {
         // yield put({
-        //   type: 'user/saveCurrentUser',
+        //   type: 'saveCurrentUser',
         //   payload: response.data,
         // })
       } else {

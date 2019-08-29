@@ -59,7 +59,7 @@ class FormWidget extends React.Component {
           payload: formData,
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose();
@@ -74,7 +74,7 @@ class FormWidget extends React.Component {
           },
         }).then(res => {
           if (res.status !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           this.props.onClose(formData); // 编辑时将最新数据发送出去
@@ -202,15 +202,15 @@ class FormWidget extends React.Component {
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit} style={{ maxWidth: '1200px' }}>
         <Fieldset disabled={preview}>
-          <Form.Item label="姓名">
+          <Form.Item label="机构名称">
             {form.getFieldDecorator('name', {
               rules: [
                 {
                   required: true,
-                  message: '请输入姓名',
+                  message: '请输入机构名称',
                 },
               ],
-            })(Fieldset.Field(<Input placeholder="请输入姓名" />))}
+            })(Fieldset.Field(<Input placeholder="请输入机构名称" />))}
           </Form.Item>
           <Form.Item label="机构网站">
             {form.getFieldDecorator('website', {
@@ -247,7 +247,7 @@ class FormWidget extends React.Component {
           </Form.Item>
           <Form.Item label="合作经验">
             <MultipleItemQueue
-              disabled={!preview}
+              disabled={preview}
               buttonText="添加合作经验"
               queueLength={multipleItemQueueLength.experience}
             >

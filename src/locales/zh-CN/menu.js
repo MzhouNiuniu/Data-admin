@@ -1,10 +1,5 @@
 export default {
   'menu.welcome': '欢迎',
-
-  'menu.Article': '文章管理',
-  'menu.Article.List': '文章列表',
-  'menu.Article.Form': '添加文章',
-  'menu.Article.FormEdit': '编辑文章',
   'menu.User': '用户管理',
   'menu.User.List': '用户列表',
   'menu.User.Form': '添加用户',
@@ -44,6 +39,7 @@ export default {
   'menu.Account': '个人中心',
   'menu.Account.Setting': '账户管理',
   'menu.System': '系统管理',
+  'menu.System.About': '关于我们',
   'menu.System.Page': '页面管理',
   'menu.System.Role': '角色管理',
 

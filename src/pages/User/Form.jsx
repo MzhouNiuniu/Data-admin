@@ -31,7 +31,9 @@ class UserForm extends React.Component {
     const { id } = this.state;
     return (
       <Card>
-        <FormWidget id={id} onClose={this.handleFormClose} onCancel={this.handleFormCancel} />
+        <div className="max-width-900px">
+          <FormWidget id={id} onClose={this.handleFormClose} onCancel={this.handleFormCancel} />
+        </div>
       </Card>
     );
   }

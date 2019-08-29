@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
 import FormWidget from './FormWidget';
+import LinkButton from '@components/LinkButton';
 
 @Form.create({
   name: 'search',
@@ -17,21 +18,19 @@ class SearchForm extends React.Component {
     onSubmit() {},
     onReset() {},
   };
-  state = {
-    onSubmit: e => {
-      this.props.onSubmit(e, this.props.form);
-    },
-    onReset: e => {
-      this.props.onReset(e, this.props.form);
-    },
+
+  onSubmit = e => {
+    this.props.onSubmit(e, this.props.form);
+  };
+  onReset = e => {
+    this.props.onReset(e, this.props.form);
   };
 
   render() {
-    const { onSubmit, onReset } = this.state;
     const { form } = this.props;
     return (
       <div className="search-bar">
-        <Form layout="inline" onSubmit={onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item label="用户名查询">
             {form.getFieldDecorator('phone')(<Input placeholder="请输入用户名" />)}
           </Form.Item>
@@ -40,7 +39,7 @@ class SearchForm extends React.Component {
               查询
             </Button>
             <span>&emsp;</span>
-            <Button onClick={onReset}>重置</Button>
+            <Button onClick={this.onReset}>重置</Button>
           </Form.Item>
         </Form>
       </div>
@@ -51,6 +50,7 @@ class SearchForm extends React.Component {
 @connect()
 @Form.create()
 class UserList extends React.Component {
+  searchForm = null;
   columns = [
     {
       width: 40,
@@ -64,7 +64,7 @@ class UserList extends React.Component {
       dataIndex: 'avatar',
       render: (text, row, index) => {
         if (!text) {
-          return <p>暂未设置</p>;
+          return '暂未设置';
         }
         return <img src={row.avatar} width="100%" />;
       },
@@ -116,10 +116,6 @@ class UserList extends React.Component {
   };
   pagination = JSON.parse(JSON.stringify(this.defaultPagination));
 
-  queryParams = {
-    /* 见 SearchForm */
-  };
-
   state = {
     dataSource: [],
     selection: [],
@@ -137,14 +133,14 @@ class UserList extends React.Component {
   }
 
   loadDataSource = (page, size) => {
-    const { pagination, queryParams } = this;
+    const { pagination, searchForm } = this;
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
     const params = {
       page,
       size,
-      ...queryParams,
+      ...searchForm.getFieldsValue(),
     };
     dispatch({
       type: 'user/list',
@@ -159,10 +155,6 @@ class UserList extends React.Component {
         dataSource,
       });
     });
-  };
-
-  handleAddItem = () => {
-    this.props.history.push('Form');
   };
 
   openItemEditModal = row => {
@@ -197,7 +189,7 @@ class UserList extends React.Component {
           payload: rows.map(item => item.id),
         }).then(res => {
           if (res.code !== 200) {
-            message.warn(res.message);
+            message.error(res.message);
             return;
           }
           message.success(res.message);
@@ -217,8 +209,6 @@ class UserList extends React.Component {
       if (err) {
         return;
       }
-      Object.assign(this.queryParams, formData);
-
       const { defaultPagination } = this;
       this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
     });
@@ -227,15 +217,6 @@ class UserList extends React.Component {
   handleSearchReset = (e, form) => {
     form.resetFields();
     this.handleSearch(e, form);
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    const otherParams = {};
-    if (sorter.field) {
-      otherParams['sort___' + sorter.field] = sorter.order === 'ascend' ? 'asc' : 'desc';
-    }
-    Object.assign(this.queryParams, otherParams);
-    this.loadDataSource(pagination.current, pagination.pageSize);
   };
 
   componentDidMount() {
@@ -258,9 +239,13 @@ class UserList extends React.Component {
     const { dataSource, selection, editModal } = this.state;
     return (
       <Card className="page__list">
-        <SearchForm onSubmit={this.handleSearch} onReset={this.handleSearchReset} />
+        <SearchForm
+          ref={ref => (this.searchForm = ref)}
+          onSubmit={this.handleSearch}
+          onReset={this.handleSearchReset}
+        />
         <div className="operator-bar">
-          <Button onClick={this.handleAddItem}>添加用户</Button>
+          <LinkButton to="Form">添加用户</LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
@@ -268,7 +253,7 @@ class UserList extends React.Component {
           dataSource={dataSource}
           {...config}
           pagination={pagination}
-          onChange={this.handleTableChange}
+          onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
         <Modal
           className="page__list__edit-modal"

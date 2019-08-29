@@ -19,35 +19,76 @@ export default {
     },
   },
   news: {
+    typeMap: {
+      '0': '行业动态',
+      '1': '智库新闻',
+      '2': '智库动态',
+      '3': '项目动态',
+    },
     type: [
       {
         label: '行业动态',
-        value: '行业动态',
+        value: 0,
       },
       {
-        label: '城投动态',
-        value: '城投动态',
+        label: '智库新闻',
+        value: 1,
       },
       {
         label: '智库动态',
-        value: '智库动态',
+        value: 2,
       },
       {
         label: '项目动态',
-        value: '项目动态',
+        value: 3,
+      },
+    ],
+  },
+  policy: {
+    typeMap: {
+      '0': '政策法规',
+      '1': '指南标准',
+      '2': '国家性规范文件',
+      '3': '地方规范文件',
+      '4': '部门规范文件',
+    },
+    type: [
+      {
+        label: '政策法规',
+        value: 0,
+      },
+      {
+        label: '指南标准',
+        value: 1,
+      },
+      {
+        label: '国家性规范文件',
+        value: 2,
+      },
+      {
+        label: '地方规范文件',
+        value: 3,
+      },
+      {
+        label: '部门规范文件',
+        value: 4,
       },
     ],
   },
   profession: {
     report: {
+      typeMap: {
+        '0': '专题报告',
+        '1': '定期报告',
+      },
       type: [
         {
           label: '专题报告',
-          value: '专题报告',
+          value: 0,
         },
         {
           label: '定期报告',
-          value: '定期报告',
+          value: 1,
         },
       ],
     },
