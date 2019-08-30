@@ -9,6 +9,8 @@ import MultipleItemQueue from '@components/Form/MultipleItemQueue';
 import constant from '@constant/index';
 import Area from '@components/Form/Area';
 import UploadImage from '@components/Form/Upload/Image';
+import UploadFile from '@components/Form/Upload/File';
+import AddBond from './AddBond';
 
 @connect()
 @Form.create()
@@ -23,12 +25,18 @@ class FormWidget extends React.Component {
     onClose() {},
     onCancel() {},
   };
-
+  state = {
+    // 用途1：表单验证之后，将每个tab页里面的错误进行统计
+    formError: {},
+  };
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
+        this.setState({
+          formError: err,
+        });
         return;
       }
       if (!form.isFieldsTouched()) {
@@ -110,10 +118,147 @@ class FormWidget extends React.Component {
     );
   };
 
+  getFieldsValue = fieldName => {
+    // 解决 getFieldsValue(fieldName)
+    return this.props.form.getFieldsValue()[fieldName];
+  };
+
+  getSelectionYearList = fieldName => {
+    const currentValue = this.getFieldsValue(fieldName);
+    if (!Array.isArray(currentValue)) {
+      return [];
+    }
+    return currentValue.reduce((acc, item) => {
+      item.year && acc.push(item.year);
+      return acc;
+    }, []);
+  };
+
   renderFinanceInfo = (queue, ctrl) => {
     const { form } = this.props;
-    const formItemLayout = {};
+
     /* 财务信息 - financial */
+    const selectionYearList = this.getSelectionYearList('financial');
+    return queue.map((item, index) => {
+      return (
+        <div
+          key={index}
+          className="pos-rel mb-10 pt-24"
+          style={{
+            border: '1px solid rgb(217, 217, 217)',
+            borderRadius: '4px',
+            padding: ' 0 10px',
+          }}
+        >
+          <Row gutter={30}>
+            <Col span={6}>
+              <Form.Item label="年份">
+                {form.getFieldDecorator('financial[' + index + '].year', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择年份',
+                    },
+                  ],
+                })(<YearPicker disabledDate={selectionYearList} />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="总资产">
+                {form.getFieldDecorator('financial[' + index + '].totalAsset', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入总资产',
+                    },
+                  ],
+                })(<Input placeholder="请输入总资产" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="净资产">
+                {form.getFieldDecorator('financial[' + index + '].netAsset', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入净资产',
+                    },
+                  ],
+                })(<Input placeholder="请输入净资产" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="负债率">
+                {form.getFieldDecorator('financial[' + index + '].liabilities', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入负债率',
+                    },
+                  ],
+                })(<Input placeholder="请输入负债率" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="营业收入额">
+                {form.getFieldDecorator('financial[' + index + '].business', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入营业收入',
+                    },
+                  ],
+                })(<Input placeholder="请输入营业收入" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="主营业务收入">
+                {form.getFieldDecorator('financial[' + index + '].mainBusiness', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入主营业务收入',
+                    },
+                  ],
+                })(<Input placeholder="请输入主营业务收入" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="净利润">
+                {form.getFieldDecorator('financial[' + index + '].netProfit', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入净利润',
+                    },
+                  ],
+                })(<Input placeholder="请输入净利润" />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="利润总额">
+                {form.getFieldDecorator('financial[' + index + '].totalProfit', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入利润总额',
+                    },
+                  ],
+                })(<Input placeholder="请输入利润总额" />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          {this.renderRemoveItemBtn('financial', index, ctrl.removeItem)}
+        </div>
+      );
+    });
+  };
+
+  renderGradeInfo = (queue, ctrl) => {
+    const { form } = this.props;
+
+    /* 评级信息 - rate */
+    const selectionYearList = this.getSelectionYearList('rate');
     return queue.map((item, index) => {
       return (
         <div
@@ -128,136 +273,80 @@ class FormWidget extends React.Component {
           <Row>
             <Col span={4}>
               <Form.Item label="年份">
-                {form.getFieldDecorator('financial[' + index + '].year', {
+                {form.getFieldDecorator('rate[' + index + '].year', {
                   rules: [
                     {
                       required: true,
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker />)}
+                })(<YearPicker disabledDate={selectionYearList} />)}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
-              <Form.Item label="总资产" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].totalAsset', {
+              <Form.Item label="主体评级">
+                {form.getFieldDecorator('rate[' + index + '].main', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入总资产',
+                      message: '请选择主体评级',
                     },
                   ],
-                })(<Input placeholder="请输入总资产" />)}
+                })(
+                  <Select placeholder="请选择主体评级">
+                    {constant.cityInvest.rateLevel.map(item => (
+                      <Select.Option key={item.value} value={item.value}>
+                        {item.label}
+                      </Select.Option>
+                    ))}
+                  </Select>,
+                )}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
-              <Form.Item label="净资产" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].netAsset', {
+              <Form.Item label="展望评级">
+                {form.getFieldDecorator('rate[' + index + '].wish', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入净资产',
+                      message: '请选择展望评级',
                     },
                   ],
-                })(<Input placeholder="请输入净资产" />)}
+                })(
+                  <Select placeholder="请选择展望评级">
+                    {constant.cityInvest.rateLevel.map(item => (
+                      <Select.Option key={item.value} value={item.value}>
+                        {item.label}
+                      </Select.Option>
+                    ))}
+                  </Select>,
+                )}
               </Form.Item>
             </Col>
-            <Col span={4} offset={1}>
-              <Form.Item label="负债率" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].liabilities', {
+            <Col span={9} offset={1}>
+              <Form.Item label="评级机构">
+                {form.getFieldDecorator('rate[' + index + '].organization', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入负债率',
+                      message: '请输入评级机构',
                     },
                   ],
-                })(<Input placeholder="请输入负债率" />)}
+                })(<Input placeholder="请输入评级机构" />)}
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={4}>
-              <Form.Item label="营业收入额" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].business', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入营业收入',
-                    },
-                  ],
-                })(<Input placeholder="请输入营业收入" />)}
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1}>
-              <Form.Item label="主营业务收入" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].mainBusiness', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入主营业务收入',
-                    },
-                  ],
-                })(<Input placeholder="请输入主营业务收入" />)}
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1}>
-              <Form.Item label="净利润" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].netProfit', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入净利润',
-                    },
-                  ],
-                })(<Input placeholder="请输入净利润" />)}
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1}>
-              <Form.Item label="利润总额" {...formItemLayout}>
-                {form.getFieldDecorator('financial[' + index + '].totalProfit', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入利润总额',
-                    },
-                  ],
-                })(<Input placeholder="请输入利润总额" />)}
-              </Form.Item>
-            </Col>
-          </Row>
-          {this.renderRemoveItemBtn('finance', index, ctrl.removeItem)}
-        </div>
-      );
-    });
-  };
-
-  renderGradeInfo = (queue, ctrl) => {
-    const { form } = this.props;
-    const formItemLayout = {};
-    /* 评级信息 - grade */
-    return queue.map((item, index) => {
-      return (
-        <div
-          key={index}
-          className="pos-rel mb-10 pt-24"
-          style={{
-            border: '1px solid rgb(217, 217, 217)',
-            borderRadius: '4px',
-            padding: ' 0 10px',
-          }}
-        >
-          <Form.Item label="字段名" {...formItemLayout}>
-            {form.getFieldDecorator('grade[' + index + '].字段名', {
+          <Form.Item label="评级报告">
+            {form.getFieldDecorator('rate[' + index + '].report', {
               rules: [
                 {
                   required: true,
-                  message: '请输入字段名',
+                  message: '请输入评级报告',
                 },
               ],
-            })(<Input placeholder="请输入字段名" />)}
+            })(<Input.TextArea rows={4} placeholder="请输入评级报告" />)}
           </Form.Item>
-
-          {this.renderRemoveItemBtn('grade', index, ctrl.removeItem)}
+          {this.renderRemoveItemBtn('rate', index, ctrl.removeItem)}
         </div>
       );
     });
@@ -265,8 +354,9 @@ class FormWidget extends React.Component {
 
   renderBizInfo = (queue, ctrl) => {
     const { form } = this.props;
-    const formItemLayout = {};
-    /* 融资信息 - biz */
+
+    /* 融资信息 - financing */
+    const selectionYearList = this.getSelectionYearList('financial');
     return queue.map((item, index) => {
       return (
         <div
@@ -278,18 +368,93 @@ class FormWidget extends React.Component {
             padding: ' 0 10px',
           }}
         >
-          <Form.Item label="字段名" {...formItemLayout}>
-            {form.getFieldDecorator('biz[' + index + '].字段名', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入字段名',
-                },
-              ],
-            })(<Input placeholder="请输入字段名" />)}
-          </Form.Item>
-
-          {this.renderRemoveItemBtn('biz', index, ctrl.removeItem)}
+          <Row gutter={30}>
+            <Col span={6}>
+              <Form.Item label="年份">
+                {form.getFieldDecorator('financing[' + index + '].year', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择年份',
+                    },
+                  ],
+                })(<YearPicker disabledDate={selectionYearList} />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="企业债券">
+                {form.getFieldDecorator('financing[' + index + '].enterpriseBond')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="公司债券">
+                {form.getFieldDecorator('financing[' + index + '].companyBond')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="中小企业私募债券">
+                {form.getFieldDecorator('financing[' + index + '].middleBond')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="非公开发行债券">
+                {form.getFieldDecorator('financing[' + index + '].unpublicBond')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="企业资产支持证券">
+                {form.getFieldDecorator('financing[' + index + '].enterpriseAssetBond')(
+                  <AddBond />,
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="信贷资产支持证券">
+                {form.getFieldDecorator('financing[' + index + '].credit')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="超短期融资券（SCP）">
+                {form.getFieldDecorator('financing[' + index + '].SCP')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="短期融资券（CP）">
+                {form.getFieldDecorator('financing[' + index + '].CP')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="中期票据（MTN）">
+                {form.getFieldDecorator('financing[' + index + '].MTN')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="定向工具（PPN）">
+                {form.getFieldDecorator('financing[' + index + '].PPN')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="资产支持票据（ABN）">
+                {form.getFieldDecorator('financing[' + index + '].ABN')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="项目收益票据（PRN）">
+                {form.getFieldDecorator('financing[' + index + '].PRN')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="债务融资工具（DFI）">
+                {form.getFieldDecorator('financing[' + index + '].DFI')(<AddBond />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="绿色债务融资工具（GN）">
+                {form.getFieldDecorator('financing[' + index + '].GN')(<AddBond />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          {this.renderRemoveItemBtn('financing', index, ctrl.removeItem)}
         </div>
       );
     });
@@ -297,7 +462,6 @@ class FormWidget extends React.Component {
 
   renderOtherInfo = (queue, ctrl) => {
     const { form } = this.props;
-    const formItemLayout = {};
     /* 其它信息 - other */
     return queue.map((item, index) => {
       return (
@@ -310,16 +474,32 @@ class FormWidget extends React.Component {
             padding: ' 0 10px',
           }}
         >
-          <Form.Item label="字段名" {...formItemLayout}>
-            {form.getFieldDecorator('other[' + index + '].字段名', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入字段名',
-                },
-              ],
-            })(<Input placeholder="请输入字段名" />)}
-          </Form.Item>
+          <Row>
+            <Col span={6}>
+              <Form.Item label="附件名称">
+                {form.getFieldDecorator('other[' + index + '].name', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入附件名称',
+                    },
+                  ],
+                })(<Input placeholder="请输入附件名称" />)}
+              </Form.Item>
+            </Col>
+            <Col span={17} offset={1}>
+              <Form.Item label="上传附件">
+                {form.getFieldDecorator('other[' + index + '].file', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请上传附件',
+                    },
+                  ],
+                })(<UploadFile />)}
+              </Form.Item>
+            </Col>
+          </Row>
 
           {this.renderRemoveItemBtn('other', index, ctrl.removeItem)}
         </div>
@@ -453,6 +633,25 @@ class FormWidget extends React.Component {
     );
   };
 
+  renderTabBar = (props, DefaultTabBar) => {
+    const { formError } = this.state;
+    return (
+      <DefaultTabBar {...props}>
+        {node => {
+          if (formError[node.key]) {
+            return React.cloneElement(node, {
+              style: {
+                color: 'red',
+                fontWeight: 'bold',
+              },
+            });
+          }
+          return node;
+        }}
+      </DefaultTabBar>
+    );
+  };
+
   render() {
     const { form } = this.props;
     console.log(form.getFieldsValue());
@@ -460,18 +659,24 @@ class FormWidget extends React.Component {
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
         {this.renderBaseInfo()}
         <Form.Item>
-          <Tabs>
-            <Tabs.TabPane tab="财务信息" key="baseInfo">
-              <MultipleItemQueue buttonText="ADD">{this.renderFinanceInfo}</MultipleItemQueue>
+          <Tabs renderTabBar={this.renderTabBar}>
+            <Tabs.TabPane tab="财务信息" key="financial">
+              <MultipleItemQueue buttonText="添加财务信息">
+                {this.renderFinanceInfo}
+              </MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="评级信息" key="financeInfo">
-              <MultipleItemQueue buttonText="ADD">{this.renderGradeInfo}</MultipleItemQueue>
+            <Tabs.TabPane tab="评级信息" key="rate">
+              <MultipleItemQueue buttonText="添加评级信息">
+                {this.renderGradeInfo}
+              </MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="融资信息" key="bizInfo">
-              <MultipleItemQueue buttonText="ADD">{this.renderBizInfo}</MultipleItemQueue>
+            <Tabs.TabPane tab="融资信息" key="financing">
+              <MultipleItemQueue buttonText="添加融资信息">{this.renderBizInfo}</MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="其它信息" key="otherInfo">
-              <MultipleItemQueue buttonText="ADD">{this.renderOtherInfo}</MultipleItemQueue>
+            <Tabs.TabPane tab="其它信息" key="other">
+              <MultipleItemQueue buttonText="添加其它信息">
+                {this.renderOtherInfo}
+              </MultipleItemQueue>
             </Tabs.TabPane>
           </Tabs>
         </Form.Item>

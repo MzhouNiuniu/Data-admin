@@ -101,13 +101,13 @@ class BaseCrudList extends React.Component {
           <>
             {/*<AuditButton*/}
             {/*  row={row}*/}
-            {/*  api="/a/magazine/updateStatusById"*/}
+            {/*  api="/magazine/updateStatusById"*/}
             {/*  status={row.status}*/}
             {/*  finallyCallback={this.loadDataSource}*/}
             {/*/>*/}
             {/*<StickButton*/}
             {/*  row={row}*/}
-            {/*  api="/a/magazine/stickById"*/}
+            {/*  api="/magazine/stickById"*/}
             {/*  status={row.stick}*/}
             {/*  finallyCallback={this.loadDataSource}*/}
             {/*/>*/}

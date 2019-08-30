@@ -95,13 +95,13 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/a/expert/updateStatusById"
+              api="/expert/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
             <StickButton
               row={row}
-              api="/a/expert/stickById"
+              api="/expert/stickById"
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
@@ -260,7 +260,7 @@ class BaseCrudList extends React.Component {
           <Upload
             showUploadList={false}
             name="file"
-            action="/a/cityInvest/importExcel"
+            action="/cityInvest/importExcel"
             onChange={this.handleUploadTplFile}
           >
             <Button type="primary">导入公司</Button>

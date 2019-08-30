@@ -1,16 +1,17 @@
-/**
- * 未完成！
- * 未完成！
- * 未完成！
- * */
 import React from 'react';
+import propTypes from 'prop-types';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 
 class HighRangePicker extends React.Component {
-  value = [];
+  static propTypes = {
+    value: propTypes.array,
+    onChange: propTypes.func,
+  };
+
+  value = null;
 
   onChange = (momentVal, val) => {
     this.value = momentVal;
@@ -18,21 +19,15 @@ class HighRangePicker extends React.Component {
   };
 
   render() {
-    const props = { ...this.props, onChange: this.onChange, value: this.value };
-    if (!Array.isArray(props.value)) {
-      setTimeout(() => {
-        this.onChange(null, []);
-      });
-      return null;
+    const props = { ...this.props, onChange: this.onChange };
+    // 回显
+    if (!this.value && this.props.value) {
+      this.value = [
+        !props.value[0] ? null : moment(props.value[0]),
+        !props.value[1] ? null : moment(props.value[1]),
+      ];
     }
-    //
-    // else {
-    //   props.value = [
-    //     !props.value[0] ? null : moment(props.value[0]),
-    //     !props.value[1] ? null : moment(props.value[1]),
-    //   ]
-    // }
-
+    props.value = this.value;
     return <RangePicker {...props} />;
   }
 }

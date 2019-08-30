@@ -2,12 +2,12 @@ import request from '@/utils/request';
 
 export default {
   updateIndexConfig(payload) {
-    return request('/a/indexConfig/publish', {
+    return request('/indexConfig/publish', {
       method: 'post',
       data: payload,
     });
   },
   indexConfigDetail() {
-    return request('/a/indexConfig/getDetails');
+    return request('/indexConfig/getDetails');
   },
 };

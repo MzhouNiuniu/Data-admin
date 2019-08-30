@@ -100,13 +100,13 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/a/organization/updateStatusById"
+              api="/organization/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
             <StickButton
               row={row}
-              api="/a/organization/stickById"
+              api="/organization/stickById"
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />

@@ -112,11 +112,6 @@ export default {
   chainWebpack: webpackPlugin,
   alias: ideaWebpackConfig.resolve.alias,
   proxy: {
-    '/a/': {
-      target: 'http://192.168.9.105:3000',
-      changeOrigin: true,
-      pathRewrite: { '^/a': '' },
-    },
     '/mock/': {
       target: 'http://localhost:8001',
       changeOrigin: true,

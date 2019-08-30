@@ -262,7 +262,7 @@ class UserList extends React.Component {
           width="70%"
           onCancel={this.handleEditModalCancel}
         >
-          {editModal.visible && editModal.row && (
+          {editModal.visible && (
             <FormWidget
               id={editModal.row.id}
               onClose={this.handleEditModalClose}

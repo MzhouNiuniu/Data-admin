@@ -1,28 +1,28 @@
 import request from '@/utils/request';
 
 export function login(payload) {
-  return request('/a/user/login', {
+  return request('/user/login', {
     method: 'get',
     params: payload,
   });
 }
 
 export function register(payload) {
-  return request('/a/user/reg', {
+  return request('/user/reg', {
     method: 'post',
     data: payload,
   });
 }
 
 export function changePwd(payload) {
-  return request('/a/user/updateUser', {
+  return request('/user/updateUser', {
     method: 'post',
     data: payload,
   });
 }
 
 export function logout(payload) {
-  return request('/a/user/reg', {
+  return request('/user/reg', {
     method: 'post',
     data: payload,
   });
@@ -242,28 +242,28 @@ export function loadRoutes() {
           ],
         },
 
-        {
-          path: '/Demo',
-          name: 'Demo',
-          icon: 'smile',
-          routes: [
-            {
-              path: 'AbsorbedMap',
-              name: 'AbsorbedMap',
-              icon: 'smile',
-            },
-            {
-              path: 'PdfPreview',
-              name: 'PdfPreview',
-              icon: 'smile',
-            },
-            {
-              path: 'ExpertPreview/:id',
-              name: 'ExpertPreview',
-              icon: 'smile',
-            },
-          ],
-        },
+        // {
+        //   path: '/Demo',
+        //   name: 'Demo',
+        //   icon: 'smile',
+        //   routes: [
+        //     {
+        //       path: 'AbsorbedMap',
+        //       name: 'AbsorbedMap',
+        //       icon: 'smile',
+        //     },
+        //     {
+        //       path: 'PdfPreview',
+        //       name: 'PdfPreview',
+        //       icon: 'smile',
+        //     },
+        //     {
+        //       path: 'ExpertPreview/:id',
+        //       name: 'ExpertPreview',
+        //       icon: 'smile',
+        //     },
+        //   ],
+        // },
         {
           path: '/User',
           name: 'User',
@@ -301,16 +301,16 @@ export function loadRoutes() {
               name: 'About',
               icon: 'smile',
             },
-            {
-              path: 'Page',
-              name: 'Page',
-              icon: 'smile',
-            },
-            {
-              path: 'Role',
-              name: 'Role',
-              icon: 'smile',
-            },
+            // {
+            //   path: 'Page',
+            //   name: 'Page',
+            //   icon: 'smile',
+            // },
+            // {
+            //   path: 'Role',
+            //   name: 'Role',
+            //   icon: 'smile',
+            // },
           ],
         },
         {

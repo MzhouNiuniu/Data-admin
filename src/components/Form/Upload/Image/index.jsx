@@ -52,6 +52,7 @@ class UploadImage extends React.Component {
           onPreview={this.handleSlideOpen}
         />
         <Modal
+          destroyOnClose
           visible={slide.visible}
           footer={null}
           style={{ top: '18%' }}

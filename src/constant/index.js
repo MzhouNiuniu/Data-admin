@@ -19,6 +19,24 @@ export default {
     },
   },
   cityInvest: {
+    rateLevel: [
+      {
+        label: 'AAA',
+        value: 'AAA',
+      },
+      {
+        label: 'AA+',
+        value: 'AA+',
+      },
+      {
+        label: 'AA',
+        value: 'AA',
+      },
+      {
+        label: '其他',
+        value: '其他',
+      },
+    ],
     govLevel: [
       {
         label: '省',

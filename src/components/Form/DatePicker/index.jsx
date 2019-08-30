@@ -1,8 +1,14 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 
 class HighDatePicker extends React.Component {
+  static propTypes = {
+    value: propTypes.string,
+    onChange: propTypes.func,
+  };
+
   value = null;
 
   onChange = (momentVal, val) => {
@@ -12,10 +18,9 @@ class HighDatePicker extends React.Component {
 
   render() {
     const props = { ...this.props };
-    if (!this.value) {
-      if (props.value) {
-        this.value = moment(props.value);
-      }
+    // 回显
+    if (!this.value && props.value) {
+      this.value = moment(props.value);
     }
     Object.assign(props, {
       value: this.value,

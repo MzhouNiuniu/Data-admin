@@ -43,11 +43,17 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-
+console.log(process.env);
 const request = extend({
   errorHandler,
   // 默认错误处理
-  credentials: 'include', // 默认请求是否带上cookie
+  // credentials: 'include', // 默认请求是否带上cookie
   // requestType: 'form',
+  prefix: 'http://192.168.9.105:3000',
 });
 export default request;
+export const baseRequest = extend({
+  errorHandler,
+  // 默认错误处理
+  // credentials: 'include', // 默认请求是否带上cookie
+});

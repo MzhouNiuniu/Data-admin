@@ -1,31 +1,31 @@
 import request from '@utils/request';
 
 export function update(payload) {
-  return request('/a/researchReport/updateById', {
+  return request('/researchReport/updateById', {
     method: 'post',
     data: payload,
   });
 }
 
 export function detail(payload) {
-  return request('/a/researchReport/getDetails?id=' + payload);
+  return request('/researchReport/getDetails?id=' + payload);
 }
 
 export function create(payload) {
-  return request('/a/researchReport/publish', {
+  return request('/researchReport/publish', {
     method: 'post',
     data: payload,
   });
 }
 
 export function list(payload) {
-  return request('/a/researchReport/getList', {
+  return request('/researchReport/getList', {
     params: payload,
   });
 }
 
 export function del(payload) {
-  return request('/a/researchReport/delById', {
+  return request('/researchReport/delById', {
     method: 'post',
     data: payload,
   });

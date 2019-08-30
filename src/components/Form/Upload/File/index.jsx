@@ -39,7 +39,7 @@ export default class UploadImage extends React.Component {
     multiple: false, // 是否可上传多张图片
     valueType: 'string',
     action: '/api/upload',
-    listType: 'picture',
+    listType: 'text',
     maxlength: 3,
     getFileUrl(file) {
       return file.url || (file.response ? file.response.url : '');

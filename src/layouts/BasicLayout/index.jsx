@@ -44,11 +44,11 @@ const BasicLayout = props => {
       });
 
       // todo 如果不是从登录过来的，就请求最新的用户信息，如头像变动等（多个设备之间切换时）
-      if (!props.user.isFromLoginPage) {
-        dispatch({
-          type: 'user/refresh',
-        });
-      }
+      // if (!props.user.isFromLoginPage) {
+      //   dispatch({
+      //     type: 'user/refresh',
+      //   });
+      // }
     }
   }, []);
   /**
