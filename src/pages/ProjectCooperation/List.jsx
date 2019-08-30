@@ -67,7 +67,7 @@ class SearchForm extends React.Component {
   }
 }
 
-renderBatchOperatorBar = (props) => {
+const renderBatchOperatorBar = (props) => {
   return (
     <>
       <span>&emsp;</span>
@@ -168,7 +168,7 @@ class List extends React.Component {
     this.loadDataSource(this.state.params);
   }
   render() {
-    const { dataSource, formWidgetModal } = this.state;
+    const { dataSource, formWidgetModal, selectRows } = this.state;
     const { columns, pagination } = this;
     return (
       <Card className="page__list">
