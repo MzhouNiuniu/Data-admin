@@ -1,4 +1,4 @@
-import { create, list, detail, update, del, audit } from '@services/profession/case';
+import { create, list, detail, update, del } from '@services/ProjectCooperation';
 
 export default {
   state: null,

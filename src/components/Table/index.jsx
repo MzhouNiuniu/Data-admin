@@ -43,7 +43,7 @@ class ProTable extends React.Component {
     const hasSelected = selectedRowKeys.length > 0;
     return (
       <div>
-        <Table rowSelection={rowSelection} bordered columns={this.props.columns} dataSource={this.props.data} pagination={this.props.pagination}/>
+        <Table rowKey = '_id' rowSelection={rowSelection} bordered columns={this.props.columns} dataSource={this.props.data} pagination={this.props.pagination}/>
       </div>
     );
   }
