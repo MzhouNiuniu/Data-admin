@@ -373,7 +373,6 @@ export function list(payload) {
 export function detail(payload) {
   return request('/mock/mock-detail/user/' + payload);
 }
-
 export function del(payload) {
   return request('/mock/mock-delete/user', {
     method: 'delete',
