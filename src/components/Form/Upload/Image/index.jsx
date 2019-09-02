@@ -1,8 +1,18 @@
 import React from 'react';
-import { Icon, Modal, Upload } from 'antd';
+import propTypes from 'prop-types';
+import { Icon, Modal } from 'antd';
 import UploadFile from '../File';
+import api from '@services/api';
 
 class UploadImage extends React.Component {
+  static propTypes = {
+    action: propTypes.string,
+  };
+
+  static defaultProps = {
+    action: api.fileServer.uploadImage,
+  };
+
   state = {
     slide: {
       visible: false,

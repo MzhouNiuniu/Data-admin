@@ -28,9 +28,9 @@ export default class Editor extends React.Component {
     onChange() {},
   };
 
+  isInit = false;
   editor = null;
   state = {
-    isInit: false,
     editorState: BraftEditor.createEditorState(this.props.value),
   };
   getMediaList = () => {
@@ -76,9 +76,9 @@ export default class Editor extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // 初始化
-    if (!this.state.isInit && this.props.value) {
+    if (!this.isInit && this.props.value) {
+      this.isInit = true;
       this.setState({
-        isInit: true,
         editorState: BraftEditor.createEditorState(this.props.value),
       });
     }

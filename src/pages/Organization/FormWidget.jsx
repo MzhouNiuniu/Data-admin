@@ -40,9 +40,8 @@ class FormWidget extends React.Component {
         this.props.onCancel();
         return;
       }
-      /**
-       * 生成地区信息
-       * */
+
+      /* 生成地区信息 */
       {
         const { area } = formData;
         delete formData.area;
@@ -97,12 +96,9 @@ class FormWidget extends React.Component {
           return;
         }
 
-        /**
-         * 生成地区信息
-         * */
+        /* 生成地区信息 */
         {
           const area = [[formData.province, formData.city, formData.district], formData.address];
-
           delete formData.address;
           delete formData.province;
           delete formData.city;

@@ -47,15 +47,15 @@ export function forEachUmiRouteStruct(routes, cb) {
   return main(routes, null, '', cb);
 }
 
-export function checkNodeAContainsNodeB(a, b) {
-  if (!a || !b) return false;
-  if (a === b) return true;
-  let result = false;
-  while ((b = b.parentNode)) {
-    if (b === a) {
-      result = true;
-      break;
+export function checkEventTargetIsInTarget(event, selectorOrElement) {
+  const path = event.composedPath();
+  for (let i = 0; i < path.length; i++) {
+    if (path[i] === document.body) {
+      return false;
+    }
+    if (path[i] === selectorOrElement || path[i].classList.contains(selectorOrElement)) {
+      return true;
     }
   }
-  return result;
+  return false;
 }

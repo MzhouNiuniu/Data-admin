@@ -19,19 +19,19 @@ class MultipleItemQueue extends React.Component {
     },
   };
 
+  isInit = false;
   state = {
-    isInit: false,
     queue: [],
   };
 
   componentDidUpdate() {
-    if (!this.state.isInit && this.props.queueLength !== 0) {
+    if (!this.isInit && this.props.queueLength !== 0) {
       const queue = [];
       for (let i = 0; i < this.props.queueLength; i++) {
         queue.push(this.props.queueItemGetter());
       }
+      this.isInit = true;
       this.setState({
-        isInit: true,
         queue,
       });
     }

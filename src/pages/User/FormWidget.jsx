@@ -34,10 +34,7 @@ class FormWidget extends React.Component {
       if (!this.props.id) {
         dispatch({
           type: 'user/create',
-          payload: {
-            userName: formData.userName,
-            password: formData.password,
-          },
+          payload: formData,
         }).then(res => {
           if (res.status !== 200) {
             message.error(res.message);
@@ -85,7 +82,7 @@ class FormWidget extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="头像" className="mb-6">
-          {form.getFieldDecorator('avatar')(<UploadImage />)}
+          {form.getFieldDecorator('logo')(<UploadImage />)}
         </Form.Item>
         <Form.Item label="账号">
           {form.getFieldDecorator('userName', {
@@ -113,7 +110,7 @@ class FormWidget extends React.Component {
           })(
             <Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="text"
+              type="password"
               placeholder="请输入密码"
             />,
           )}

@@ -246,15 +246,6 @@ class ProjCooForm extends React.Component {
               <Button type="primary" htmlType="submit">
                 提交
               </Button>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <Button
-                type="primary"
-                onClick={() => {
-                  console.log(this.props.form.getFieldsValue());
-                }}
-              >
-                测试数据
-              </Button>
             </Form.Item>
           )}
         </Form>

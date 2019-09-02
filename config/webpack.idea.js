@@ -9,6 +9,7 @@ module.exports = {
       '@components': path.resolve(PROJECT_ROOT, './src/components'),
       '@pages': path.resolve(PROJECT_ROOT, './src/pages'),
       '@services': path.resolve(PROJECT_ROOT, './src/services'),
+      '@config': path.resolve(PROJECT_ROOT, './src/config'),
       '@utils': path.resolve(PROJECT_ROOT, './src/utils'),
     },
   },

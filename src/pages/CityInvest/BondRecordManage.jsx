@@ -227,7 +227,7 @@ class BondRecordManage extends React.Component {
           destroyOnClose
           visible={visible}
           footer={null}
-          width="70%"
+          width="950px"
           onCancel={this.handleCloseModal}
         >
           <BondRecordForm

@@ -2,6 +2,7 @@ import './index.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { Upload, Icon, Button } from 'antd';
+import api from '@services/api';
 
 /**
  * 服务端存储格式：{name:'f1',url:'xxx.com/xxx.png'} 或者 [{name:'f1',url:'xxx.com/xxx.png'}]
@@ -38,7 +39,7 @@ export default class UploadImage extends React.Component {
     disabled: false,
     multiple: false, // 是否可上传多张图片
     valueType: 'string',
-    action: '/api/upload',
+    action: api.fileServer.uploadFile,
     listType: 'text',
     maxlength: 3,
     getFileUrl(file) {
@@ -53,8 +54,9 @@ export default class UploadImage extends React.Component {
     },
   };
 
-  isInit = false;
   valueSplitSymbol = this.props.valueSplitSymbol || ',';
+
+  isInit = false;
 
   constructor(props) {
     super(props);
@@ -216,6 +218,7 @@ export default class UploadImage extends React.Component {
       onPreview,
       uploadBtnRender,
     } = this.props;
+
     return (
       <Upload
         disabled={disabled}

@@ -35,7 +35,9 @@ class About extends React.Component {
         this.setState({ disabled: true });
         return;
       }
-
+      if (!res.data) {
+        return;
+      }
       this.props.form.setFieldsValue(res.data);
     });
   }

@@ -110,7 +110,7 @@ class FormWidget extends React.Component {
                   message: '请上传头像',
                 },
               ],
-            })(<UploadImage action="/api/upload/base64" />)}
+            })(<UploadImage />)}
           </Form.Item>
           <Form.Item label="性别">
             {form.getFieldDecorator('sex', {

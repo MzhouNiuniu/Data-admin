@@ -39,6 +39,9 @@ class About extends React.Component {
         this.setState({ disabled: true });
         return;
       }
+      if (!res.data) {
+        return;
+      }
       const formData = res.data;
       this.state.multipleItemQueueLength.accordion = formData.info.length;
       this.setState({});

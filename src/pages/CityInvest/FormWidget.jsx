@@ -26,6 +26,12 @@ class FormWidget extends React.Component {
     onCancel() {},
   };
   state = {
+    multipleItemQueueLength: {
+      financial: 0,
+      rate: 0,
+      financing: 0,
+      other: 0,
+    },
     // 用途1：表单验证之后，将每个tab页里面的错误进行统计
     formError: {},
   };
@@ -39,9 +45,14 @@ class FormWidget extends React.Component {
         });
         return;
       }
-      if (!form.isFieldsTouched()) {
-        this.props.onCancel();
-        return;
+
+      /* 生成地区信息 */
+      {
+        const { area } = formData;
+        delete formData.area;
+        formData.province = area[0];
+        formData.city = area[1];
+        formData.district = area[2];
       }
 
       const { dispatch } = this.props;
@@ -89,7 +100,24 @@ class FormWidget extends React.Component {
           return;
         }
 
-        this.props.form.setFieldsValue(formData);
+        /* 生成地区信息 */
+        {
+          const area = [formData.province, formData.city, formData.district];
+          delete formData.province;
+          delete formData.city;
+          delete formData.district;
+          formData.area = area;
+        }
+
+        this.state.multipleItemQueueLength.financial = formData.financial.length;
+        this.state.multipleItemQueueLength.rate = formData.rate.length;
+        this.state.multipleItemQueueLength.financing = formData.financing.length;
+        this.state.multipleItemQueueLength.other = formData.other.length;
+        this.setState({}, () => {
+          setTimeout(() => {
+            this.props.form.setFieldsValue(formData);
+          }, 0);
+        });
       });
     }
   }
@@ -129,7 +157,7 @@ class FormWidget extends React.Component {
       return [];
     }
     return currentValue.reduce((acc, item) => {
-      item.year && acc.push(item.year);
+      item.year && acc.push(Number(item.year));
       return acc;
     }, []);
   };
@@ -160,7 +188,7 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledDate={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList} />)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -280,7 +308,7 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledDate={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList} />)}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
@@ -378,7 +406,7 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledDate={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList} />)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -653,6 +681,7 @@ class FormWidget extends React.Component {
   };
 
   render() {
+    const { multipleItemQueueLength } = this.state;
     const { form } = this.props;
     console.log(form.getFieldsValue());
     return (
@@ -660,21 +689,35 @@ class FormWidget extends React.Component {
         {this.renderBaseInfo()}
         <Form.Item>
           <Tabs renderTabBar={this.renderTabBar}>
-            <Tabs.TabPane tab="财务信息" key="financial">
-              <MultipleItemQueue buttonText="添加财务信息">
+            <Tabs.TabPane forceRender tab="财务信息" key="financial">
+              <MultipleItemQueue
+                buttonText="添加财务信息"
+                queueLength={multipleItemQueueLength.financial}
+              >
                 {this.renderFinanceInfo}
               </MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="评级信息" key="rate">
-              <MultipleItemQueue buttonText="添加评级信息">
+            <Tabs.TabPane forceRender tab="评级信息" key="rate">
+              <MultipleItemQueue
+                buttonText="添加评级信息"
+                queueLength={multipleItemQueueLength.rate}
+              >
                 {this.renderGradeInfo}
               </MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="融资信息" key="financing">
-              <MultipleItemQueue buttonText="添加融资信息">{this.renderBizInfo}</MultipleItemQueue>
+            <Tabs.TabPane forceRender tab="融资信息" key="financing">
+              <MultipleItemQueue
+                buttonText="添加融资信息"
+                queueLength={multipleItemQueueLength.financing}
+              >
+                {this.renderBizInfo}
+              </MultipleItemQueue>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="其它信息" key="other">
-              <MultipleItemQueue buttonText="添加其它信息">
+            <Tabs.TabPane forceRender tab="其它信息" key="other">
+              <MultipleItemQueue
+                buttonText="添加其它信息"
+                queueLength={multipleItemQueueLength.other}
+              >
                 {this.renderOtherInfo}
               </MultipleItemQueue>
             </Tabs.TabPane>

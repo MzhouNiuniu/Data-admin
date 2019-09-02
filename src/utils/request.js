@@ -4,6 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import baseUrl from '@config/baseUrl';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -43,17 +44,12 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-console.log(process.env);
 const request = extend({
   errorHandler,
   // 默认错误处理
   // credentials: 'include', // 默认请求是否带上cookie
   // requestType: 'form',
-  prefix: 'http://192.168.9.105:3000',
+  prefix: baseUrl.base,
 });
 export default request;
-export const baseRequest = extend({
-  errorHandler,
-  // 默认错误处理
-  // credentials: 'include', // 默认请求是否带上cookie
-});
+export { default as baseRequest } from 'umi-request';

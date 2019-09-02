@@ -1,6 +1,7 @@
 import './index.scss';
 import React from 'react';
 import propTypes from 'prop-types';
+import { checkEventTargetIsInTarget } from '@utils/utils';
 
 const CONTEXT_MENU_CLASSNAME = 'component__context-menu__menu';
 
@@ -8,7 +9,7 @@ class ContextMenu extends React.PureComponent {
   static propTypes = {
     menu: propTypes.any.isRequired, // 右键菜单的内容
   };
-  root = null; // element
+  elRoot = null; // element
   state = {
     visible: false,
     x: 0,
@@ -29,16 +30,7 @@ class ContextMenu extends React.PureComponent {
   };
 
   checkTargetIsMenu = e => {
-    const path = e.composedPath();
-    for (let i = 0; i < path.length; i++) {
-      if (path[i] === document.body) {
-        return false;
-      }
-      if (path[i].classList.contains(CONTEXT_MENU_CLASSNAME)) {
-        return true;
-      }
-    }
-    return false;
+    return checkEventTargetIsInTarget(e, CONTEXT_MENU_CLASSNAME);
   };
 
   handleMousedown = e => {
@@ -57,11 +49,11 @@ class ContextMenu extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.root.addEventListener('contextmenu', this.handleMousedown);
+    this.elRoot.addEventListener('contextmenu', this.handleMousedown);
   }
 
   componentWillUnmount() {
-    this.root.removeEventListener('contextmenu', this.handleMousedown);
+    this.elRoot.removeEventListener('contextmenu', this.handleMousedown);
   }
 
   renderMenu = () => {
@@ -81,7 +73,7 @@ class ContextMenu extends React.PureComponent {
 
   render() {
     return (
-      <section ref={ref => (this.root = ref)}>
+      <section ref={ref => (this.elRoot = ref)}>
         {this.props.children}
         {this.state.visible && this.renderMenu()}
       </section>

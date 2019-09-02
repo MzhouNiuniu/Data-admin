@@ -9,7 +9,7 @@ class BaseCrudForm extends React.Component {
   };
 
   toList = () => {
-    this.props.history.replace('/Policy/List');
+    this.props.history.replace('/CityInvest/List');
   };
 
   handleFormClose = () => {

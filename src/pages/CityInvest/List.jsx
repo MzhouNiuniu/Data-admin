@@ -35,19 +35,6 @@ class SearchForm extends React.Component {
           <Form.Item label="标题查询">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
-          <Form.Item label="类型">
-            {form.getFieldDecorator('type', {
-              initialValue: 0,
-            })(
-              <Select placeholder="请选择类型" className="w160px" allowClear={true}>
-                {constant.policy.type.map(item => (
-                  <Select.Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Select.Option>
-                ))}
-              </Select>,
-            )}
-          </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               查询
@@ -72,14 +59,6 @@ class BaseCrudList extends React.Component {
       dataIndex: 'name',
     },
     {
-      title: '文号',
-      dataIndex: 'reference',
-    },
-    {
-      title: '类型',
-      dataIndex: 'cnType',
-    },
-    {
       title: '审核状态',
       dataIndex: 'cnStatus',
     },
@@ -95,13 +74,13 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/expert/updateStatusById"
+              api="/companyData/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
             <StickButton
               row={row}
-              api="/expert/stickById"
+              api="/companyData/stickById"
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />

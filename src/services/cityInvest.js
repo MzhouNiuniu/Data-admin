@@ -1,31 +1,31 @@
 import request from '@/utils/request';
 
 export function update(payload) {
-  return request('/news/updateById', {
+  return request('/companyData/updateById', {
     method: 'post',
     data: payload,
   });
 }
 
 export function detail(payload) {
-  return request('/news/getDetails?id=' + payload);
+  return request('/companyData/getDetails?id=' + payload);
 }
 
 export function create(payload) {
-  return request('/news/publish', {
+  return request('/companyData/publish', {
     method: 'post',
     data: payload,
   });
 }
 
 export function list(payload) {
-  return request('/news/getList', {
+  return request('/companyData/getList', {
     params: payload,
   });
 }
 
 export function del(payload) {
-  return request('/news/delById', {
+  return request('/companyData/delById', {
     method: 'post',
     data: payload,
   });

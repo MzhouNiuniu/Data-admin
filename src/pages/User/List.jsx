@@ -2,8 +2,8 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
-import FormWidget from './FormWidget';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
+import constant from '@constant';
 import LinkButton from '@components/LinkButton';
 
 @Form.create({
@@ -18,7 +18,6 @@ class SearchForm extends React.Component {
     onSubmit() {},
     onReset() {},
   };
-
   onSubmit = e => {
     this.props.onSubmit(e, this.props.form);
   };
@@ -31,8 +30,8 @@ class SearchForm extends React.Component {
     return (
       <div className="search-bar">
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="用户名查询">
-            {form.getFieldDecorator('phone')(<Input placeholder="请输入用户名" />)}
+          <Form.Item label="标题查询">
+            {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -49,57 +48,48 @@ class SearchForm extends React.Component {
 
 @connect()
 @Form.create()
-class UserList extends React.Component {
+class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
-      width: 40,
-      title: 'ID',
-      dataIndex: 'id',
-      sorter: true,
-    },
-    {
-      width: 100,
+      width: 90,
       title: '头像',
-      dataIndex: 'avatar',
-      render: (text, row, index) => {
+      dataIndex: 'logo',
+      render(text) {
         if (!text) {
           return '暂未设置';
         }
-        return <img src={row.avatar} width="100%" />;
+        return <img className="max-width-100" src={text} alt="" />;
       },
+    },
+    {
+      width: 90,
+      title: 'ID',
+      dataIndex: '_id',
     },
     {
       title: '用户名',
-      dataIndex: 'phone',
+      dataIndex: 'userName',
     },
     // {
-    //   width: 100,
-    //   title: '创建时间',
-    //   dataIndex: 'id',
+    //   title: '操作',
+    //   key: 'action',
+    //   render: (text, row, index) => {
+    //     return (
+    //       <>
+    //         <Button type="danger" onClick={() => this.handleDelItem([row])}>
+    //           删除
+    //         </Button>
+    //       </>
+    //     );
+    //   },
     // },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text, row, index) => {
-        return (
-          <>
-            <Button type="primary" onClick={() => this.openItemEditModal(row)}>
-              编辑
-            </Button>
-            <span>&emsp;</span>
-            <Button type="danger" onClick={() => this.handleDelItem([row])}>
-              删除
-            </Button>
-          </>
-        );
-      },
-    },
   ];
+
   config = {
     bordered: true,
     size: 'small',
-    rowKey: 'id',
+    rowKey: '_id',
     rowSelection: {
       onChange: (keys, rows) => {
         this.setState({
@@ -119,18 +109,14 @@ class UserList extends React.Component {
   state = {
     dataSource: [],
     selection: [],
-    editModal: {
-      visible: false,
-      row: null,
-    },
   };
 
   /* 处理dataSource中的数据项 */
-  rowPipe(row) {
-    if (!row.avatar) return row;
-    row.avatar = row.avatar.split(',')[0];
+  rowPipe = row => {
+    row.cnType = constant.policy.typeMap[row.type] || row.status;
+    row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
-  }
+  };
 
   loadDataSource = (page, size) => {
     const { pagination, searchForm } = this;
@@ -139,15 +125,16 @@ class UserList extends React.Component {
     size = size || pagination.pageSize;
     const params = {
       page,
-      size,
+      limit: size,
       ...searchForm.getFieldsValue(),
     };
     dispatch({
       type: 'user/list',
       payload: params,
     }).then(res => {
-      if (res.code !== 200) return;
-      const dataSource = res.data.map(this.rowPipe);
+      if (res.status !== 200) return;
+      res = res.data;
+      const dataSource = res.docs.map(this.rowPipe);
       pagination.current = page;
       pagination.pageSize = size;
       pagination.total = res.total;
@@ -157,38 +144,22 @@ class UserList extends React.Component {
     });
   };
 
-  openItemEditModal = row => {
-    this.state.editModal.visible = true;
-    this.state.editModal.row = row;
-    this.setState({});
-  };
-
-  closeEditModal = () => {
-    this.state.editModal.visible = false;
-    this.setState({});
-  };
-
-  handleEditModalClose = () => {
-    message.success('编辑成功');
-    this.closeEditModal();
-    this.loadDataSource();
-  };
-
-  handleEditModalCancel = () => {
-    this.closeEditModal();
-  };
-
   handleDelItem = rows => {
+    rows = rows[0]; // 暂时没有批量
     Modal.confirm({
-      title: 'Do you Want to delete these items?',
-      content: 'Some descriptions',
+      title: '确定要删除这些数据吗？',
+      content: rows.title,
+      okText: '确定',
+      cancelText: '取消',
       onOk: () => {
         const { dispatch } = this.props;
         dispatch({
           type: 'user/del',
-          payload: rows.map(item => item.id),
+          payload: {
+            id: rows._id,
+          },
         }).then(res => {
-          if (res.code !== 200) {
+          if (res.status !== 200) {
             message.error(res.message);
             return;
           }
@@ -236,7 +207,8 @@ class UserList extends React.Component {
 
   render() {
     const { columns, config, pagination } = this;
-    const { dataSource, selection, editModal } = this.state;
+    const { dataSource, selection } = this.state;
+
     return (
       <Card className="page__list">
         <SearchForm
@@ -245,7 +217,7 @@ class UserList extends React.Component {
           onReset={this.handleSearchReset}
         />
         <div className="operator-bar">
-          <LinkButton to="Form">添加用户</LinkButton>
+          <LinkButton to="Form"> 添加用户 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table
@@ -255,24 +227,9 @@ class UserList extends React.Component {
           pagination={pagination}
           onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
-        <Modal
-          className="page__list__edit-modal"
-          visible={editModal.visible}
-          footer={null}
-          width="70%"
-          onCancel={this.handleEditModalCancel}
-        >
-          {editModal.visible && (
-            <FormWidget
-              id={editModal.row.id}
-              onClose={this.handleEditModalClose}
-              onCancel={this.handleEditModalCancel}
-            />
-          )}
-        </Modal>
       </Card>
     );
   }
 }
 
-export default UserList;
+export default BaseCrudList;

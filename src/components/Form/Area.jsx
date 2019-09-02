@@ -26,8 +26,8 @@ class Area extends React.Component {
     onChange() {},
   };
 
+  isInit = false;
   state = {
-    isInit: false,
     options: [],
     area: [],
     address: '',
@@ -60,9 +60,9 @@ class Area extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // 初始化
-    if (!this.state.isInit && this.props.value && this.props.value[0]) {
+    if (!this.isInit && this.props.value && this.props.value[0]) {
+      this.isInit = true;
       this.setState({
-        isInit: true,
         addressTouched: true,
       });
       this.getOptionsByValue(this.props.value).then(options => {

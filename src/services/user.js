@@ -35,120 +35,120 @@ export function loadRoutes() {
         {
           path: '/',
           name: 'welcome',
-          icon: 'smile',
+          // icon: '',
         },
         {
           path: '/CityInvest',
           name: 'CityInvest',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
         {
           path: '/News',
           name: 'News',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
         {
           path: '/Policy',
           name: 'Policy',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
         {
           path: '/Profession',
           name: 'Profession',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'Case',
               name: 'Case',
-              icon: 'smile',
+              icon: '',
               routes: [
                 {
                   path: 'List',
                   name: 'List',
-                  icon: 'smile',
+                  icon: '',
                 },
                 {
                   path: 'Form',
                   name: 'Form',
-                  icon: 'smile',
+                  icon: '',
                 },
                 {
                   path: 'Form/:id',
                   name: 'FormEdit',
-                  icon: 'smile',
+                  icon: '',
                 },
               ],
             },
             {
               path: 'Report',
               name: 'Report',
-              icon: 'smile',
+              icon: '',
               routes: [
                 {
                   path: 'List',
                   name: 'List',
-                  icon: 'smile',
+                  icon: '',
                 },
                 {
                   path: 'Form',
                   name: 'Form',
-                  icon: 'smile',
+                  icon: '',
                 },
                 {
                   path: 'Form/:id',
                   name: 'FormEdit',
-                  icon: 'smile',
+                  icon: '',
                 },
               ],
             },
@@ -157,22 +157,22 @@ export function loadRoutes() {
         {
           path: '/Organization',
           name: 'Organization',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
@@ -180,24 +180,24 @@ export function loadRoutes() {
         {
           path: '/ProjectCooperation',
           name: 'ProjectCooperation',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
               component: './ProjectCooperation/List',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
               component: './ProjectCooperation/Form',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
@@ -205,44 +205,44 @@ export function loadRoutes() {
         {
           path: '/Magazine',
           name: 'Magazine',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
         {
           path: '/Expert',
           name: 'Expert',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
@@ -250,83 +250,83 @@ export function loadRoutes() {
         // {
         //   path: '/Demo',
         //   name: 'Demo',
-        //   icon: 'smile',
+        //   icon: '',
         //   routes: [
         //     {
         //       path: 'AbsorbedMap',
         //       name: 'AbsorbedMap',
-        //       icon: 'smile',
+        //       icon: '',
         //     },
         //     {
         //       path: 'PdfPreview',
         //       name: 'PdfPreview',
-        //       icon: 'smile',
+        //       icon: '',
         //     },
         //     {
         //       path: 'ExpertPreview/:id',
         //       name: 'ExpertPreview',
-        //       icon: 'smile',
+        //       icon: '',
         //     },
         //   ],
         // },
         {
           path: '/User',
           name: 'User',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
         {
           path: '/System',
           name: 'System',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'FrontConfig',
               name: 'FrontConfig',
-              icon: 'smile',
+              icon: '',
             },
             {
               path: 'About',
               name: 'About',
-              icon: 'smile',
+              icon: '',
             },
             // {
             //   path: 'Page',
             //   name: 'Page',
-            //   icon: 'smile',
+            //   icon: '',
             // },
             // {
             //   path: 'Role',
             //   name: 'Role',
-            //   icon: 'smile',
+            //   icon: '',
             // },
           ],
         },
         {
           path: '/Account',
           name: 'Account',
-          icon: 'smile',
+          icon: '',
           routes: [
             {
               path: 'Setting',
               name: 'Setting',
-              icon: 'smile',
+              icon: '',
             },
           ],
         },
@@ -357,20 +357,21 @@ export function loadRoutes() {
 }
 
 export function update(id, payload) {
-  return request('/mock/mock-update/user/' + id, {
-    method: 'put',
+  return request('/user/updateUser', {
+    method: 'post',
+    data: payload,
+  });
+}
+
+export function list(payload) {
+  return request('/user/getList', {
+    method: 'post',
     data: payload,
   });
 }
 
 export function detail(payload) {
   return request('/mock/mock-detail/user/' + payload);
-}
-
-export function list(payload) {
-  return request('/mock/mock-list/user', {
-    params: payload,
-  });
 }
 
 export function del(payload) {

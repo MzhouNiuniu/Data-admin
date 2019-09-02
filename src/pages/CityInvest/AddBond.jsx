@@ -5,6 +5,7 @@ import constant from '@constant/index';
 import RangePicker from '@components/Form/DatePicker/RangePicker';
 import UploadFile from '@components/Form/Upload/File';
 import BondRecordManage from './BondRecordManage';
+import BraftEditor from 'braft-editor';
 
 @Form.create({ name: 'bond' })
 class BondForm extends React.Component {
@@ -78,7 +79,7 @@ class BondForm extends React.Component {
                 ],
               })(
                 <Select placeholder="请选择债券类型">
-                  {constant.cityInvest.rateLevel.map(item => (
+                  {constant.cityInvest.mainType.map(item => (
                     <Select.Option key={item.value} value={item.value}>
                       {item.label}
                     </Select.Option>
@@ -107,18 +108,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择发行方式',
+                    message: '请输入发行方式',
                   },
                 ],
-              })(
-                <Select placeholder="请选择发行方式">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入发行方式" />)}
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -127,18 +120,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择发行规模',
+                    message: '请输入发行规模',
                   },
                 ],
-              })(
-                <Select placeholder="请选择发行规模">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入发行规模" />)}
             </Form.Item>
           </Col>
         </Row>
@@ -175,18 +160,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择债券期限',
+                    message: '请输入债券期限',
                   },
                 ],
-              })(
-                <Select placeholder="请选择债券期限">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入债券期限" />)}
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -195,18 +172,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择票面利率',
+                    message: '请输入票面利率',
                   },
                 ],
-              })(
-                <Select placeholder="请选择票面利率">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入票面利率" />)}
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -257,18 +226,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择还本方式',
+                    message: '请输入还本方式',
                   },
                 ],
-              })(
-                <Select placeholder="请选择还本方式">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入还本方式" />)}
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -277,18 +238,10 @@ class BondForm extends React.Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择付息方式',
+                    message: '请输入付息方式',
                   },
                 ],
-              })(
-                <Select placeholder="请选择付息方式">
-                  {constant.cityInvest.rateLevel.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
+              })(<Input placeholder="请输入付息方式" />)}
             </Form.Item>
           </Col>
         </Row>
@@ -336,10 +289,22 @@ class AddBond extends React.Component {
     value: propTypes.object,
     onChange: propTypes.func,
   };
+  isInit = false;
   state = {
     visible: false,
     records: [], // 每种债券都有记录
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    // 初始化
+    if (!this.isInit && this.props.value) {
+      this.isInit = true;
+      this.setState({
+        records: this.props.value.record,
+      });
+    }
+  }
+
   setRecords = records => {
     this.props.value.record = records;
     this.setState({
@@ -391,7 +356,6 @@ class AddBond extends React.Component {
       delete value.startTime;
       delete value.endTime;
     }
-
     return (
       <>
         {!value ? (
@@ -415,7 +379,7 @@ class AddBond extends React.Component {
           destroyOnClose
           visible={visible}
           footer={null}
-          width="70%"
+          width="950px"
           onCancel={this.handleCloseModal}
         >
           <BondForm value={value} onSubmit={this.handleSubmit} onCancel={this.handleCloseModal} />

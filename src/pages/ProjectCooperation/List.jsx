@@ -2,8 +2,8 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
 import './List.scss';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip, Select  } from 'antd';
-import ProTable from '@components/Table/index'
+import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip, Select } from 'antd';
+import ProTable from '@components/Table/index';
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
@@ -22,8 +22,8 @@ function handleChange(value) {
 }
 
 @Form.create({
-    name: 'search',
-  })
+  name: 'search',
+})
 class SearchForm extends React.Component {
   static propTypes = {
     onSubmit: propTypes.func,
@@ -42,8 +42,8 @@ class SearchForm extends React.Component {
       e.preventDefault();
       this.props.onReset(e, this.props.form);
     },
-    
   };
+
   render() {
     const { onSubmit, onReset } = this.state;
     const { form } = this.props;
@@ -67,7 +67,7 @@ class SearchForm extends React.Component {
   }
 }
 
-const renderBatchOperatorBar = (props) => {
+const RenderBatchOperatorBar = props => {
   return (
     <>
       <span>&emsp;</span>
@@ -78,7 +78,6 @@ const renderBatchOperatorBar = (props) => {
   );
 };
 
-
 @connect()
 class List extends React.Component {
   // table的假数据
@@ -86,7 +85,7 @@ class List extends React.Component {
     {
       title: '项目名称',
       dataIndex: 'name',
-      key: ''
+      key: '',
     },
     {
       title: '公司名称',
@@ -105,29 +104,27 @@ class List extends React.Component {
       // dataIndex: 'Tphotos',
       key: 'Tphotos',
       render: (text, row, index) => {
-        return (
-          <img src={row.Tphotos} width="90px" height="90px" />
-        )
-      }
+        return <img src={row.Tphotos} width="90px" height="90px" />;
+      },
     },
     {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
         return (
-          <> 
-            <AuditButton 
-            row={row}
-            api="/a/collaborate/updateStatusById"
-            status={row.status}
-            finallyCallback={this.loadDataSource}
+          <>
+            <AuditButton
+              row={row}
+              api="/collaborate/updateStatusById"
+              status={row.status}
+              finallyCallback={this.loadDataSource}
             />
             <span>&emsp;</span>
-            <StickButton 
-            row={row}
-            api="/a/collaborate/stickById"
-            status={row.stick}
-            finallyCallback={this.loadDataSource}
+            <StickButton
+              row={row}
+              api="/collaborate/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
             />
             <span>&emsp;</span>
             <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
@@ -141,8 +138,8 @@ class List extends React.Component {
             </Button>
           </>
         );
-      }
-    }
+      },
+    },
   ];
   defaultPagination = {
     current: 1,
@@ -151,42 +148,43 @@ class List extends React.Component {
   };
   pagination = JSON.parse(JSON.stringify(this.defaultPagination));
   searchForm = null;
-  state={
+  state = {
     selectRows: [],
     dataSource: [],
     params: {
-        page: 1,
-        limit: 10,
-        keyWords: ''
+      page: 1,
+      limit: 10,
+      keyWords: '',
     },
     formWidgetModal: {
       visible: false,
       row: null,
     },
-  }
+  };
+
   componentDidMount() {
     this.loadDataSource(this.state.params);
   }
+
   render() {
     const { dataSource, formWidgetModal, selectRows } = this.state;
     const { columns, pagination } = this;
     return (
       <Card className="page__list">
-        <SearchForm
-         ref={ref => (this.searchForm = ref)}
-         onSubmit={this.queryList}
-         />
+        <SearchForm ref={ref => (this.searchForm = ref)} onSubmit={this.queryList} />
         <LinkButton type="primary" to="Form">
-              新增项目
+          新增项目
         </LinkButton>
-        {selectRows.length > 0 && <renderBatchOperatorBar  handleDelItemBatch = {this.handleDelItemBatch}/>}
-        <br/>
-        <br/>
-        <ProTable 
-        columns={columns} 
-        data={dataSource} 
-        onSelectChange={this.saveSelectRows}
-        pagination={pagination}
+        {selectRows.length > 0 && (
+          <RenderBatchOperatorBar handleDelItemBatch={this.handleDelItemBatch} />
+        )}
+        <br />
+        <br />
+        <ProTable
+          columns={columns}
+          data={dataSource}
+          onSelectChange={this.saveSelectRows}
+          pagination={pagination}
         />
 
         <Drawer
@@ -200,10 +198,8 @@ class List extends React.Component {
           {formWidgetModal.visible && <FormWidget preview id={formWidgetModal.row._id} />}
         </Drawer>
       </Card>
-    )
+    );
   }
-
-
 
   // 获取请求的参数
   getParams = () => {
@@ -216,48 +212,53 @@ class List extends React.Component {
       ...searchForm.getFieldsValue(),
     };
     return params;
-  }
+  };
   // 加载列表
-  loadDataSource = (params = {
-    page: 1,
-    limit: 10,
-    keyWords: ''
-  }) => {
+  loadDataSource = (
+    params = {
+      page: 1,
+      limit: 10,
+      keyWords: '',
+    },
+  ) => {
     const { dispatch } = this.props;
     const { pagination } = this;
     dispatch({
       type: 'ProjectCooperation/list',
       payload: params,
-    }).then( res => {
-        if (res.status !== 200) {
-          message.error('系统异常，请联系管理员！');
-          return
-        }
-        const data = res.data;
-        const dataSource = data.docs.map(this.rowPipe);
-        pagination.current = data.page;
-        pagination.pageSize = data.limit;
-        pagination.total = data.total;
-        this.setState({
-          dataSource,
-        });
-    })
-  }
+    }).then(res => {
+      if (res.status !== 200) {
+        message.error('系统异常，请联系管理员！');
+        return;
+      }
+      const data = res.data;
+      const dataSource = data.docs.map(this.rowPipe);
+      pagination.current = data.page;
+      pagination.pageSize = data.limit;
+      pagination.total = data.total;
+      this.setState({
+        dataSource,
+      });
+    });
+  };
   // 获取被勾选的row
   saveSelectRows = (key, rows) => {
     this.setState({
-      selectRows: rows
-    })
-  }
+      selectRows: rows,
+    });
+  };
   // 搜索
   queryList = (e, form) => {
-    this.setState({
-      params: this.getParams()
-    }, () => {
-      this.loadDataSource(this.state.params)
-    })
-  }
-   /* 处理dataSource中的数据项 */
+    this.setState(
+      {
+        params: this.getParams(),
+      },
+      () => {
+        this.loadDataSource(this.state.params);
+      },
+    );
+  };
+  /* 处理dataSource中的数据项 */
   rowPipe = row => {
     if (row.avatar) {
       row.avatar = row.avatar.split(',')[0];

@@ -6,6 +6,7 @@ import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from
 import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import LinkButton from '@components/LinkButton';
+import StickButton from '@components/project/StickButton';
 
 @Form.create({
   name: 'search',
@@ -101,8 +102,14 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/expert/updateStatusById"
+              api="/researchReport/updateStatusById"
               status={row.status}
+              finallyCallback={this.loadDataSource}
+            />
+            <StickButton
+              row={row}
+              api="/researchReport/stickById"
+              status={row.stick}
               finallyCallback={this.loadDataSource}
             />
             <LinkButton type="primary" to={`Form/${row._id}`}>
