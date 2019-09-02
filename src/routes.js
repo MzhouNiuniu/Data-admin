@@ -203,6 +203,12 @@ module.exports = [
             name: 'Form',
             component: './ProjectCooperation/Form',
           },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './ProjectCooperation/Form',
+          },
         ],
       },
       /* 杂志管理 */

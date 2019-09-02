@@ -6,40 +6,40 @@ import UploadFile from '@components/Form/Upload/File';
 import UploadImage from '@components/Form/Upload/Image';
 
 import {
-    Card,
-    Form,
-    Input,
-    Tooltip,
-    Icon,
-    Cascader,
-    Select,
-    Row,
-    Col,
-    Checkbox,
-    Button,
-    AutoComplete,
-    Upload,
-    message
-  } from 'antd';
-  import Editor from '@components/Form/Editor';
+  Card,
+  Form,
+  Input,
+  Tooltip,
+  Icon,
+  Cascader,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  AutoComplete,
+  Upload,
+  message,
+} from 'antd';
+import Editor from '@components/Form/Editor';
 
 const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+  name: 'file',
+  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 @connect()
 @Form.create({
@@ -105,21 +105,20 @@ class ProjCooForm extends React.Component {
       }
     });
   };
-  
+
   handleChange = info => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl) =>  {
+      getBase64(info.file.originFileObj, imageUrl => {
         console.log(imageUrl);
-          this.setState({
-            imageUrl,
-            loading: false,
-          })
-        }
-      );
+        this.setState({
+          imageUrl,
+          loading: false,
+        });
+      });
     }
   };
   componentDidMount() {
@@ -142,10 +141,8 @@ class ProjCooForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { preview, form } = this.props;
-    const formItemLayout = {
-    };
-    const tailFormItemLayout = {
-    };
+    const formItemLayout = {};
+    const tailFormItemLayout = {};
 
     const uploadButton = (
       <div>
@@ -155,103 +152,111 @@ class ProjCooForm extends React.Component {
     );
     const { imageUrl } = this.state;
 
-    
     return (
-      <> 
-          <Form {...formItemLayout} onSubmit={this.handleSubmit} >
-                <Form.Item label="项目名称">
-                  {getFieldDecorator('name', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入项目名称',
-                      }
-                    ],
-                  })( <Input disabled={preview} /> )}
-                </Form.Item>
+      <>
+        <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+          <Form.Item label="项目名称">
+            {getFieldDecorator('name', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入项目名称',
+                },
+              ],
+            })(<Input disabled={preview} />)}
+          </Form.Item>
 
-                <Form.Item label="公司名称">
-                  {getFieldDecorator('company', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入公司名称',
-                      }
-                    ],
-                  })( <Input disabled={preview} />)}
-                </Form.Item>
+          <Form.Item label="公司名称">
+            {getFieldDecorator('company', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入公司名称',
+                },
+              ],
+            })(<Input disabled={preview} />)}
+          </Form.Item>
 
-                <Form.Item label="推广公司">
-                  {getFieldDecorator('Tcompany', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入推广公司',
-                      }
-                    ],
-                  })( <Input disabled={preview} />)}
-                </Form.Item>
+          <Form.Item label="推广公司">
+            {getFieldDecorator('Tcompany', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入推广公司',
+                },
+              ],
+            })(<Input disabled={preview} />)}
+          </Form.Item>
 
-                <Form.Item label="推广联系方式">
-                  {getFieldDecorator('Tcontact', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入推广联系方式',
-                      },
-                      {
-                        message: '手机格式不正确！',
-                        pattern: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[189])\d{8}$/
-                      }
-                    ],
-                  })(<Input disabled={preview} />)}
-                </Form.Item>
+          <Form.Item label="推广联系方式">
+            {getFieldDecorator('Tcontact', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入推广联系方式',
+                },
+                {
+                  message: '手机格式不正确！',
+                  pattern: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[189])\d{8}$/,
+                },
+              ],
+            })(<Input disabled={preview} />)}
+          </Form.Item>
 
-                <Form.Item label="内容">
-                  {getFieldDecorator('content', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入内容',
-                      },
-                    ],
-                  })( <Editor disabled={preview} ref={ref => (this.editor = ref)} placeholder="请输入内容" /> )}
-                </Form.Item>
+          <Form.Item label="内容">
+            {getFieldDecorator('content', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入内容',
+                },
+              ],
+            })(
+              <Editor
+                disabled={preview}
+                ref={ref => (this.editor = ref)}
+                placeholder="请输入内容"
+              />,
+            )}
+          </Form.Item>
 
-                <Form.Item label="附件">
-                  {getFieldDecorator('accessory', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请上传',
-                      },
-                    ],
-                  })( 
-                  <UploadFile multiple={true} valueType="array">
-                  </UploadFile>)}
-                </Form.Item>
+          <Form.Item label="附件">
+            {getFieldDecorator('accessory', {
+              rules: [
+                {
+                  required: true,
+                  message: '请上传',
+                },
+              ],
+            })(<UploadFile disabled={preview} multiple={true} valueType="array"></UploadFile>)}
+          </Form.Item>
 
-                <Form.Item label="二维码">
-                  {getFieldDecorator('Tphotos', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入',
-                      },
-                    ],
-                  })(<UploadImage />)}
-                </Form.Item>
-                  {
-                    !preview && <Form.Item {...tailFormItemLayout}>
-                                  <Button type="primary" htmlType="submit">
-                                    提交
-                                  </Button>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;
-                                  <Button type="primary" onClick={() => {
-                                      console.log(this.props.form.getFieldsValue())
-                                  }} >测试数据</Button>
-                                </Form.Item> 
-                  }
+          <Form.Item label="二维码">
+            {getFieldDecorator('Tphotos', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入',
+                },
+              ],
+            })(<UploadImage disabled={preview} />)}
+          </Form.Item>
+          {!preview && (
+            <Form.Item {...tailFormItemLayout}>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <Button
+                type="primary"
+                onClick={() => {
+                  console.log(this.props.form.getFieldsValue());
+                }}
+              >
+                测试数据
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </>
     );
@@ -259,8 +264,6 @@ class ProjCooForm extends React.Component {
 }
 
 export default ProjCooForm;
-
-
 
 function getBase64(img, callback) {
   const reader = new FileReader();

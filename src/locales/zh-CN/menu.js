@@ -33,7 +33,7 @@ export default {
 
   'menu.ProjectCooperation': '项目合作',
   'menu.ProjectCooperation.List': '项目列表',
-  'menu.ProjectCooperation.Form': '项目添加项目',
+  'menu.ProjectCooperation.Form': '添加项目',
   'menu.ProjectCooperation.FormEdit': '编辑项目',
 
   'menu.Magazine': '杂志管理',

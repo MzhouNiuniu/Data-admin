@@ -194,6 +194,11 @@ export function loadRoutes() {
               icon: 'smile',
               component: './ProjectCooperation/Form',
             },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: 'smile',
+            },
           ],
         },
 

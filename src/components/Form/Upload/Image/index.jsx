@@ -14,7 +14,7 @@ class UploadImage extends React.Component {
     this.setState({
       slide: {
         visible: true,
-        src: file.thumbUrl,
+        src: file.thumbUrl || file.url,
       },
     });
   };
