@@ -186,19 +186,17 @@ export function loadRoutes() {
               path: 'List',
               name: 'List',
               icon: 'smile',
-              component: './ProjectCooperation/List',
             },
             {
               path: 'Form',
               name: 'Form',
               icon: 'smile',
-              component: './ProjectCooperation/Form',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
               icon: 'smile',
-            },
+            }
           ],
         },
 

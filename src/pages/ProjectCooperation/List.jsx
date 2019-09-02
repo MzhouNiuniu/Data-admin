@@ -101,7 +101,7 @@ class List extends React.Component {
       dataIndex: 'Tcontact',
     },
     {
-      title: '推广联系方式',
+      title: '推广二维码',
       // dataIndex: 'Tphotos',
       key: 'Tphotos',
       render: (text, row, index) => {
