@@ -3,7 +3,8 @@ import './index.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import BraftEditor from 'braft-editor';
-import request from '@/utils/request';
+import { baseRequest } from '@/utils/request';
+import api from '@services/api';
 
 function extractFirstPicFromBraft(editor) {
   const mediaList = editor.getFinderInstance().getItems();
@@ -24,7 +25,7 @@ export default class Editor extends React.Component {
   static defaultProps = {
     disabled: false,
     // value: '',
-    uploadUrl: '/api/upload',
+    uploadUrl: api.fileServer.uploadFile,
     onChange() {},
   };
 
@@ -33,15 +34,26 @@ export default class Editor extends React.Component {
   state = {
     editorState: BraftEditor.createEditorState(this.props.value),
   };
-  getMediaList = () => {
+  getFirstImage = () => {
+    let firstImageHTML = this.state.editorState.toHTML().match(/\<img.*?\/\>/);
+    if (!firstImageHTML) {
+      return null;
+    }
+    return firstImageHTML[0].match(/src="(.*?)"/)[1];
+
+    /**
+     * 回显时，无法获取媒体库
+     getMediaList = () => {
     return this.editor.getFinderInstance().getItems();
   };
-  getFirstImage = () => {
+     getFirstImage = () => {
     const firstImg = this.getMediaList().find(item => item.type === 'IMAGE');
     if (!firstImg) {
       return null;
     }
     return firstImg.url;
+  };
+     * */
   };
 
   handleChange = editorState => {
@@ -58,8 +70,13 @@ export default class Editor extends React.Component {
 
   handleMediaUpload = param => {
     const { uploadUrl } = this.props;
-    request(uploadUrl, {
+
+    const formData = new FormData();
+    formData.append('file', param.file);
+
+    baseRequest(uploadUrl, {
       method: 'post',
+      data: formData,
     }).then(
       res => {
         param.success({

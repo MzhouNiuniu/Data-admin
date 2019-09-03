@@ -114,54 +114,49 @@ module.exports = [
           },
         ],
       },
-      /* 行业案例 */
+      /* 行业研究案例 */
       {
-        path: '/Profession',
-        name: 'Profession',
+        path: '/ProfessionCase',
+        name: 'ProfessionCase',
         routes: [
           {
-            path: 'Case',
-            name: 'Case',
-            routes: [
-              {
-                path: 'List',
-                name: 'List',
-                component: './Profession/Case/List',
-              },
-              {
-                path: 'Form',
-                name: 'Form',
-                component: './Profession/Case/Form',
-              },
-              {
-                hideInMenu: true,
-                path: 'Form/:id',
-                name: 'FormEdit',
-                component: './Profession/Case/Form',
-              },
-            ],
+            path: 'List',
+            name: 'List',
+            component: './Profession/Case/List',
           },
           {
-            path: 'Report',
-            name: 'Report',
-            routes: [
-              {
-                path: 'List',
-                name: 'List',
-                component: './Profession/Report/List',
-              },
-              {
-                path: 'Form',
-                name: 'Form',
-                component: './Profession/Report/Form',
-              },
-              {
-                hideInMenu: true,
-                path: 'Form/:id',
-                name: 'FormEdit',
-                component: './Profession/Report/Form',
-              },
-            ],
+            path: 'Form',
+            name: 'Form',
+            component: './Profession/Case/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Profession/Case/Form',
+          },
+        ],
+      },
+      /* 行业研究报告 */
+      {
+        path: '/ProfessionReport',
+        name: 'ProfessionReport',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './Profession/Report/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './Profession/Report/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './Profession/Report/Form',
           },
         ],
       },

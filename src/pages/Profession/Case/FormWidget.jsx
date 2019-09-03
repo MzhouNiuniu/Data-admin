@@ -65,6 +65,7 @@ class FormWidget extends React.Component {
   };
 
   componentDidMount() {
+    console.log(this.editor);
     if (this.props.id) {
       const { dispatch } = this.props;
       dispatch({

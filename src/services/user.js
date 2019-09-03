@@ -103,54 +103,50 @@ export function loadRoutes() {
             },
           ],
         },
+        /* 行业研究案例 */
         {
-          path: '/Profession',
-          name: 'Profession',
+          path: '/ProfessionCase',
+          name: 'ProfessionCase',
           icon: '',
           routes: [
             {
-              path: 'Case',
-              name: 'Case',
+              path: 'List',
+              name: 'List',
               icon: '',
-              routes: [
-                {
-                  path: 'List',
-                  name: 'List',
-                  icon: '',
-                },
-                {
-                  path: 'Form',
-                  name: 'Form',
-                  icon: '',
-                },
-                {
-                  path: 'Form/:id',
-                  name: 'FormEdit',
-                  icon: '',
-                },
-              ],
             },
             {
-              path: 'Report',
-              name: 'Report',
+              path: 'Form',
+              name: 'Form',
               icon: '',
-              routes: [
-                {
-                  path: 'List',
-                  name: 'List',
-                  icon: '',
-                },
-                {
-                  path: 'Form',
-                  name: 'Form',
-                  icon: '',
-                },
-                {
-                  path: 'Form/:id',
-                  name: 'FormEdit',
-                  icon: '',
-                },
-              ],
+            },
+            {
+              hideInMenu: true,
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: '',
+            },
+          ],
+        },
+        /* 行业研究报告 */
+        {
+          path: '/ProfessionReport',
+          name: 'ProfessionReport',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: '',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: '',
+            },
+            {
+              hideInMenu: true,
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: '',
             },
           ],
         },
@@ -373,6 +369,7 @@ export function list(payload) {
 export function detail(payload) {
   return request('/mock/mock-detail/user/' + payload);
 }
+
 export function del(payload) {
   return request('/mock/mock-delete/user', {
     method: 'delete',
