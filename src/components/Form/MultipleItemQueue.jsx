@@ -65,7 +65,13 @@ class MultipleItemQueue extends React.Component {
       <section>
         {children(queue, this)}
         {!disabled && (
-          <Button type="dashed" style={{ width: '100%' }} onClick={this.addItem}>
+          // global.less，通过hide_disabled实现通过css禁用
+          <Button
+            type="dashed"
+            style={{ width: '100%' }}
+            onClick={this.addItem}
+            className="hide_disabled"
+          >
             <Icon type="plus" /> {buttonText}
           </Button>
         )}

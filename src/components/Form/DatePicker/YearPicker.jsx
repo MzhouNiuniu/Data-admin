@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import propTypes from 'prop-types';
 import { Input, Icon } from 'antd';
+import 'antd/lib/date-picker/style';
 import { checkEventTargetIsInTarget } from '@utils/utils';
 
 const currentYear = new Date().getFullYear();
@@ -11,6 +12,8 @@ class YearPicker extends React.Component {
   static propTypes = {
     value: propTypes.oneOfType([propTypes.number, propTypes.string]), // 数字为主
     onChange: propTypes.func,
+
+    placeholder: propTypes.string,
     disabledDate: propTypes.func,
     disabledYearList: propTypes.array, // 与 disabledDate 只能存在一个
   };
@@ -120,6 +123,18 @@ class YearPicker extends React.Component {
     });
   };
 
+  setValue = year => {
+    this.setState({
+      currentYear: year,
+    });
+    this.close();
+
+    if (this.state.currentYear === year) {
+      return;
+    }
+    this.props.onChange(year);
+  };
+
   handleMousedown = () => {
     window.addEventListener(
       'mousedown',
@@ -146,15 +161,8 @@ class YearPicker extends React.Component {
     if (this.disabledDate(year)) {
       return;
     }
-    this.setState({
-      currentYear: year,
-    });
-    this.close();
 
-    if (this.state.currentYear === year) {
-      return;
-    }
-    this.props.onChange(year);
+    this.setValue(year);
   };
 
   handleClickNextPage = () => {
@@ -172,6 +180,14 @@ class YearPicker extends React.Component {
       yearList: this.getYearListByYear(newYear),
     });
   };
+
+  reset = () => {
+    this.setState({
+      yearList: this.getYearListByYear(currentYear),
+    });
+    this.setValue(currentYear);
+  };
+
   renderPanel = () => {
     const { visible, currentYear, yearList } = this.state;
     if (!visible) {
@@ -260,6 +276,13 @@ class YearPicker extends React.Component {
             </div>
             <div style={{ height: '226px' }}></div>
           </div>
+          <div className="ant-calendar-footer">
+            <span className="ant-calendar-footer-btn">
+              <a className="ant-calendar-today-btn " role="button" onClick={this.reset}>
+                今年
+              </a>
+            </span>
+          </div>
         </div>
       </div>,
       this.elBodyContainer,
@@ -268,7 +291,7 @@ class YearPicker extends React.Component {
 
   render() {
     const { value } = this.props;
-
+    const { placeholder, style, className } = this.props;
     // fix:Render methods should be a pure function of props and state; triggering nested component updates from render is not allowed. If necessary, trigger nested updates in componentDidUpdate.Check the render method of YearPicker
     setTimeout(this.renderPanel);
 
@@ -279,6 +302,9 @@ class YearPicker extends React.Component {
         value={value}
         suffix={<Icon type="calendar" />}
         onFocus={this.handleInputFocus}
+        style={style}
+        className={className}
+        placeholder={placeholder}
       />
     );
   }

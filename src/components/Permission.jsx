@@ -17,11 +17,15 @@ export function hasPermission(permission) {
     return false;
   }
   if (!userPermissionRegex) {
-    const userPermission = window.g_app._store.getState().user.currentUser.permission || ['admin']; // mock admin
+    let userPermission = window.g_app._store.getState().user.currentUser.role; // 根据role生成permission信息，允许role是字符串、数组
+    if (!Array.isArray(userPermission)) {
+      userPermission = [userPermission];
+    }
     if (!userPermission || !userPermission.length) {
       userPermissionRegex = -1;
       return false;
     }
+
     userPermissionRegex = new RegExp(`\\b(${userPermission.join('|')})\\b(,)?`);
   }
   return userPermissionRegex.test(permission.join(','));
@@ -33,6 +37,7 @@ function Permission(props) {
   }
   return props.children;
 }
+
 Permission.propTypes = {
   permission: propTypes.array.isRequired,
 };

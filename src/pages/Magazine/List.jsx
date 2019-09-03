@@ -2,12 +2,13 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer, Popconfirm } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal } from 'antd';
 import FormWidget from './FormWidget';
 import constant from '@constant';
-import AuditButton from '@components/project/AuditButton';
+import PreviewButton from '@components/project/PreviewButton';
 import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
+import DeleteButton from '@components/project/DeleteButton';
 
 @Form.create({
   name: 'search',
@@ -33,7 +34,7 @@ class SearchForm extends React.Component {
     return (
       <div className="search-bar">
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="标题查询">
+          <Form.Item label="标题">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
           <Form.Item>
@@ -99,27 +100,18 @@ class BaseCrudList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            {/*<AuditButton*/}
-            {/*  row={row}*/}
-            {/*  api="/magazine/updateStatusById"*/}
-            {/*  status={row.status}*/}
-            {/*  finallyCallback={this.loadDataSource}*/}
-            {/*/>*/}
-            {/*<StickButton*/}
-            {/*  row={row}*/}
-            {/*  api="/magazine/stickById"*/}
-            {/*  status={row.stick}*/}
-            {/*  finallyCallback={this.loadDataSource}*/}
-            {/*/>*/}
-            <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
-            <span>&emsp;</span>
+            <StickButton
+              row={row}
+              api="/magazine/stickById"
+              status={row.stick}
+              finallyCallback={this.loadDataSource}
+            />
+            <PreviewButton row={row} FormWidget={FormWidget} />
             <LinkButton type="primary" to={`Form/${row._id}`}>
               编辑
             </LinkButton>
             <span>&emsp;</span>
-            <Button type="danger" onClick={() => this.handleDelItem([row])}>
-              删除
-            </Button>
+            <DeleteButton api="/magazine/delById" row={row} finallyCallback={this.loadDataSource} />
           </>
         );
       },
@@ -149,10 +141,6 @@ class BaseCrudList extends React.Component {
   state = {
     dataSource: [],
     selection: [],
-    formWidgetModal: {
-      visible: false,
-      row: null,
-    },
   };
 
   /* 处理dataSource中的数据项 */
@@ -190,53 +178,6 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handlePreviewItem = row => {
-    this.setState({
-      formWidgetModal: {
-        visible: true,
-        row,
-      },
-    });
-  };
-  handleClosePreviewModal = () => {
-    this.setState({
-      formWidgetModal: {
-        visible: false,
-        row: null,
-      },
-    });
-  };
-
-  handleDelItem = rows => {
-    rows = rows[0]; // 暂时没有批量
-    Modal.confirm({
-      title: '确定要删除这些数据吗？',
-      content: rows.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'magazine/del',
-          payload: {
-            id: rows._id,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
-      },
-    });
-  };
-
-  handleDelItemBatch = () => {
-    this.handleDelItem(this.state.selection);
-  };
-
   handleSearch = (e, form) => {
     e.preventDefault();
     form.validateFields((err, formData) => {
@@ -258,19 +199,12 @@ class BaseCrudList extends React.Component {
   }
 
   renderBatchOperatorBar = () => {
-    return (
-      <>
-        <span>&emsp;</span>
-        <Button type="danger" onClick={this.handleDelItemBatch}>
-          批量删除
-        </Button>
-      </>
-    );
+    return null;
   };
 
   render() {
     const { columns, config, pagination } = this;
-    const { dataSource, selection, formWidgetModal } = this.state;
+    const { dataSource, selection } = this.state;
 
     return (
       <Card className="page__list">
@@ -290,16 +224,6 @@ class BaseCrudList extends React.Component {
           pagination={pagination}
           onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
         />
-        <Drawer
-          placement="right"
-          title="查看详情"
-          width={900}
-          destroyOnClose
-          visible={formWidgetModal.visible}
-          onClose={this.handleClosePreviewModal}
-        >
-          {formWidgetModal.visible && <FormWidget preview id={formWidgetModal.row._id} />}
-        </Drawer>
       </Card>
     );
   }

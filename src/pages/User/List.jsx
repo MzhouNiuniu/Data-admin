@@ -30,7 +30,7 @@ class SearchForm extends React.Component {
     return (
       <div className="search-bar">
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="标题查询">
+          <Form.Item label="用户名">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
           <Form.Item>
@@ -71,19 +71,6 @@ class BaseCrudList extends React.Component {
       title: '用户名',
       dataIndex: 'userName',
     },
-    // {
-    //   title: '操作',
-    //   key: 'action',
-    //   render: (text, row, index) => {
-    //     return (
-    //       <>
-    //         <Button type="danger" onClick={() => this.handleDelItem([row])}>
-    //           删除
-    //         </Button>
-    //       </>
-    //     );
-    //   },
-    // },
   ];
 
   config = {
@@ -144,36 +131,6 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handleDelItem = rows => {
-    rows = rows[0]; // 暂时没有批量
-    Modal.confirm({
-      title: '确定要删除这些数据吗？',
-      content: rows.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'user/del',
-          payload: {
-            id: rows._id,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
-      },
-    });
-  };
-
-  handleDelItemBatch = () => {
-    this.handleDelItem(this.state.selection);
-  };
-
   handleSearch = (e, form) => {
     e.preventDefault();
     form.validateFields((err, formData) => {
@@ -195,14 +152,7 @@ class BaseCrudList extends React.Component {
   }
 
   renderBatchOperatorBar = () => {
-    return (
-      <>
-        <span>&emsp;</span>
-        <Button type="danger" onClick={this.handleDelItemBatch}>
-          批量删除
-        </Button>
-      </>
-    );
+    return null;
   };
 
   render() {

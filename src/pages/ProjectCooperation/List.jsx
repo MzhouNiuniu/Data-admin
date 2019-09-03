@@ -2,13 +2,15 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
 import './List.scss';
-import { Card, Table, Button, Form, Input, message, Modal, Drawer, Tooltip, Select } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Tooltip, Select } from 'antd';
 import ProTable from '@components/Table/index';
 import constant from '@constant';
+import FormWidget from './FormWidget';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
-import FormWidget from './FormWidget';
+import PreviewButton from '@components/project/PreviewButton';
+import DeleteButton from '@components/project/DeleteButton';
 
 const { Option } = Select;
 
@@ -68,14 +70,7 @@ class SearchForm extends React.Component {
 }
 
 const RenderBatchOperatorBar = props => {
-  return (
-    <>
-      <span>&emsp;</span>
-      <Button type="danger" onClick={props.handleDelItemBatch}>
-        批量删除
-      </Button>
-    </>
-  );
+  return null;
 };
 
 @connect()
@@ -108,6 +103,14 @@ class List extends React.Component {
       },
     },
     {
+      title: '审核状态',
+      dataIndex: 'cnStatus',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'releaseTime',
+    },
+    {
       title: '操作',
       key: 'action',
       render: (text, row, index) => {
@@ -119,23 +122,18 @@ class List extends React.Component {
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
-            <span>&emsp;</span>
             <StickButton
               row={row}
               api="/collaborate/stickById"
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
-            <span>&emsp;</span>
-            <Button onClick={() => this.handlePreviewItem(row)}>查看</Button>
-            <span>&emsp;</span>
-            <LinkButton type="primary" to={`Form/${row._id}`}>
-              编辑
-            </LinkButton>
-            <span>&emsp;</span>
-            <Button type="danger" onClick={() => this.handleDelItem([row])}>
-              删除
-            </Button>
+            <PreviewButton row={row} FormWidget={FormWidget} />
+            <DeleteButton
+              api="/collaborate/delById"
+              row={row}
+              finallyCallback={this.loadDataSource}
+            />
           </>
         );
       },
@@ -156,10 +154,6 @@ class List extends React.Component {
       limit: 10,
       keyWords: '',
     },
-    formWidgetModal: {
-      visible: false,
-      row: null,
-    },
   };
 
   componentDidMount() {
@@ -167,7 +161,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { dataSource, formWidgetModal, selectRows } = this.state;
+    const { dataSource, selectRows } = this.state;
     const { columns, pagination } = this;
     return (
       <Card className="page__list">
@@ -186,17 +180,6 @@ class List extends React.Component {
           onSelectChange={this.saveSelectRows}
           pagination={pagination}
         />
-
-        <Drawer
-          placement="right"
-          title="查看详情"
-          width={900}
-          destroyOnClose
-          visible={formWidgetModal.visible}
-          onClose={this.handleClosePreviewModal}
-        >
-          {formWidgetModal.visible && <FormWidget preview id={formWidgetModal.row._id} />}
-        </Drawer>
       </Card>
     );
   }
@@ -265,22 +248,6 @@ class List extends React.Component {
     }
     row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
-  };
-  handlePreviewItem = row => {
-    this.setState({
-      formWidgetModal: {
-        visible: true,
-        row,
-      },
-    });
-  };
-  handleClosePreviewModal = () => {
-    this.setState({
-      formWidgetModal: {
-        visible: false,
-        row: null,
-      },
-    });
   };
 
   handleDelItem = rows => {

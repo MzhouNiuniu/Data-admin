@@ -7,6 +7,9 @@ import constant from '@constant';
 import AuditButton from '@components/project/AuditButton';
 import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
+import PreviewButton from '@components/project/PreviewButton';
+import DeleteButton from '@components/project/DeleteButton';
+import FormWidget from './FormWidget';
 
 @Form.create({
   name: 'search',
@@ -32,7 +35,7 @@ class SearchForm extends React.Component {
     return (
       <div className="search-bar">
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="标题查询">
+          <Form.Item label="标题">
             {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
           </Form.Item>
           <Form.Item label="类型">
@@ -105,13 +108,8 @@ class BaseCrudList extends React.Component {
               status={row.stick}
               finallyCallback={this.loadDataSource}
             />
-            <LinkButton type="primary" to={`Form/${row._id}`}>
-              编辑
-            </LinkButton>
-            <span>&emsp;</span>
-            <Button type="danger" onClick={() => this.handleDelItem([row])}>
-              删除
-            </Button>
+            <PreviewButton row={row} FormWidget={FormWidget} />
+            <DeleteButton api="/statute/delById" row={row} finallyCallback={this.loadDataSource} />
           </>
         );
       },
@@ -176,36 +174,6 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handleDelItem = rows => {
-    rows = rows[0]; // 暂时没有批量
-    Modal.confirm({
-      title: '确定要删除这些数据吗？',
-      content: rows.title,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'policy/del',
-          payload: {
-            id: rows._id,
-          },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
-          message.success(res.message);
-          this.loadDataSource();
-        });
-      },
-    });
-  };
-
-  handleDelItemBatch = () => {
-    this.handleDelItem(this.state.selection);
-  };
-
   handleSearch = (e, form) => {
     e.preventDefault();
     form.validateFields((err, formData) => {
@@ -222,25 +190,12 @@ class BaseCrudList extends React.Component {
     this.handleSearch(e, form);
   };
 
-  handleUploadTplFile = info => {
-    if (info.file.status !== 'done') return;
-    const { defaultPagination } = this;
-    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
-  };
-
   componentDidMount() {
     this.loadDataSource();
   }
 
   renderBatchOperatorBar = () => {
-    return (
-      <>
-        <span>&emsp;</span>
-        <Button type="danger" onClick={this.handleDelItemBatch}>
-          批量删除
-        </Button>
-      </>
-    );
+    return null;
   };
 
   render() {
@@ -256,15 +211,6 @@ class BaseCrudList extends React.Component {
         />
         <div className="operator-bar">
           <LinkButton to="Form"> 添加政策 </LinkButton>
-          <span>&emsp;</span>
-          <Upload
-            showUploadList={false}
-            name="file"
-            action="/policy/importExcel"
-            onChange={this.handleUploadTplFile}
-          >
-            <Button type="primary">导入政策</Button>
-          </Upload>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

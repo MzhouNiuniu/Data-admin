@@ -361,18 +361,22 @@ class AddBond extends React.Component {
         {!value ? (
           <>
             <div className="text-disabled">未设置</div>
-            <Button type="dashed" size="small" onClick={this.handleOpenModal}>
-              添加
-            </Button>
+            <div className="hide_disabled">
+              <Button type="dashed" size="small" onClick={this.handleOpenModal}>
+                添加
+              </Button>
+            </div>
           </>
         ) : (
           <>
             <div>{value.fullName || value.abbreviation}</div>
-            <Button type="primary" size="small" onClick={this.handleOpenModal}>
-              编辑
-            </Button>
-            <span>&nbsp;</span>
-            <BondRecordManage records={records} setRecords={this.setRecords} />
+            <div className="hide_disabled">
+              <Button type="primary" size="small" onClick={this.handleOpenModal}>
+                编辑
+              </Button>
+              <span>&nbsp;</span>
+              <BondRecordManage records={records} setRecords={this.setRecords} />
+            </div>
           </>
         )}
         <Modal

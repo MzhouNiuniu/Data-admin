@@ -1,6 +1,11 @@
 export default {
   'menu.welcome': '欢迎',
 
+  'menu.BasicData': '基础数据',
+  'menu.BasicData.List': '数据列表',
+  'menu.BasicData.Form': '添加数据',
+  'menu.BasicData.FormEdit': '编辑数据',
+
   'menu.CityInvest': '城投数据',
   'menu.CityInvest.List': '公司列表',
   'menu.CityInvest.Form': '添加公司',

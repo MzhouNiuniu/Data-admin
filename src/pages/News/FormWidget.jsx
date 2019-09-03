@@ -5,12 +5,14 @@ import { connect } from 'dva';
 import { Row, Col, Form, Input, Button, message, Select } from 'antd';
 import Editor from '@components/Form/Editor';
 import constant from '@constant';
+import AuditMessage from '@components/project/AuditMessage';
 
 @connect()
 @Form.create()
 class FormWidget extends React.Component {
   editor = null;
   static propTypes = {
+    preview: propTypes.bool, // 是否为预览模式
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
     onCancel: propTypes.func,
@@ -21,6 +23,9 @@ class FormWidget extends React.Component {
     onCancel() {},
   };
 
+  state = {
+    AuditMessage: [],
+  };
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
@@ -79,76 +84,91 @@ class FormWidget extends React.Component {
           return;
         }
 
+        this.setState({
+          auditMessageList: formData.auditList,
+        });
         this.props.form.setFieldsValue(formData);
       });
     }
   }
 
   render() {
-    const { form } = this.props;
+    const { auditMessageList } = this.state;
+    const { id, form, preview } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Row>
-          <Col span={19}>
-            <Form.Item label="标题">
-              {form.getFieldDecorator('title', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入标题',
-                  },
-                ],
-              })(<Input placeholder="请输入标题" />)}
+        {!preview && id && <AuditMessage message={auditMessageList} />}
+        <fieldset disabled={preview}>
+          <Row>
+            <Col span={19}>
+              <Form.Item label="标题">
+                {form.getFieldDecorator('title', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入标题',
+                    },
+                  ],
+                })(<Input placeholder="请输入标题" />)}
+              </Form.Item>
+            </Col>
+            <Col span={4} offset={1}>
+              <Form.Item label="类型">
+                {form.getFieldDecorator('type', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择类型',
+                    },
+                  ],
+                })(
+                  <Select placeholder="请选择类型">
+                    {constant.news.type.map(item => (
+                      <Select.Option key={item.value} value={item.value}>
+                        {item.label}
+                      </Select.Option>
+                    ))}
+                  </Select>,
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item label="来源">
+            {form.getFieldDecorator('source', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入来源',
+                },
+              ],
+            })(<Input placeholder="请输入来源" />)}
+          </Form.Item>
+          <Form.Item label="内容">
+            {form.getFieldDecorator('content', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入内容',
+                },
+              ],
+            })(
+              <Editor
+                ref={ref => (this.editor = ref)}
+                disabled={preview}
+                placeholder="请输入内容"
+              />,
+            )}
+          </Form.Item>
+          {preview && (
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+              <span>&emsp;</span>
+              <Button onClick={this.props.onCancel}>取消</Button>
             </Form.Item>
-          </Col>
-          <Col span={4} offset={1}>
-            <Form.Item label="类型">
-              {form.getFieldDecorator('type', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择类型',
-                  },
-                ],
-              })(
-                <Select placeholder="请选择类型">
-                  {constant.news.type.map(item => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>,
-              )}
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item label="来源">
-          {form.getFieldDecorator('source', {
-            rules: [
-              {
-                required: true,
-                message: '请输入来源',
-              },
-            ],
-          })(<Input placeholder="请输入来源" />)}
-        </Form.Item>
-        <Form.Item label="内容">
-          {form.getFieldDecorator('content', {
-            rules: [
-              {
-                required: true,
-                message: '请输入内容',
-              },
-            ],
-          })(<Editor ref={ref => (this.editor = ref)} placeholder="请输入内容" />)}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-          <span>&emsp;</span>
-          <Button onClick={this.props.onCancel}>取消</Button>
-        </Form.Item>
+          )}
+        </fieldset>
       </Form>
     );
   }

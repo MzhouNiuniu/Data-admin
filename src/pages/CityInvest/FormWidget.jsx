@@ -11,11 +11,13 @@ import Area from '@components/Form/Area';
 import UploadImage from '@components/Form/Upload/Image';
 import UploadFile from '@components/Form/Upload/File';
 import AddBond from './AddBond';
+import AuditMessage from '@components/project/AuditMessage';
 
 @connect()
 @Form.create()
 class FormWidget extends React.Component {
   static propTypes = {
+    preview: propTypes.bool, // 是否为预览模式
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
     onCancel: propTypes.func,
@@ -25,7 +27,9 @@ class FormWidget extends React.Component {
     onClose() {},
     onCancel() {},
   };
+
   state = {
+    auditMessageList: [],
     multipleItemQueueLength: {
       financial: 0,
       rate: 0,
@@ -113,11 +117,17 @@ class FormWidget extends React.Component {
         this.state.multipleItemQueueLength.rate = formData.rate.length;
         this.state.multipleItemQueueLength.financing = formData.financing.length;
         this.state.multipleItemQueueLength.other = formData.other.length;
-        this.setState({}, () => {
-          setTimeout(() => {
-            this.props.form.setFieldsValue(formData);
-          }, 0);
-        });
+
+        this.setState(
+          {
+            auditMessageList: formData.auditList,
+          },
+          () => {
+            setTimeout(() => {
+              this.props.form.setFieldsValue(formData);
+            }, 0);
+          },
+        );
       });
     }
   }
@@ -681,55 +691,60 @@ class FormWidget extends React.Component {
   };
 
   render() {
-    const { multipleItemQueueLength } = this.state;
-    const { form } = this.props;
+    const { multipleItemQueueLength, auditMessageList } = this.state;
+    const { id, form, preview } = this.props;
     console.log(form.getFieldsValue());
     return (
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
-        {this.renderBaseInfo()}
-        <Form.Item>
-          <Tabs renderTabBar={this.renderTabBar}>
-            <Tabs.TabPane forceRender tab="财务信息" key="financial">
-              <MultipleItemQueue
-                buttonText="添加财务信息"
-                queueLength={multipleItemQueueLength.financial}
-              >
-                {this.renderFinanceInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="评级信息" key="rate">
-              <MultipleItemQueue
-                buttonText="添加评级信息"
-                queueLength={multipleItemQueueLength.rate}
-              >
-                {this.renderGradeInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="融资信息" key="financing">
-              <MultipleItemQueue
-                buttonText="添加融资信息"
-                queueLength={multipleItemQueueLength.financing}
-              >
-                {this.renderBizInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="其它信息" key="other">
-              <MultipleItemQueue
-                buttonText="添加其它信息"
-                queueLength={multipleItemQueueLength.other}
-              >
-                {this.renderOtherInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-          </Tabs>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-          <span>&emsp;</span>
-          <Button onClick={this.props.onCancel}>取消</Button>
-        </Form.Item>
+        {!preview && id && <AuditMessage message={auditMessageList} />}
+        <fieldset disabled={preview}>
+          {this.renderBaseInfo()}
+          <Form.Item>
+            <Tabs renderTabBar={this.renderTabBar}>
+              <Tabs.TabPane forceRender tab="财务信息" key="financial">
+                <MultipleItemQueue
+                  buttonText="添加财务信息"
+                  queueLength={multipleItemQueueLength.financial}
+                >
+                  {this.renderFinanceInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="评级信息" key="rate">
+                <MultipleItemQueue
+                  buttonText="添加评级信息"
+                  queueLength={multipleItemQueueLength.rate}
+                >
+                  {this.renderGradeInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="融资信息" key="financing">
+                <MultipleItemQueue
+                  buttonText="添加融资信息"
+                  queueLength={multipleItemQueueLength.financing}
+                >
+                  {this.renderBizInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="其它信息" key="other">
+                <MultipleItemQueue
+                  buttonText="添加其它信息"
+                  queueLength={multipleItemQueueLength.other}
+                >
+                  {this.renderOtherInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+            </Tabs>
+          </Form.Item>
+          {!preview && (
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+              <span>&emsp;</span>
+              <Button onClick={this.props.onCancel}>取消</Button>
+            </Form.Item>
+          )}
+        </fieldset>
       </Form>
     );
   }

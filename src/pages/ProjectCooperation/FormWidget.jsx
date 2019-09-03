@@ -1,7 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import Fieldset from '@components/Form/Fieldset';
 import UploadFile from '@components/Form/Upload/File';
 import UploadImage from '@components/Form/Upload/Image';
 
@@ -22,6 +21,7 @@ import {
   message,
 } from 'antd';
 import Editor from '@components/Form/Editor';
+import AuditMessage from '@components/project/AuditMessage';
 
 const props = {
   name: 'file',
@@ -58,6 +58,7 @@ class ProjCooForm extends React.Component {
   };
 
   state = {
+    auditMessageList: [],
     confirmDirty: false,
     loading: false,
   };
@@ -121,6 +122,7 @@ class ProjCooForm extends React.Component {
       });
     }
   };
+
   componentDidMount() {
     if (this.props.id) {
       const { dispatch } = this.props;
@@ -134,13 +136,19 @@ class ProjCooForm extends React.Component {
           this.props.onCancel();
           return;
         }
+
+        this.setState({
+          auditMessageList: formData.auditList,
+        });
         this.props.form.setFieldsValue(formData);
       });
     }
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { preview, form } = this.props;
+    const { auditMessageList } = this.state;
+    const { id, preview, form } = this.props;
     const formItemLayout = {};
     const tailFormItemLayout = {};
 
@@ -155,6 +163,7 @@ class ProjCooForm extends React.Component {
     return (
       <>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+          {!preview && id && <AuditMessage message={auditMessageList} />}
           <Form.Item label="项目名称">
             {getFieldDecorator('name', {
               rules: [

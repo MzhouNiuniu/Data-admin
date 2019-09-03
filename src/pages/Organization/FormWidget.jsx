@@ -6,6 +6,7 @@ import { Form, Input, Select, Button, message, Icon } from 'antd';
 import Fieldset from '@components/Form/Fieldset';
 import MultipleItemQueue from '@components/Form/MultipleItemQueue';
 import Area from '@components/Form/Area';
+import AuditMessage from '@components/project/AuditMessage';
 
 @connect()
 @Form.create()
@@ -24,6 +25,7 @@ class FormWidget extends React.Component {
   };
 
   state = {
+    auditMessageList: [],
     multipleItemQueueLength: {
       experience: 0,
     },
@@ -112,7 +114,9 @@ class FormWidget extends React.Component {
         if (formData.experience) {
           multipleItemQueueLength.experience = formData.experience.length;
         }
-        this.setState({});
+        this.setState({
+          auditMessageList: formData.auditList,
+        });
 
         this.props.form.setFieldsValue(formData);
       });
@@ -189,14 +193,15 @@ class FormWidget extends React.Component {
   };
 
   render() {
-    const { multipleItemQueueLength } = this.state;
-    const { preview, form } = this.props;
+    const { multipleItemQueueLength, auditMessageList } = this.state;
+    const { id, preview, form } = this.props;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 17 },
     };
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit} style={{ maxWidth: '1200px' }}>
+        {!preview && id && <AuditMessage message={auditMessageList} />}
         <Fieldset disabled={preview}>
           <Form.Item label="机构名称">
             {form.getFieldDecorator('name', {
@@ -240,6 +245,28 @@ class FormWidget extends React.Component {
                 },
               ],
             })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入服务内容" />))}
+          </Form.Item>
+          <Form.Item label="经营范围">
+            {form.getFieldDecorator('scope', {
+              validateTrigger: ['onBlur'],
+              rules: [
+                {
+                  required: true,
+                  message: '请输入经营范围',
+                },
+              ],
+            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入经营范围" />))}
+          </Form.Item>
+          <Form.Item label="专业领域">
+            {form.getFieldDecorator('speciality', {
+              validateTrigger: ['onBlur'],
+              rules: [
+                {
+                  required: true,
+                  message: '请输入专业领域',
+                },
+              ],
+            })(Fieldset.Field(<Input.TextArea rows={4} placeholder="请输入专业领域" />))}
           </Form.Item>
           <Form.Item label="合作经验">
             <MultipleItemQueue

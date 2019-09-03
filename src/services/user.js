@@ -2,8 +2,8 @@ import request from '@/utils/request';
 
 export function login(payload) {
   return request('/user/login', {
-    method: 'get',
-    params: payload,
+    method: 'post',
+    data: payload,
   });
 }
 
@@ -36,6 +36,28 @@ export function loadRoutes() {
           path: '/',
           name: 'welcome',
           // icon: '',
+        },
+        {
+          path: '/BasicData',
+          name: 'BasicData',
+          icon: '',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+              icon: '',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+              icon: '',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+              icon: '',
+            },
+          ],
         },
         {
           path: '/CityInvest',

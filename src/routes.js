@@ -44,6 +44,30 @@ module.exports = [
           },
         ],
       },
+      /* 基础数据 */
+      {
+        path: '/BasicData',
+        name: 'BasicData',
+        routes: [
+          {
+            path: 'List',
+            name: 'List',
+            component: './BasicData/List',
+          },
+          {
+            path: 'Form',
+            name: 'Form',
+            component: './BasicData/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'Form/:id',
+            name: 'FormEdit',
+            component: './BasicData/Form',
+          },
+        ],
+      },
+
       /* 城投数据 */
       {
         path: '/CityInvest',

@@ -2,13 +2,13 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
-import constant from '@constant';
-import AuditButton from '@components/project/AuditButton';
-import LinkButton from '@components/LinkButton';
-import StickButton from '@components/project/StickButton';
-import PreviewButton from '@components/project/PreviewButton';
+import { Card, Table, Button, Form, Input, message, Modal, Col } from 'antd';
 import FormWidget from './FormWidget';
+import constant from '@constant';
+import LinkButton from '@components/LinkButton';
+import PreviewButton from '@components/project/PreviewButton';
+import YearPicker from '@components/Form/DatePicker/YearPicker';
+import Area from '@components/Form/Area';
 import DeleteButton from '@components/project/DeleteButton';
 
 @Form.create({
@@ -35,20 +35,12 @@ class SearchForm extends React.Component {
     return (
       <div className="search-bar">
         <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="标题">
-            {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
+          <Form.Item label="年份">
+            {form.getFieldDecorator('year')(<YearPicker placeholder="请选择年份" />)}
           </Form.Item>
-          <Form.Item label="类型">
-            {form.getFieldDecorator('type', {
-              initialValue: 0,
-            })(
-              <Select placeholder="请选择类型" className="w160px" allowClear={true}>
-                {constant.profession.report.type.map(item => (
-                  <Select.Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Select.Option>
-                ))}
-              </Select>,
+          <Form.Item label="地区">
+            {form.getFieldDecorator('area', { initialValue: [] })(
+              <Area placeholder="请选择地区" useAddress={false} />,
             )}
           </Form.Item>
           <Form.Item>
@@ -70,28 +62,39 @@ class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
-      width: 90,
-      title: '封面',
-      dataIndex: 'cover',
-      render(text) {
-        if (!text) {
-          return '暂未设置';
-        }
-        return <img className="max-width-100" src={text} alt="" />;
-      },
+      width: 60,
+      title: '年份',
+      dataIndex: 'year',
     },
     {
-      width: 220,
-      title: '标题',
-      dataIndex: 'name',
+      width: 180,
+      title: '辖区名称',
+      dataIndex: 'directly',
     },
     {
-      title: '类型',
-      dataIndex: 'cnType',
+      width: 110,
+      title: '省',
+      dataIndex: 'province',
     },
     {
-      title: '审核状态',
-      dataIndex: 'cnStatus',
+      width: 110,
+      title: 'GDP',
+      dataIndex: 'GDP',
+    },
+    {
+      width: 110,
+      title: 'GDP增速',
+      dataIndex: 'addFDP',
+    },
+    {
+      width: 110,
+      title: '收入',
+      dataIndex: 'income',
+    },
+    {
+      width: 110,
+      title: '增长收入',
+      dataIndex: 'addIncome',
     },
     {
       title: '创建时间',
@@ -103,21 +106,13 @@ class BaseCrudList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            <AuditButton
-              row={row}
-              api="/researchReport/updateStatusById"
-              status={row.status}
-              finallyCallback={this.loadDataSource}
-            />
-            <StickButton
-              row={row}
-              api="/researchReport/stickById"
-              status={row.stick}
-              finallyCallback={this.loadDataSource}
-            />
             <PreviewButton row={row} FormWidget={FormWidget} />
+            <LinkButton type="primary" to={`Form/${row._id}`}>
+              编辑
+            </LinkButton>
+            <span>&emsp;</span>
             <DeleteButton
-              api="/researchReport/delById"
+              api="/basicData/delById"
               row={row}
               finallyCallback={this.loadDataSource}
             />
@@ -154,7 +149,9 @@ class BaseCrudList extends React.Component {
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    row.cnType = constant.profession.report.typeMap[row.type] || row.status;
+    if (row.avatar) {
+      row.avatar = row.avatar.split(',')[0];
+    }
     row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
@@ -164,13 +161,24 @@ class BaseCrudList extends React.Component {
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
+
+    const formData = searchForm.getFieldsValue();
+    /* 生成地区信息 */
+    {
+      const { area } = formData;
+      delete formData.area;
+      formData.province = area[0];
+      formData.city = area[1];
+      formData.district = area[2];
+    }
+
     const params = {
       page,
       limit: size,
-      ...searchForm.getFieldsValue(),
+      ...formData,
     };
     dispatch({
-      type: 'professionReport/list',
+      type: 'basicData/list',
       payload: params,
     }).then(res => {
       if (res.status !== 200) return;
@@ -221,7 +229,7 @@ class BaseCrudList extends React.Component {
           onReset={this.handleSearchReset}
         />
         <div className="operator-bar">
-          <LinkButton to="Form"> 添加报告 </LinkButton>
+          <LinkButton to="Form"> 添加数据 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

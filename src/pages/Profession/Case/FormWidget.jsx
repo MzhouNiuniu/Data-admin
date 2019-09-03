@@ -4,12 +4,14 @@ import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Form, Input, Button, message } from 'antd';
 import Editor from '@components/Form/Editor';
+import AuditMessage from '@components/project/AuditMessage';
 
 @connect()
 @Form.create()
 class FormWidget extends React.Component {
   editor = null;
   static propTypes = {
+    preview: propTypes.bool, // 是否为预览模式
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
     onCancel: propTypes.func,
@@ -18,6 +20,10 @@ class FormWidget extends React.Component {
   static defaultProps = {
     onClose() {},
     onCancel() {},
+  };
+
+  state = {
+    auditMessageList: [],
   };
 
   handleSubmit = e => {
@@ -79,52 +85,67 @@ class FormWidget extends React.Component {
           return;
         }
 
+        this.setState({
+          auditMessageList: formData.auditList,
+        });
         this.props.form.setFieldsValue(formData);
       });
     }
   }
 
   render() {
-    const { form } = this.props;
+    const { auditMessageList } = this.state;
+    const { id, form, preview } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="标题">
-          {form.getFieldDecorator('name', {
-            rules: [
-              {
-                required: true,
-                message: '请输入标题',
-              },
-            ],
-          })(<Input placeholder="请输入标题" />)}
-        </Form.Item>
-        <Form.Item label="简介">
-          {form.getFieldDecorator('brief', {
-            rules: [
-              {
-                required: true,
-                message: '请输入简介',
-              },
-            ],
-          })(<Input.TextArea placeholder="请输入简介" />)}
-        </Form.Item>
-        <Form.Item label="内容">
-          {form.getFieldDecorator('content', {
-            rules: [
-              {
-                required: true,
-                message: '请输入内容',
-              },
-            ],
-          })(<Editor ref={ref => (this.editor = ref)} placeholder="请输入内容" />)}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-          <span>&emsp;</span>
-          <Button onClick={this.props.onCancel}>取消</Button>
-        </Form.Item>
+        {!preview && id && <AuditMessage message={auditMessageList} />}
+        <fieldset disabled={preview}>
+          <Form.Item label="标题">
+            {form.getFieldDecorator('name', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入标题',
+                },
+              ],
+            })(<Input placeholder="请输入标题" />)}
+          </Form.Item>
+          <Form.Item label="简介">
+            {form.getFieldDecorator('brief', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入简介',
+                },
+              ],
+            })(<Input.TextArea placeholder="请输入简介" />)}
+          </Form.Item>
+          <Form.Item label="内容">
+            {form.getFieldDecorator('content', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入内容',
+                },
+              ],
+            })(
+              <Editor
+                ref={ref => (this.editor = ref)}
+                disabled={preview}
+                placeholder="请输入内容"
+              />,
+            )}
+          </Form.Item>
+          {preview && (
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+              <span>&emsp;</span>
+              <Button onClick={this.props.onCancel}>取消</Button>
+            </Form.Item>
+          )}
+        </fieldset>
       </Form>
     );
   }

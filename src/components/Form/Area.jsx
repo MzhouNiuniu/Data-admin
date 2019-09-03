@@ -29,6 +29,8 @@ class Area extends React.Component {
   isInit = false;
   state = {
     options: [],
+
+    // 这两个主要是数据备份，修复了表单验证0
     area: [],
     address: '',
     addressTouched: false,
@@ -146,7 +148,9 @@ class Area extends React.Component {
     /**
      * 数据格式：[[省、市、区],详细地址]
      * */
-    if (!this.state.addressTouched) return;
+    if (!this.state.addressTouched) {
+      return;
+    }
     if (this.state.area.length === 0 || !this.state.address) {
       this.props.onChange([]);
       return;
@@ -155,8 +159,19 @@ class Area extends React.Component {
   };
 
   render() {
-    const { options, area, address } = this.state;
-    const { className, style, disabled, useAddress, placeholder } = this.props;
+    const { options } = this.state;
+    const { value, className, style, disabled, useAddress, placeholder } = this.props;
+
+    let area = null,
+      address = null;
+    if (useAddress) {
+      area = value[0];
+      address = value[1];
+    } else {
+      area = value;
+      address = undefined;
+    }
+
     return (
       <div className={className} style={style}>
         <Cascader

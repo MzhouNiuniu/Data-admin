@@ -1,8 +1,9 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { Form, Button, Modal, message, Input, Dropdown, Icon, Menu } from 'antd';
-import Permission from '@components/Permission';
 import request from '@/utils/request';
+import Permission from '@components/Permission';
+import LinkButton from '@components/LinkButton';
 
 const RejectForm = Form.create({ name: 'audit' })(function(props) {
   const { form, onSubmit, onCancel } = props;
@@ -80,12 +81,12 @@ class AuditButton extends React.Component {
     });
   };
 
-  handleClickRejectBtn = () => {
+  openRejectForm = () => {
     this.setState({
       visible: true,
     });
   };
-  handleCloseRejectForm = () => {
+  closeRejectForm = () => {
     this.setState({
       visible: false,
     });
@@ -111,6 +112,7 @@ class AuditButton extends React.Component {
           return;
         }
         message.success(res.message);
+        this.closeRejectForm();
         this.props.onReject && this.props.onReject();
         this.props.finallyCallback && this.props.finallyCallback();
       });
@@ -119,36 +121,48 @@ class AuditButton extends React.Component {
 
   render() {
     const { visible } = this.state;
+    const { row } = this.props;
     const status = Number(this.props.status);
-    if (status !== 0) {
+
+    // 审核通过不显示
+    if (status === 1) {
       return null;
     }
+
+    // 审核不通过 显示编辑按钮
     const menu = (
       <Menu>
         <Menu.Item key="resolve" onClick={this.handleClickResolveBtn}>
           通过
         </Menu.Item>
-        <Menu.Item key="reject" onClick={this.handleClickRejectBtn}>
+        <Menu.Item key="reject" onClick={this.openRejectForm}>
           不通过
         </Menu.Item>
       </Menu>
     );
     return (
-      <Permission permission={['admin']}>
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button className="info">
-            审核
-            <Icon type="down-circle" theme="twoTone" />
-          </Button>
-        </Dropdown>
-        <Modal destroyOnClose visible={visible} footer={null} onCancel={this.handleCloseRejectForm}>
-          <RejectForm
-            onSubmit={this.handleRejectFormSubmit}
-            onCancel={this.handleCloseRejectForm}
-          />
-        </Modal>
-        {status === 0 && <span>&emsp;</span>}
-      </Permission>
+      <>
+        <Permission permission={['admin']}>
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Button className="info">
+              审核
+              <Icon type="down-circle" theme="twoTone" />
+            </Button>
+          </Dropdown>
+          <span>&emsp;</span>
+          <Modal destroyOnClose visible={visible} footer={null} onCancel={this.closeRejectForm}>
+            <RejectForm onSubmit={this.handleRejectFormSubmit} onCancel={this.closeRejectForm} />
+          </Modal>
+        </Permission>
+        {status === 2 && (
+          <>
+            <LinkButton type="primary" to={`Form/${row._id}`}>
+              编辑
+            </LinkButton>
+            <span>&emsp;</span>
+          </>
+        )}
+      </>
     );
   }
 }
