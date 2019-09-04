@@ -5,46 +5,7 @@ import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
 import LinkButton from '@components/LinkButton';
-
-@Form.create({
-  name: 'search',
-})
-class SearchForm extends React.Component {
-  static propTypes = {
-    onSubmit: propTypes.func,
-    onReset: propTypes.func,
-  };
-  static defaultProps = {
-    onSubmit() {},
-    onReset() {},
-  };
-  onSubmit = e => {
-    this.props.onSubmit(e, this.props.form);
-  };
-  onReset = e => {
-    this.props.onReset(e, this.props.form);
-  };
-
-  render() {
-    const { form } = this.props;
-    return (
-      <div className="search-bar">
-        <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="用户名">
-            {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <span>&emsp;</span>
-            <Button onClick={this.onReset}>重置</Button>
-          </Form.Item>
-        </Form>
-      </div>
-    );
-  }
-}
+import SearchForm from '@components/project/SearchForm';
 
 @connect()
 @Form.create()
@@ -131,20 +92,9 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handleSearch = (e, form) => {
-    e.preventDefault();
-    form.validateFields((err, formData) => {
-      if (err) {
-        return;
-      }
-      const { defaultPagination } = this;
-      this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
-    });
-  };
-
-  handleSearchReset = (e, form) => {
-    form.resetFields();
-    this.handleSearch(e, form);
+  handleSearchFormChange = () => {
+    const { defaultPagination } = this;
+    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
   };
 
   componentDidMount() {
@@ -162,10 +112,17 @@ class BaseCrudList extends React.Component {
     return (
       <Card className="page__list">
         <SearchForm
-          ref={ref => (this.searchForm = ref)}
-          onSubmit={this.handleSearch}
-          onReset={this.handleSearchReset}
-        />
+          wrappedComponentRef={ref => (this.searchForm = ref)}
+          onChange={this.handleSearchFormChange}
+        >
+          {form => (
+            <>
+              <Form.Item label="用户名">
+                {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
+              </Form.Item>
+            </>
+          )}
+        </SearchForm>
         <div className="operator-bar">
           <LinkButton to="Form"> 添加用户 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}

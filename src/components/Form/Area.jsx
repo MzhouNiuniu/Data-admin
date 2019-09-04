@@ -29,8 +29,6 @@ class Area extends React.Component {
   isInit = false;
   state = {
     options: [],
-
-    // 这两个主要是数据备份，修复了表单验证0
     area: [],
     address: '',
     addressTouched: false,
@@ -79,6 +77,19 @@ class Area extends React.Component {
           },
         );
       });
+    }
+
+    // fix 表单重置按钮
+    if (prevProps.value && prevProps.value[0] && !this.props.value[0]) {
+      // 需要详细地址时
+      if (!this.props.useAddress) {
+        this.setState({
+          area: [],
+          address: '',
+        });
+      } else {
+        // 暂不处理！！
+      }
     }
   }
 
@@ -159,18 +170,8 @@ class Area extends React.Component {
   };
 
   render() {
-    const { options } = this.state;
-    const { value, className, style, disabled, useAddress, placeholder } = this.props;
-
-    let area = null,
-      address = null;
-    if (useAddress) {
-      area = value[0];
-      address = value[1];
-    } else {
-      area = value;
-      address = undefined;
-    }
+    const { options, area, address } = this.state;
+    const { className, style, disabled, useAddress, placeholder } = this.props;
 
     return (
       <div className={className} style={style}>

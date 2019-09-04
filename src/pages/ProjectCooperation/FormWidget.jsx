@@ -22,6 +22,7 @@ import {
 } from 'antd';
 import Editor from '@components/Form/Editor';
 import AuditMessage from '@components/project/AuditMessage';
+import constant from '@constant/index';
 
 const props = {
   name: 'file',
@@ -164,16 +165,40 @@ class ProjCooForm extends React.Component {
       <>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           {!preview && id && <AuditMessage message={auditMessageList} />}
-          <Form.Item label="项目名称">
-            {getFieldDecorator('name', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入项目名称',
-                },
-              ],
-            })(<Input disabled={preview} />)}
-          </Form.Item>
+          <Row>
+            <Col span={19}>
+              <Form.Item label="项目名称">
+                {getFieldDecorator('name', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入项目名称',
+                    },
+                  ],
+                })(<Input disabled={preview} />)}
+              </Form.Item>
+            </Col>
+            <Col span={4} offset={1}>
+              <Form.Item label="类型">
+                {form.getFieldDecorator('type', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择类型',
+                    },
+                  ],
+                })(
+                  <Select placeholder="请选择类型">
+                    {constant.ProjectCooperation.projectType.map(item => (
+                      <Select.Option key={item.value} value={item.value}>
+                        {item.label}
+                      </Select.Option>
+                    ))}
+                  </Select>,
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Form.Item label="公司名称">
             {getFieldDecorator('company', {
@@ -187,29 +212,11 @@ class ProjCooForm extends React.Component {
           </Form.Item>
 
           <Form.Item label="推广公司">
-            {getFieldDecorator('Tcompany', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入推广公司',
-                },
-              ],
-            })(<Input disabled={preview} />)}
+            {getFieldDecorator('Tcompany')(<Input disabled={preview} />)}
           </Form.Item>
 
           <Form.Item label="推广联系方式">
-            {getFieldDecorator('Tcontact', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入推广联系方式',
-                },
-                {
-                  message: '手机格式不正确！',
-                  pattern: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[189])\d{8}$/,
-                },
-              ],
-            })(<Input disabled={preview} />)}
+            {getFieldDecorator('Tcontact')(<Input disabled={preview} />)}
           </Form.Item>
 
           <Form.Item label="内容">
@@ -230,25 +237,13 @@ class ProjCooForm extends React.Component {
           </Form.Item>
 
           <Form.Item label="附件">
-            {getFieldDecorator('accessory', {
-              rules: [
-                {
-                  required: true,
-                  message: '请上传',
-                },
-              ],
-            })(<UploadFile disabled={preview} multiple={true} valueType="array"></UploadFile>)}
+            {getFieldDecorator('accessory')(
+              <UploadFile disabled={preview} multiple={true} valueType="array"></UploadFile>,
+            )}
           </Form.Item>
 
           <Form.Item label="二维码">
-            {getFieldDecorator('Tphotos', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入',
-                },
-              ],
-            })(<UploadImage disabled={preview} />)}
+            {getFieldDecorator('Tphotos')(<UploadImage disabled={preview} />)}
           </Form.Item>
           {!preview && (
             <Form.Item {...tailFormItemLayout}>

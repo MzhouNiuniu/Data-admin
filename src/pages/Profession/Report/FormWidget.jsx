@@ -190,7 +190,7 @@ class FormWidget extends React.Component {
           <Form.Item label="附件">
             {form.getFieldDecorator('accessory')(<UploadFile multiple={true} />)}
           </Form.Item>
-          {preview && (
+          {!preview && (
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 提交
