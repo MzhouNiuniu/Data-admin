@@ -10,51 +10,7 @@ import PreviewButton from '@components/project/PreviewButton';
 import YearPicker from '@components/Form/DatePicker/YearPicker';
 import Area from '@components/Form/Area';
 import DeleteButton from '@components/project/DeleteButton';
-
-@Form.create({
-  name: 'search',
-})
-class SearchForm extends React.Component {
-  static propTypes = {
-    onSubmit: propTypes.func,
-    onReset: propTypes.func,
-  };
-  static defaultProps = {
-    onSubmit() {},
-    onReset() {},
-  };
-  onSubmit = e => {
-    this.props.onSubmit(e, this.props.form);
-  };
-  onReset = e => {
-    this.props.onReset(e, this.props.form);
-  };
-
-  render() {
-    const { form } = this.props;
-    return (
-      <div className="search-bar">
-        <Form layout="inline" onSubmit={this.onSubmit}>
-          <Form.Item label="年份">
-            {form.getFieldDecorator('year')(<YearPicker placeholder="请选择年份" />)}
-          </Form.Item>
-          <Form.Item label="地区">
-            {form.getFieldDecorator('area', { initialValue: [] })(
-              <Area placeholder="请选择地区" useAddress={false} />,
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <span>&emsp;</span>
-            <Button onClick={this.onReset}>重置</Button>
-          </Form.Item>
-        </Form>
-      </div>
-    );
-  }
-}
+import SearchForm from '@components/project/SearchForm';
 
 @connect()
 @Form.create()
@@ -193,20 +149,9 @@ class BaseCrudList extends React.Component {
     });
   };
 
-  handleSearch = (e, form) => {
-    e.preventDefault();
-    form.validateFields((err, formData) => {
-      if (err) {
-        return;
-      }
-      const { defaultPagination } = this;
-      this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
-    });
-  };
-
-  handleSearchReset = (e, form) => {
-    form.resetFields();
-    this.handleSearch(e, form);
+  handleSearchFormChange = () => {
+    const { defaultPagination } = this;
+    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
   };
 
   componentDidMount() {
@@ -224,10 +169,22 @@ class BaseCrudList extends React.Component {
     return (
       <Card className="page__list">
         <SearchForm
-          ref={ref => (this.searchForm = ref)}
-          onSubmit={this.handleSearch}
-          onReset={this.handleSearchReset}
-        />
+          wrappedComponentRef={ref => (this.searchForm = ref)}
+          onChange={this.handleSearchFormChange}
+        >
+          {form => (
+            <>
+              <Form.Item label="年份">
+                {form.getFieldDecorator('year')(<YearPicker placeholder="请选择年份" />)}
+              </Form.Item>
+              <Form.Item label="地区">
+                {form.getFieldDecorator('area', { initialValue: [] })(
+                  <Area placeholder="请选择地区" useAddress={false} />,
+                )}
+              </Form.Item>
+            </>
+          )}
+        </SearchForm>
         <div className="operator-bar">
           <LinkButton to="Form"> 添加数据 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}

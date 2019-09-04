@@ -11,62 +11,17 @@ import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
 import PreviewButton from '@components/project/PreviewButton';
 import DeleteButton from '@components/project/DeleteButton';
+import SearchForm from '@components/project/SearchForm';
+
+/**
+ * 重置、分页
+ * */
 
 const { Option } = Select;
 
 const children = [];
 for (let i = 10; i < 36; i++) {
   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
-
-function handleChange(value) {
-  console.log(`Selected: ${value}`);
-}
-
-@Form.create({
-  name: 'search',
-})
-class SearchForm extends React.Component {
-  static propTypes = {
-    onSubmit: propTypes.func,
-    onReset: propTypes.func,
-  };
-  static defaultProps = {
-    onSubmit() {},
-    onReset() {},
-  };
-  state = {
-    onSubmit: e => {
-      e.preventDefault();
-      this.props.onSubmit(e, this.props.form);
-    },
-    onReset: e => {
-      e.preventDefault();
-      this.props.onReset(e, this.props.form);
-    },
-  };
-
-  render() {
-    const { onSubmit, onReset } = this.state;
-    const { form } = this.props;
-    const size = 'default';
-    return (
-      <div className="search-bar">
-        <Form layout="inline" onSubmit={onSubmit}>
-          <Form.Item label="项目名称">
-            {form.getFieldDecorator('keyWords')(<Input placeholder="请输入项目名称" />)}
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <span>&emsp;</span>
-            <Button onClick={onReset}>重置</Button>
-          </Form.Item>
-        </Form>
-      </div>
-    );
-  }
 }
 
 const RenderBatchOperatorBar = props => {
@@ -78,9 +33,13 @@ class List extends React.Component {
   // table的假数据
   columns = [
     {
+      width: 180,
       title: '项目名称',
       dataIndex: 'name',
-      key: '',
+    },
+    {
+      title: '类型',
+      dataIndex: 'type',
     },
     {
       title: '公司名称',
@@ -160,12 +119,28 @@ class List extends React.Component {
     this.loadDataSource(this.state.params);
   }
 
+  handleSearchFormChange = () => {
+    const { defaultPagination } = this;
+    this.queryList(defaultPagination.current, defaultPagination.pageSize);
+  };
+
   render() {
     const { dataSource, selectRows } = this.state;
     const { columns, pagination } = this;
     return (
       <Card className="page__list">
-        <SearchForm ref={ref => (this.searchForm = ref)} onSubmit={this.queryList} />
+        <SearchForm
+          wrappedComponentRef={ref => (this.searchForm = ref)}
+          onChange={this.handleSearchFormChange}
+        >
+          {form => (
+            <>
+              <Form.Item label="项目名称">
+                {form.getFieldDecorator('keyWords')(<Input placeholder="请输入项目名称" />)}
+              </Form.Item>
+            </>
+          )}
+        </SearchForm>
         <LinkButton type="primary" to="Form">
           新增项目
         </LinkButton>
@@ -177,6 +152,7 @@ class List extends React.Component {
         <ProTable
           columns={columns}
           data={dataSource}
+          onChange={pagination => this.queryList(pagination.current, pagination.pageSize)}
           onSelectChange={this.saveSelectRows}
           pagination={pagination}
         />
@@ -185,10 +161,10 @@ class List extends React.Component {
   }
 
   // 获取请求的参数
-  getParams = () => {
+  getParams = (page, size) => {
     const { pagination, searchForm } = this;
-    const page = page || pagination.current;
-    const size = size || pagination.pageSize;
+    page = page || pagination.current;
+    size = size || pagination.pageSize;
     const params = {
       page,
       limit: size,
@@ -231,10 +207,10 @@ class List extends React.Component {
     });
   };
   // 搜索
-  queryList = (e, form) => {
+  queryList = (page, size) => {
     this.setState(
       {
-        params: this.getParams(),
+        params: this.getParams(page, size),
       },
       () => {
         this.loadDataSource(this.state.params);

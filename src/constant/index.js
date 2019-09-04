@@ -165,6 +165,26 @@ export default {
       ],
     },
   },
+  ProjectCooperation: {
+    projectType: [
+      {
+        label: '工程项目',
+        value: '工程项目',
+      },
+      {
+        label: '投资项目',
+        value: '投资项目',
+      },
+      {
+        label: '融资项目',
+        value: '融资项目',
+      },
+      {
+        label: '其它',
+        value: '其它',
+      },
+    ],
+  },
 
   // old
   JSON: {

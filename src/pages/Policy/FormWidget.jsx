@@ -153,7 +153,7 @@ class FormWidget extends React.Component {
               ],
             })(<Editor disabled={preview} placeholder="请输入内容" />)}
           </Form.Item>
-          {preview && (
+          {!preview && (
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 提交
