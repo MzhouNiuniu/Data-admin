@@ -4,6 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import { routerRedux } from 'dva/router';
 import baseUrl from '@config/baseUrl';
 
 const codeMessage = {
@@ -51,5 +52,17 @@ const request = extend({
   // requestType: 'form',
   prefix: baseUrl.base,
 });
+request.use(AuthMiddleware);
+
 export default request;
 export { default as baseRequest } from 'umi-request';
+
+async function AuthMiddleware(ctx, next) {
+  await next();
+  const { res } = ctx;
+  if (res.code === 401) {
+    window.g_app._store.dispatch(
+      routerRedux.push('/Login?redirect=' + location.pathname + location.search),
+    );
+  }
+}

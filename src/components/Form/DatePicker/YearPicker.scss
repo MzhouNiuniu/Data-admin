@@ -1,6 +1,7 @@
 .ant-year-picker {
   &.ant-calendar {
     position: absolute !important;
+    z-index: 8888;
   }
 
   .ant-calendar-disabled-cell a {
@@ -15,7 +16,7 @@
   }
 
   // 如果是 禁用+被选中 状态，则使用选中
-  .ant-calendar-year-panel-selected-cell a{
+  .ant-calendar-year-panel-selected-cell a {
     color: #fff;
     background: #1890FF;
   }

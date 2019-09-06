@@ -41,7 +41,11 @@ class BaseCrudList extends React.Component {
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
-            <PreviewButton row={row} FormWidget={FormWidget} />
+            <PreviewButton
+              row={row}
+              FormWidget={FormWidget}
+              onClose={newRow => this.loadDataSource()}
+            />
             <DeleteButton
               api="/companyData/delById"
               row={row}
@@ -90,6 +94,7 @@ class BaseCrudList extends React.Component {
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
+
     const params = {
       page,
       limit: size,

@@ -35,93 +35,76 @@ export function loadRoutes() {
         {
           path: '/',
           name: 'welcome',
-          // icon: '',
         },
         {
           path: '/BasicData',
           name: 'BasicData',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/CityInvest',
           name: 'CityInvest',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/News',
           name: 'News',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/Policy',
           name: 'Policy',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
@@ -129,23 +112,19 @@ export function loadRoutes() {
         {
           path: '/ProfessionCase',
           name: 'ProfessionCase',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               hideInMenu: true,
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
@@ -157,40 +136,33 @@ export function loadRoutes() {
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               hideInMenu: true,
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/Organization',
           name: 'Organization',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
@@ -198,24 +170,20 @@ export function loadRoutes() {
         {
           path: '/ProjectCooperation',
           name: 'ProjectCooperation',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
               component: './ProjectCooperation/List',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
               component: './ProjectCooperation/Form',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
@@ -223,44 +191,36 @@ export function loadRoutes() {
         {
           path: '/Magazine',
           name: 'Magazine',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/Expert',
           name: 'Expert',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
@@ -268,83 +228,68 @@ export function loadRoutes() {
         // {
         //   path: '/Demo',
         //   name: 'Demo',
-        //   icon: '',
         //   routes: [
         //     {
         //       path: 'AbsorbedMap',
         //       name: 'AbsorbedMap',
-        //       icon: '',
         //     },
         //     {
         //       path: 'PdfPreview',
         //       name: 'PdfPreview',
-        //       icon: '',
         //     },
         //     {
         //       path: 'ExpertPreview/:id',
         //       name: 'ExpertPreview',
-        //       icon: '',
         //     },
         //   ],
         // },
         {
           path: '/User',
           name: 'User',
-          icon: '',
           routes: [
             {
               path: 'List',
               name: 'List',
-              icon: '',
             },
             {
               path: 'Form',
               name: 'Form',
-              icon: '',
             },
             {
               path: 'Form/:id',
               name: 'FormEdit',
-              icon: '',
             },
           ],
         },
         {
           path: '/System',
           name: 'System',
-          icon: '',
           routes: [
             {
               path: 'FrontConfig',
               name: 'FrontConfig',
-              icon: '',
             },
             {
               path: 'About',
               name: 'About',
-              icon: '',
             },
             // {
             //   path: 'Page',
             //   name: 'Page',
-            //   icon: '',
             // },
             // {
             //   path: 'Role',
             //   name: 'Role',
-            //   icon: '',
             // },
           ],
         },
         {
           path: '/Account',
           name: 'Account',
-          icon: '',
           routes: [
             {
               path: 'Setting',
               name: 'Setting',
-              icon: '',
             },
           ],
         },

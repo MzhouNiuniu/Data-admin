@@ -1,3 +1,7 @@
+.bf-font-sizes, .bf-line-heights, bf-letter-spacings, .bf-emojis {
+  box-sizing: content-box !important;
+}
+
 // 在antd form里使用时
 .ant-form-item {
   .braft-editor {

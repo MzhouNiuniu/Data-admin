@@ -9,6 +9,14 @@ import { routerRedux } from 'dva/router';
  * 无cookie：等价于未登录
  */
 function getLocaleUser() {
+  // let token = document.cookie.split(';')
+  //   .find(item => /session=/.test(item));
+  // if (!token) {
+  //   document.cookie = 'session=-1;expires=' + new Date(null).toUTCString();
+  //   localStorage.clear();
+  //   sessionStorage.clear();
+  //   return {};
+  // }
   let currentUser = {};
   try {
     currentUser = JSON.parse(localStorage.getItem('TEST_USER') || '{}');
@@ -30,7 +38,7 @@ const UserModel = {
     authRouteMap: {}, // 权限支持，键为路由path，值为1，树遍历优化
   },
   effects: {
-    *login({ payload, autoLogin }, { call, put }) {
+    *login({ payload, autoLogin, redirect }, { call, put }) {
       const response = yield call(userService.login, payload);
       if (response.status !== 200) {
         return Promise.reject(response);
@@ -48,11 +56,7 @@ const UserModel = {
           type: 'saveLocaleUser',
         });
       }
-      yield put(
-        routerRedux.replace({
-          pathname: '/',
-        }),
-      );
+      yield put(routerRedux.replace(redirect || '/'));
     },
     *register({ payload }, { call, put }) {
       const response = yield call(userService.register, payload);

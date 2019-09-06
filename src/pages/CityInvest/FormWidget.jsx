@@ -145,7 +145,6 @@ class FormWidget extends React.Component {
   };
 
   renderRemoveItemBtn = (fieldName, index, removeItem) => {
-    if (this.props.preview) return null;
     return (
       <Icon
         type="close-circle"
@@ -693,58 +692,54 @@ class FormWidget extends React.Component {
   render() {
     const { multipleItemQueueLength, auditMessageList } = this.state;
     const { id, form, preview } = this.props;
-    console.log(form.getFieldsValue());
     return (
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
         {!preview && id && <AuditMessage message={auditMessageList} />}
-        <fieldset disabled={preview}>
-          {this.renderBaseInfo()}
-          <Form.Item>
-            <Tabs renderTabBar={this.renderTabBar}>
-              <Tabs.TabPane forceRender tab="财务信息" key="financial">
-                <MultipleItemQueue
-                  buttonText="添加财务信息"
-                  queueLength={multipleItemQueueLength.financial}
-                >
-                  {this.renderFinanceInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              <Tabs.TabPane forceRender tab="评级信息" key="rate">
-                <MultipleItemQueue
-                  buttonText="添加评级信息"
-                  queueLength={multipleItemQueueLength.rate}
-                >
-                  {this.renderGradeInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              <Tabs.TabPane forceRender tab="融资信息" key="financing">
-                <MultipleItemQueue
-                  buttonText="添加融资信息"
-                  queueLength={multipleItemQueueLength.financing}
-                >
-                  {this.renderBizInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              <Tabs.TabPane forceRender tab="其它信息" key="other">
-                <MultipleItemQueue
-                  buttonText="添加其它信息"
-                  queueLength={multipleItemQueueLength.other}
-                >
-                  {this.renderOtherInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-            </Tabs>
-          </Form.Item>
-          {!preview && (
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                提交
-              </Button>
-              <span>&emsp;</span>
-              <Button onClick={this.props.onCancel}>取消</Button>
-            </Form.Item>
-          )}
-        </fieldset>
+        <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
+        {/*此区域分离，不受表单禁用的影响*/}
+        <Form.Item>
+          <Tabs renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
+            <Tabs.TabPane forceRender tab="财务信息" key="financial">
+              <MultipleItemQueue
+                buttonText="添加财务信息"
+                queueLength={multipleItemQueueLength.financial}
+              >
+                {this.renderFinanceInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="评级信息" key="rate">
+              <MultipleItemQueue
+                buttonText="添加评级信息"
+                queueLength={multipleItemQueueLength.rate}
+              >
+                {this.renderGradeInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="融资信息" key="financing">
+              <MultipleItemQueue
+                buttonText="添加融资信息"
+                queueLength={multipleItemQueueLength.financing}
+              >
+                {this.renderBizInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="其它信息" key="other">
+              <MultipleItemQueue
+                buttonText="添加其它信息"
+                queueLength={multipleItemQueueLength.other}
+              >
+                {this.renderOtherInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+          </Tabs>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            保存
+          </Button>
+          <span>&emsp;</span>
+          <Button onClick={this.props.onCancel}>取消</Button>
+        </Form.Item>
       </Form>
     );
   }

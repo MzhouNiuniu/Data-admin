@@ -22,10 +22,7 @@ class YearPicker extends React.Component {
   };
 
   pickId = 'ant-year-picker' + Date.now();
-  pickPosition = {
-    x: 0,
-    y: 0,
-  };
+  pickPosition = null;
   elBodyContainer = null;
   refInput = null;
 
@@ -67,18 +64,19 @@ class YearPicker extends React.Component {
     this.elBodyContainer = document.createElement('div');
     this.elBodyContainer.id = this.pickId;
     document.body.appendChild(this.elBodyContainer);
-
-    // compute pickPosition
-    const elInput = this.refInput.input;
-    const rectInfo = elInput.getBoundingClientRect();
-    this.pickPosition = {
-      x: rectInfo.left,
-      y: rectInfo.top + elInput.offsetHeight + 6, // input 高度
-    };
   }
 
   componentWillUnmount() {
     document.body.removeChild(this.elBodyContainer);
+  }
+
+  getPickPosition() {
+    const elInput = this.refInput.input;
+    const rectInfo = elInput.getBoundingClientRect();
+    return {
+      x: rectInfo.left,
+      y: rectInfo.top + rectInfo.height + document.documentElement.scrollTop + 6,
+    };
   }
 
   getClassName(year, isDisabled) {
@@ -152,6 +150,10 @@ class YearPicker extends React.Component {
   };
 
   handleInputFocus = () => {
+    /* fix 某些组件有动画效果，在did钩子无法获取真实位置 */
+    if (!this.pickPosition) {
+      this.pickPosition = this.getPickPosition();
+    }
     this.open();
     this.handleMousedown();
   };
@@ -235,7 +237,10 @@ class YearPicker extends React.Component {
     ReactDOM.render(
       <div
         className="ant-calendar ant-year-picker"
-        style={{ top: this.pickPosition.y + 'px', left: this.pickPosition.x + 'px' }}
+        style={{
+          top: this.pickPosition.y + 'px',
+          left: this.pickPosition.x + 'px',
+        }}
       >
         <div className="ant-calendar-panel">
           <div tabIndex="0" className="ant-calendar-date-panel">

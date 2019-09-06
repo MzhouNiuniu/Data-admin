@@ -4,8 +4,11 @@ import { Button, Drawer } from 'antd';
 
 class PreviewButton extends React.Component {
   static propTypes = {
-    row: propTypes.object,
     FormWidget: propTypes.any, // ReactNode，请示下
+
+    row: propTypes.object,
+    onClose: propTypes.func,
+    onCancel: propTypes.func,
   };
 
   state = {
@@ -22,6 +25,15 @@ class PreviewButton extends React.Component {
     this.setState({
       visible: false,
     });
+  };
+
+  handleClose = (...args) => {
+    this.closeModal();
+    this.props.onClose && this.props.onClose(...args);
+  };
+  handleCancel = () => {
+    this.closeModal();
+    this.props.onCancel && this.props.onCancel(...args);
   };
 
   render() {
@@ -41,7 +53,14 @@ class PreviewButton extends React.Component {
             visible={true}
             onClose={this.closeModal}
           >
-            {row && <FormWidget preview id={row._id} />}
+            {row && (
+              <FormWidget
+                preview
+                id={row._id}
+                onClose={this.handleClose}
+                onCancel={this.handleCancel}
+              />
+            )}
           </Drawer>
         )}
       </>

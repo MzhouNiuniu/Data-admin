@@ -156,7 +156,7 @@ class FormWidget extends React.Component {
           {!preview && (
             <Form.Item>
               <Button type="primary" htmlType="submit">
-                提交
+                保存
               </Button>
               <span>&emsp;</span>
               <Button onClick={this.props.onCancel}>取消</Button>

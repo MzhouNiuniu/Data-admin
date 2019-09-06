@@ -2,8 +2,10 @@ import './index.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
+import { withRouter } from 'dva/router';
 import { Form, Icon, Input, Button, Checkbox, PageHeader, Alert } from 'antd';
 
+@withRouter
 @connect(({ login }) => ({ login }))
 @Form.create()
 class LoginForm extends React.Component {
@@ -31,12 +33,12 @@ class LoginForm extends React.Component {
       if (err) {
         return;
       }
-
       const { autoLogin } = this.state;
       dispatch({
         type: 'user/login',
         payload: formData,
         autoLogin,
+        redirect: this.props.location.query.redirect,
       }).catch(err => {
         this.setState({
           errMsg: err.message,

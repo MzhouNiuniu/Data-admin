@@ -27,7 +27,7 @@ const RejectForm = Form.create({ name: 'audit' })(function(props) {
         </Form.Item>
         <div style={{ textAlign: 'right' }}>
           <Button type="primary" htmlType="submit">
-            提交
+            保存
           </Button>
           <span>&emsp;</span>
           <Button onClick={onCancel}>取消</Button>

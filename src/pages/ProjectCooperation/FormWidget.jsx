@@ -152,7 +152,7 @@ class ProjCooForm extends React.Component {
     const { id, preview, form } = this.props;
     const formItemLayout = {};
     const tailFormItemLayout = {};
-
+    console.log(this.props.form.getFieldsValue());
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -248,7 +248,7 @@ class ProjCooForm extends React.Component {
           {!preview && (
             <Form.Item {...tailFormItemLayout}>
               <Button type="primary" htmlType="submit">
-                提交
+                保存
               </Button>
             </Form.Item>
           )}

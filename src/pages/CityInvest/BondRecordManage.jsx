@@ -170,7 +170,7 @@ class BondRecordForm extends React.Component {
         </MultipleItemQueue>
         <div className="text-right mt-10">
           <Button type="primary" htmlType="submit">
-            提交
+            保存
           </Button>
           <span>&emsp;</span>
           <Button onClick={this.props.onCancel}>取消</Button>
