@@ -4,7 +4,7 @@
  * */
 module.exports = [
   {
-    path: '/Login?redirect',
+    path: '/Login',
     name: 'Login',
     component: './Login',
   },
