@@ -101,6 +101,10 @@ const UserModel = {
     *update({ id, payload }) {
       return userService.update(id, payload);
     },
+    *updateById({ id, payload }) {
+      return userService.updateById(id, payload);
+    },
+
     *del({ payload }) {
       return userService.del(payload);
     },

@@ -325,6 +325,12 @@ export function update(id, payload) {
     data: payload,
   });
 }
+export function updateById(id, payload) {
+  return request('/user/updateById', {
+    method: 'post',
+    data: Object.assign({ id }, payload),
+  });
+}
 
 export function list(payload) {
   return request('/user/getList', {
@@ -334,12 +340,12 @@ export function list(payload) {
 }
 
 export function detail(payload) {
-  return request('/mock/mock-detail/user/' + payload);
+  return request('/user/getDetails?id=' + payload);
 }
 
 export function del(payload) {
-  return request('/mock/mock-delete/user', {
-    method: 'delete',
+  return request('/user/delById', {
+    method: 'post',
     data: payload,
   });
 }

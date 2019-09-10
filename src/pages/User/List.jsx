@@ -32,6 +32,24 @@ class BaseCrudList extends React.Component {
       title: '用户名',
       dataIndex: 'userName',
     },
+
+    {
+      title: '角色',
+      dataIndex: 'role',
+      render(role) {
+        if (role == 'admin') {
+          return <span>管理员</span>;
+        }
+        return <span>用户</span>;
+      },
+    },
+    {
+      title: '操作',
+      render(res) {
+        console.log(res);
+        return <LinkButton to={`Form?id=${res._id}`}> 修改 </LinkButton>;
+      },
+    },
   ];
 
   config = {
