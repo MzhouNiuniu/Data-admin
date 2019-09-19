@@ -97,17 +97,17 @@ class FormWidget extends React.Component {
               ],
             })(<Input placeholder="请输入标题" />)}
           </Form.Item>
-          <Form.Item label="链接">
-            {form.getFieldDecorator('url', {
-              rules: [
-                {
-                  type: 'url',
-                  required: true,
-                  message: '请输入链接',
-                },
-              ],
-            })(<Input placeholder="请输入链接" />)}
-          </Form.Item>
+          {/*<Form.Item label="链接">*/}
+          {/*{form.getFieldDecorator('url', {*/}
+          {/*rules: [*/}
+          {/*{*/}
+          {/*type: 'url',*/}
+          {/*required: true,*/}
+          {/*message: '请输入链接',*/}
+          {/*},*/}
+          {/*],*/}
+          {/*})(<Input placeholder="请输入链接" />)}*/}
+          {/*</Form.Item>*/}
           <Form.Item label="封面">
             {form.getFieldDecorator('photos', {
               rules: [
