@@ -123,24 +123,24 @@ class FormWidget extends React.Component {
               ],
             })(<UploadImage />)}
           </Form.Item>
-          <Form.Item label="性别">
-            {form.getFieldDecorator('sex', {
-              rules: [
-                {
-                  required: true,
-                  message: '请选择性别',
-                },
-              ],
-            })(
-              <Select placeholder="请选择性别" className="w160px">
-                {constant.public.sex.map(item => (
-                  <Select.Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Select.Option>
-                ))}
-              </Select>,
-            )}
-          </Form.Item>
+          {/*<Form.Item label="性别">*/}
+          {/*{form.getFieldDecorator('sex', {*/}
+          {/*rules: [*/}
+          {/*{*/}
+          {/*required: true,*/}
+          {/*message: '请选择性别',*/}
+          {/*},*/}
+          {/*],*/}
+          {/*})(*/}
+          {/*<Select placeholder="请选择性别" className="w160px">*/}
+          {/*{constant.public.sex.map(item => (*/}
+          {/*<Select.Option key={item.value} value={item.value}>*/}
+          {/*{item.label}*/}
+          {/*</Select.Option>*/}
+          {/*))}*/}
+          {/*</Select>,*/}
+          {/*)}*/}
+          {/*</Form.Item>*/}
           <Form.Item label="个人简介">
             {form.getFieldDecorator('current', {
               validateTrigger: ['onBlur'],
