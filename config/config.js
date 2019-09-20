@@ -13,6 +13,7 @@ const plugins = [
   [
     'umi-plugin-react',
     {
+      history: 'hash',
       antd: true,
       dva: {
         hmr: true,
