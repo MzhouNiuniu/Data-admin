@@ -6,7 +6,24 @@ import { Input, Icon } from 'antd';
 import 'antd/lib/date-picker/style';
 import { checkEventTargetIsInTarget } from '@utils/utils';
 
-const currentYear = new Date().getFullYear();
+function getYearListByYear(year) {
+  const temp = 12 * ~~(year / 12);
+  return [
+    temp + 1,
+    temp + 2,
+    temp + 3,
+    temp + 4,
+    temp + 5,
+    temp + 6,
+
+    temp + 7,
+    temp + 8,
+    temp + 9,
+    temp + 10,
+    temp + 11,
+    temp + 12,
+  ];
+}
 
 class YearPicker extends React.Component {
   static propTypes = {
@@ -21,19 +38,32 @@ class YearPicker extends React.Component {
     onChange() {},
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // 初始化
+    if (!nextProps.value) {
+      return null;
+    }
+
+    const newYear = nextProps.value;
+    return {
+      currentYear: Number(newYear),
+      yearList: getYearListByYear(newYear),
+    };
+  }
+
   pickId = 'ant-year-picker' + Date.now();
   pickPosition = null;
   elBodyContainer = null;
   refInput = null;
 
-  isInit = false;
-
   constructor(props) {
     super(props);
+
+    const currentYear = new Date().getFullYear();
     this.state = {
       visible: false,
-      currentYear: !this.props.value ? currentYear : Number(this.props.value),
-      yearList: this.getYearListByYear(currentYear),
+      currentYear: !this.props.value ? undefined /* 不需要初始化 */ : Number(this.props.value),
+      yearList: getYearListByYear(currentYear),
     };
     if (!this.props.disabledDate) {
       if (!this.props.disabledYearList) {
@@ -45,18 +75,6 @@ class YearPicker extends React.Component {
           return this.props.disabledYearList.includes(year);
         };
       }
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // 初始化
-    if (!this.isInit && this.props.value) {
-      const newYear = this.props.value;
-      this.isInit = true;
-      this.setState({
-        currentYear: Number(newYear),
-        yearList: this.getYearListByYear(newYear),
-      });
     }
   }
 
@@ -91,26 +109,11 @@ class YearPicker extends React.Component {
     return base;
   }
 
-  getYearListByYear(year) {
-    const temp = 12 * ~~(year / 12);
-    return [
-      temp + 1,
-      temp + 2,
-      temp + 3,
-      temp + 4,
-      temp + 5,
-      temp + 6,
-
-      temp + 7,
-      temp + 8,
-      temp + 9,
-      temp + 10,
-      temp + 11,
-      temp + 12,
-    ];
-  }
-
   open = () => {
+    /* fix 某些组件有动画效果，在did钩子无法获取真实位置；
+     * 2019年9月25日10:16:24还是有意外情况，直接设置为每次都计算
+     */
+    this.pickPosition = this.getPickPosition();
     this.setState({
       visible: true,
     });
@@ -122,14 +125,11 @@ class YearPicker extends React.Component {
   };
 
   setValue = year => {
-    this.setState({
-      currentYear: year,
-    });
-    this.close();
-
     if (this.state.currentYear === year) {
       return;
     }
+
+    this.close();
     this.props.onChange(year);
   };
 
@@ -150,10 +150,6 @@ class YearPicker extends React.Component {
   };
 
   handleInputFocus = () => {
-    /* fix 某些组件有动画效果，在did钩子无法获取真实位置 */
-    if (!this.pickPosition) {
-      this.pickPosition = this.getPickPosition();
-    }
     this.open();
     this.handleMousedown();
   };
@@ -168,26 +164,15 @@ class YearPicker extends React.Component {
   };
 
   handleClickNextPage = () => {
-    const newYear = this.state.currentYear - 12;
-    this.setState({
-      currentYear: newYear,
-      yearList: this.getYearListByYear(newYear),
-    });
+    this.props.onChange(this.state.currentYear - 12);
   };
 
   handleClickPrevPage = () => {
-    const newYear = this.state.currentYear + 12;
-    this.setState({
-      currentYear: newYear,
-      yearList: this.getYearListByYear(newYear),
-    });
+    this.props.onChange(this.state.currentYear + 12);
   };
 
   reset = () => {
-    this.setState({
-      yearList: this.getYearListByYear(currentYear),
-    });
-    this.setValue(currentYear);
+    this.setValue(new Date().getFullYear());
   };
 
   renderPanel = () => {
