@@ -2,7 +2,7 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Row, Col, Form, Input, Button, message } from 'antd';
+import { Row, Col, Form, Input, Button, message, Select } from 'antd';
 import YearPicker from '@components/Form/DatePicker/YearPicker';
 import Area from '@components/Form/Area';
 
@@ -140,10 +140,18 @@ class FormWidget extends React.Component {
               rules: [
                 {
                   required: true,
-                  message: '请输入辖区名称',
+                  message: '请选择行政级别',
                 },
               ],
-            })(<Input placeholder="请输入辖区名称" />)}
+            })(
+              <Select placeholder="请选择主体评级">
+                {['省级', '市级', '区级'].map(item => (
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>,
+            )}
           </Form.Item>
           <Form.Item label="GDP">
             {form.getFieldDecorator('GDP', {
