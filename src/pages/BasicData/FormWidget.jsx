@@ -183,6 +183,7 @@ class FormWidget extends React.Component {
               ],
             })(<Input placeholder="请输入收入" />)}
           </Form.Item>
+
           <Form.Item label="增长收入">
             {form.getFieldDecorator('addIncome', {
               rules: [
@@ -192,6 +193,26 @@ class FormWidget extends React.Component {
                 },
               ],
             })(<Input placeholder="请输入增长收入" />)}
+          </Form.Item>
+          <Form.Item label="一般预算">
+            {form.getFieldDecorator('budget', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入一般预算',
+                },
+              ],
+            })(<Input placeholder="请输入请输入一般预算" />)}
+          </Form.Item>
+          <Form.Item label="人口">
+            {form.getFieldDecorator('man', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入人口',
+                },
+              ],
+            })(<Input placeholder="请输入请输入人口" />)}
           </Form.Item>
           <Form.Item label="存续债卷余额">
             {form.getFieldDecorator('balance', {

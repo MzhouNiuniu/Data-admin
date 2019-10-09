@@ -13,7 +13,6 @@ const plugins = [
   [
     'umi-plugin-react',
     {
-      history: 'hash',
       antd: true,
       dva: {
         hmr: true,
@@ -59,6 +58,9 @@ const plugins = [
 
 export default {
   plugins,
+  base: '/admin/',
+  publicPath: '/admin/',
+  history: 'hash',
   block: {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
