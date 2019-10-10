@@ -692,11 +692,13 @@ class FormWidget extends React.Component {
   render() {
     const { multipleItemQueueLength, auditMessageList } = this.state;
     const { id, form, preview } = this.props;
+    console.log(form.getFieldsValue());
+
     return (
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
         {!preview && id && <AuditMessage message={auditMessageList} />}
         <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
-        {/*此区域分离，不受表单禁用的影响*/}
+        {/* 此区域不受查看模式影响 */}
         <Form.Item>
           <Tabs renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
             <Tabs.TabPane forceRender tab="财务信息" key="financial">

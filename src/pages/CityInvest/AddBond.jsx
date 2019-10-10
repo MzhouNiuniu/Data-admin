@@ -129,12 +129,12 @@ class BondForm extends React.Component {
         </Row>
         <Row gutter={30}>
           <Col span={12}>
-            <Form.Item label="发行时间">
+            <Form.Item label="起息/到期时间">
               {form.getFieldDecorator('startAndEndTime', {
                 rules: [
                   {
                     required: true,
-                    message: '请选择发行时间',
+                    message: '请选择起息/到期时间',
                   },
                 ],
               })(<RangePicker className="w100" />)}

@@ -225,24 +225,24 @@ export function loadRoutes() {
           ],
         },
 
-        // {
-        //   path: '/Demo',
-        //   name: 'Demo',
-        //   routes: [
-        //     {
-        //       path: 'AbsorbedMap',
-        //       name: 'AbsorbedMap',
-        //     },
-        //     {
-        //       path: 'PdfPreview',
-        //       name: 'PdfPreview',
-        //     },
-        //     {
-        //       path: 'ExpertPreview/:id',
-        //       name: 'ExpertPreview',
-        //     },
-        //   ],
-        // },
+        {
+          path: '/Demo',
+          name: 'Demo',
+          routes: [
+            {
+              path: 'AbsorbedMap',
+              name: 'AbsorbedMap',
+            },
+            {
+              path: 'PdfPreview',
+              name: 'PdfPreview',
+            },
+            {
+              path: 'ExpertPreview/:id',
+              name: 'ExpertPreview',
+            },
+          ],
+        },
         {
           path: '/User',
           name: 'User',

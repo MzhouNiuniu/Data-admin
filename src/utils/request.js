@@ -61,8 +61,13 @@ async function AuthMiddleware(ctx, next) {
   await next();
   const { res } = ctx;
   if (res.code === 401) {
-    window.g_app._store.dispatch(
-      routerRedux.push('/Login?redirect=' + location.pathname + location.search),
-    );
+    try {
+      const location = window.g_app._store.getState().routing.location;
+      window.g_app._store.dispatch(
+        routerRedux.push('/Login?redirect=' + location.pathname + location.search),
+      );
+    } catch (e) {
+      window.g_app._store.dispatch(routerRedux.push('/Login'));
+    }
   }
 }
