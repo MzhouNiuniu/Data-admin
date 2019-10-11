@@ -35,6 +35,7 @@ class YearPicker extends React.Component {
     disabledYearList: propTypes.array, // 与 disabledDate 只能存在一个
   };
   static defaultProps = {
+    placeholder: '请选择年份',
     onChange() {},
   };
 
@@ -62,7 +63,7 @@ class YearPicker extends React.Component {
     const currentYear = new Date().getFullYear();
     this.state = {
       visible: false,
-      currentYear: !this.props.value ? undefined /* 不需要初始化 */ : Number(this.props.value),
+      currentYear: !this.props.value ? currentYear : Number(this.props.value),
       yearList: getYearListByYear(currentYear),
     };
     if (!this.props.disabledDate) {
@@ -125,9 +126,10 @@ class YearPicker extends React.Component {
   };
 
   setValue = year => {
-    if (this.state.currentYear === year) {
-      return;
-    }
+    // 因为currentYear需要初始化，所以第一次无法选中今年。。
+    // if (this.state.currentYear === year) {
+    //   return;
+    // }
 
     this.close();
     this.props.onChange(year);
