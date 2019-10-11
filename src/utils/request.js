@@ -2,7 +2,7 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend } from 'umi-request';
+import umiRequest, { extend } from 'umi-request';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import baseUrl from '@config/baseUrl';
@@ -52,12 +52,7 @@ const request = extend({
   // requestType: 'form',
   prefix: baseUrl.base,
 });
-request.use(AuthMiddleware);
-
-export default request;
-export { default as baseRequest } from 'umi-request';
-
-async function AuthMiddleware(ctx, next) {
+request.use(async function AuthMiddleware(ctx, next) {
   await next();
   const { res } = ctx;
   if (res.code === 401) {
@@ -70,4 +65,13 @@ async function AuthMiddleware(ctx, next) {
       window.g_app._store.dispatch(routerRedux.push('/Login'));
     }
   }
-}
+});
+
+export default request;
+export const baseRequest = umiRequest;
+
+// debugger
+baseRequest.use(async function(ctx, next) {
+  console.log(ctx);
+  await next();
+});

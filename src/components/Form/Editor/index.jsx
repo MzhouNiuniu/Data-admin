@@ -72,16 +72,23 @@ export default class Editor extends React.Component {
     const { uploadUrl } = this.props;
 
     const formData = new FormData();
-    formData.append('file', param.file);
+    formData.append('File', param.file);
 
     baseRequest(uploadUrl, {
       method: 'post',
       data: formData,
     }).then(
       res => {
-        param.success({
-          url: res.url,
-        });
+        console.log(res.data);
+        if (res.status === 200) {
+          param.success({
+            url: res.data.url,
+          });
+        } else {
+          param.error({
+            msg: res.data.message,
+          });
+        }
       },
       err => {
         param.error({

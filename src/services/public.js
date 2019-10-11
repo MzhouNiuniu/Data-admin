@@ -5,13 +5,19 @@ export default {
   getGeoJSON(code) {
     return baseRequest(`/geo-json/${code}_full.json`);
   },
-  uploadFile(data) {
-    return baseRequest(api.fileServer.uploadFile, {
+  uploadFile(file, fileName = 'File') {
+    const data = new FormData();
+    data.append(fileName, file);
+    return baseRequest.post(api.fileServer.uploadFile, {
+      requestType: 'form',
       data,
     });
   },
-  uploadImage() {
-    return baseRequest(api.fileServer.uploadImage, {
+  uploadImage(file, fileName = 'File') {
+    const data = new FormData();
+    data.append(fileName, file);
+    return baseRequest.post(api.fileServer.uploadFile, {
+      requestType: 'form',
       data,
     });
   },

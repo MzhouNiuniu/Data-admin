@@ -12,8 +12,8 @@ function genRestfulApi(namespace) {
 
 const api = {
   fileServer: {
-    uploadFile: `${baseURL.fileServer}/upload`,
-    uploadImage: `${baseURL.fileServer}/upload/base64`,
+    uploadFile: `${baseURL.fileServer}/oss/upload`,
+    uploadImage: `${baseURL.fileServer}/oss/upload`,
   },
 
   /**

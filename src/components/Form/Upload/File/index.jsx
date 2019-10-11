@@ -3,6 +3,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { Upload, Icon, Button } from 'antd';
 import api from '@services/api';
+import publicServices from '@services/public';
 
 /**
  * 服务端存储格式：{name:'f1',url:'xxx.com/xxx.png'} 或者 [{name:'f1',url:'xxx.com/xxx.png'}]
@@ -80,6 +81,25 @@ export default class UploadImage extends React.Component {
               url: base64,
             });
           });
+        });
+        return {
+          abort() {
+            console.log('upload progress is aborted.');
+          },
+        };
+      };
+    } else {
+      this.customRequest = ({ file, onSuccess, onError }) => {
+        publicServices.uploadFile(file).then(res => {
+          if (res.status === 200) {
+            onSuccess(res.data);
+          } else {
+            onError(new Error(res.message));
+            // 每次失败后，就移除所有失败的文件
+            this.setState({
+              fileList: this.state.fileList.filter(item => item.status !== 'error'),
+            });
+          }
         });
         return {
           abort() {
