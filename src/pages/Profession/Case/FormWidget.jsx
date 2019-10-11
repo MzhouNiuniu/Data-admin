@@ -58,6 +58,7 @@ class FormWidget extends React.Component {
           payload: {
             id: this.props.id,
             ...formData,
+            status: 0,
           },
         }).then(res => {
           if (res.status !== 200) {

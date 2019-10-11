@@ -3,8 +3,9 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
 import UploadImage from '@components/Form/Upload/Image';
-import { Form, Input, Button, message, Icon } from 'antd';
-
+import { Form, Input, Button, message, Icon, Select } from 'antd';
+import { withRouter } from 'dva/router';
+@withRouter
 @connect()
 @Form.create()
 class FormWidget extends React.Component {
@@ -31,7 +32,7 @@ class FormWidget extends React.Component {
         return;
       }
       const { dispatch } = this.props;
-      if (!this.props.id) {
+      if (!this.props.location.query.id) {
         dispatch({
           type: 'user/create',
           payload: formData,
@@ -43,12 +44,13 @@ class FormWidget extends React.Component {
           this.props.onClose();
         });
       } else {
+        console.log(Object.assign({ id: this.props.location.query.id }, formData));
         dispatch({
-          type: 'user/update',
-          id: this.props.id,
-          payload: formData,
+          type: 'user/updateById',
+          id: this.props.location.query.id,
+          payload: Object.assign({ id: this.props.location.query.id }, formData),
         }).then(res => {
-          if (res.code !== 200) {
+          if (res.status !== 200) {
             message.error(res.message);
             return;
           }
@@ -59,11 +61,12 @@ class FormWidget extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.id) {
+    console.log(this.props);
+    if (this.props.location.query.id) {
       const { dispatch } = this.props;
       dispatch({
         type: 'user/detail',
-        payload: this.props.id,
+        payload: this.props.location.query.id,
       }).then(res => {
         if (!res.data) {
           message.error('数据不存在');
@@ -77,7 +80,9 @@ class FormWidget extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     const { form } = this.props;
+    const roleList = [{ label: '用户', value: 'user' }, { label: '管理员', value: 'admin' }];
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -115,6 +120,25 @@ class FormWidget extends React.Component {
             />,
           )}
         </Form.Item>
+        <Form.Item label="角色">
+          {form.getFieldDecorator('role', {
+            rules: [
+              {
+                required: true,
+                message: '请选择类型',
+              },
+            ],
+          })(
+            <Select placeholder="请选择类型">
+              {roleList.map(item => (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.label}
+                </Select.Option>
+              ))}
+            </Select>,
+          )}
+        </Form.Item>
+
         <Form.Item>
           <Button type="primary" htmlType="submit">
             保存

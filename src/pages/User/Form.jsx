@@ -5,7 +5,7 @@ import FormWidget from './FormWidget';
 
 class UserForm extends React.Component {
   state = {
-    id: this.props.match.params.id,
+    id: this.props.location.query.id,
   };
 
   toList = () => {

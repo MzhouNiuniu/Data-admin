@@ -58,9 +58,9 @@ const plugins = [
 
 export default {
   plugins,
-  outputPath: './admin',
   base: '/admin/',
   publicPath: '/admin/',
+  history: 'hash',
   block: {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },

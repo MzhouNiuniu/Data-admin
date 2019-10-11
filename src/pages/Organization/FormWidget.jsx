@@ -286,8 +286,8 @@ class FormWidget extends React.Component {
                   message: '请输入机构简介',
                 },
                 {
-                  message: '请输入300 - 500字',
-                  min: 300,
+                  message: '请输入0 - 500字',
+                  min: 0,
                   max: 500,
                 },
               ],

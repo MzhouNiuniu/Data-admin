@@ -56,6 +56,7 @@ class FormWidget extends React.Component {
           id: this.props.id,
           payload: {
             id: this.props.id,
+            status: 1,
             ...formData,
           },
         }).then(res => {

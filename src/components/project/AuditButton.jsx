@@ -7,6 +7,7 @@ import LinkButton from '@components/LinkButton';
 
 const RejectForm = Form.create({ name: 'audit' })(function(props) {
   const { form, onSubmit, onCancel } = props;
+
   return (
     <>
       <Form
@@ -142,18 +143,21 @@ class AuditButton extends React.Component {
     );
     return (
       <>
-        <Permission permission={['admin']}>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <Button className="info">
-              审核
-              <Icon type="down-circle" theme="twoTone" />
-            </Button>
-          </Dropdown>
-          <span>&emsp;</span>
-          <Modal destroyOnClose visible={visible} footer={null} onCancel={this.closeRejectForm}>
-            <RejectForm onSubmit={this.handleRejectFormSubmit} onCancel={this.closeRejectForm} />
-          </Modal>
-        </Permission>
+        {status === 0 ? (
+          <Permission permission={['admin']}>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Button className="info">
+                审核
+                <Icon type="down-circle" theme="twoTone" />
+              </Button>
+            </Dropdown>
+            <span>&emsp;</span>
+            <Modal destroyOnClose visible={visible} footer={null} onCancel={this.closeRejectForm}>
+              <RejectForm onSubmit={this.handleRejectFormSubmit} onCancel={this.closeRejectForm} />
+            </Modal>
+          </Permission>
+        ) : null}
+
         {status === 2 && (
           <>
             <LinkButton type="primary" to={`Form/${row._id}`}>
