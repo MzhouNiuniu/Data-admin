@@ -15,8 +15,9 @@ module.exports = [
     routes: [
       {
         path: '/',
-        name: 'welcome',
-        component: './Welcome',
+        redirect: '/BasicData/List',
+        // name: 'welcome',
+        // component: './Welcome',
       },
       {
         path: '/NoAuth',

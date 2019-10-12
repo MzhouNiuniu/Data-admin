@@ -33,10 +33,6 @@ export function loadRoutes() {
     setTimeout(function() {
       const routes = [
         {
-          path: '/',
-          name: 'welcome',
-        },
-        {
           path: '/BasicData',
           name: 'BasicData',
           routes: [
@@ -224,25 +220,6 @@ export function loadRoutes() {
             },
           ],
         },
-
-        {
-          path: '/Demo',
-          name: 'Demo',
-          routes: [
-            {
-              path: 'AbsorbedMap',
-              name: 'AbsorbedMap',
-            },
-            {
-              path: 'PdfPreview',
-              name: 'PdfPreview',
-            },
-            {
-              path: 'ExpertPreview/:id',
-              name: 'ExpertPreview',
-            },
-          ],
-        },
         {
           path: '/User',
           name: 'User',
@@ -296,20 +273,25 @@ export function loadRoutes() {
       ];
 
       // 追加默认路由（主要判断权限的，默认是把所有路由加载了）
-      routes.push({
-        path: '/Exception',
-        routes: [
-          {
-            path: '403',
-          },
-          {
-            path: '404',
-          },
-          {
-            path: '500',
-          },
-        ],
-      });
+      [
+        {
+          path: '/',
+        },
+        {
+          path: '/Exception',
+          routes: [
+            {
+              path: '403',
+            },
+            {
+              path: '404',
+            },
+            {
+              path: '500',
+            },
+          ],
+        },
+      ].forEach(routes.push, routes);
 
       resolve({
         code: 200,
@@ -325,6 +307,7 @@ export function update(id, payload) {
     data: payload,
   });
 }
+
 export function updateById(id, payload) {
   return request('/user/updateById', {
     method: 'post',
