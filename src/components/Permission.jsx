@@ -18,6 +18,7 @@ export function hasPermission(permission) {
   }
   if (!userPermissionRegex) {
     let userPermission = window.g_app._store.getState().user.currentUser.role; // 根据role生成permission信息，允许role是字符串、数组
+    console.log(userPermission);
     if (!Array.isArray(userPermission)) {
       userPermission = [userPermission];
     }

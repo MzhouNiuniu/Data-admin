@@ -43,6 +43,7 @@ const UserModel = {
       if (response.status !== 200) {
         return Promise.reject(response);
       }
+      console.log(response);
       yield put({
         type: 'saveLoginFrom',
         payload: true,

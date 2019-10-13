@@ -46,7 +46,6 @@ class BaseCrudList extends React.Component {
     {
       title: '操作',
       render(res) {
-        console.log(res);
         return <LinkButton to={`Form?id=${res._id}`}> 修改 </LinkButton>;
       },
     },

@@ -10,7 +10,7 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import logo from '@/assets/logo.svg';
+import logo from '@/assets/logo.png';
 import PageLoading from '@components/PageLoading';
 import RouteTab from '@components/RouteTab';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
