@@ -66,12 +66,17 @@ request.use(async function AuthMiddleware(ctx, next) {
     }
   }
 });
-
+request.interceptors.request.use(function fixUndefinedDataMiddle(url, options) {
+  const { data } = options;
+  for (let k in data) {
+    data[k] === undefined && (data[k] = '');
+  }
+  return options;
+});
 export default request;
 export const baseRequest = umiRequest;
 
 // debugger
-baseRequest.use(async function(ctx, next) {
-  console.log(ctx);
-  await next();
-});
+// baseRequest.use(async function (ctx, next) {
+//   await next();
+// });

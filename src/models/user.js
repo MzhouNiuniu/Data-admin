@@ -8,6 +8,7 @@ import { routerRedux } from 'dva/router';
  * 有cookie：读取localStorage的用户数据
  * 无cookie：等价于未登录
  */
+
 function getLocaleUser() {
   // let token = document.cookie.split(';')
   //   .find(item => /session=/.test(item));
@@ -23,6 +24,7 @@ function getLocaleUser() {
   } catch (e) {
     currentUser = {};
   }
+
   return currentUser;
 }
 
@@ -47,9 +49,10 @@ const UserModel = {
         type: 'saveLoginFrom',
         payload: true,
       });
+      const userInfo = response.data;
       yield put({
         type: 'saveCurrentUser',
-        payload: response.data,
+        payload: userInfo,
       });
       if (autoLogin) {
         yield put({
@@ -160,7 +163,11 @@ const UserModel = {
     },
   },
   reducers: {
-    saveCurrentUser(state, { payload = {} }) {
+    saveCurrentUser(state, { payload }) {
+      if (!payload) {
+        throw 'login failed';
+      }
+
       return {
         ...state,
         currentUser: {
@@ -177,7 +184,8 @@ const UserModel = {
       };
     },
     saveLocaleUser(state) {
-      localStorage.setItem('TEST_USER', JSON.stringify(state.currentUser));
+      const currentUser = { ...state.currentUser };
+      localStorage.setItem('TEST_USER', JSON.stringify(currentUser));
       return state;
     },
     clearLocaleUser(state, action) {
