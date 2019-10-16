@@ -93,7 +93,7 @@ export default {
   news: {
     typeMap: {
       '0': '行业动态',
-      '1': '智库新闻',
+      '1': '城投新闻',
       '2': '智库动态',
       '3': '项目动态',
     },
@@ -103,7 +103,7 @@ export default {
         value: 0,
       },
       {
-        label: '智库新闻',
+        label: '城投新闻',
         value: 1,
       },
       {

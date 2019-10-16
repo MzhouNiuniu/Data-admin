@@ -82,7 +82,7 @@ class FormWidget extends React.Component {
   render() {
     console.log(this.props);
     const { form } = this.props;
-    const roleList = [{ label: '用户', value: 'user' }, { label: '管理员', value: 'admin' }];
+    const roleList = [{ label: '操作员', value: 'user' }, { label: '管理员', value: 'admin' }];
 
     return (
       <Form onSubmit={this.handleSubmit}>

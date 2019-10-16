@@ -40,7 +40,7 @@ class BaseCrudList extends React.Component {
         if (role == 'admin') {
           return <span>管理员</span>;
         }
-        return <span>用户</span>;
+        return <span>操作员</span>;
       },
     },
     {
