@@ -64,7 +64,7 @@ class LoginForm extends React.Component {
     const { form } = this.props;
     return (
       <Form className="login-form" onSubmit={this.handleSubmit}>
-        <PageHeader title="DDD" subTitle="后台管理系统" />
+        <PageHeader title="智慧城投" subTitle="后台管理系统" />
         <Form.Item>
           {form.getFieldDecorator('userName', {
             rules: [
