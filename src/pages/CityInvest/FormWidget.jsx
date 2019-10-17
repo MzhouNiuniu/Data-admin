@@ -10,8 +10,9 @@ import constant from '@constant/index';
 import Area from '@components/Form/Area';
 import UploadImage from '@components/Form/Upload/Image';
 import UploadFile from '@components/Form/Upload/File';
-import AddBond from './AddBond';
 import AuditMessage from '@components/project/AuditMessage';
+import IncomeInput from './IncomeInput';
+import AddBond from './AddBond';
 
 @connect()
 @Form.create()
@@ -34,6 +35,7 @@ class FormWidget extends React.Component {
       financial: 0,
       rate: 0,
       financing: 0,
+      incomeInfo: 0,
       other: 0,
     },
     // 用途1：表单验证之后，将每个tab页里面的错误进行统计
@@ -117,6 +119,11 @@ class FormWidget extends React.Component {
         this.state.multipleItemQueueLength.financial = formData.financial.length;
         this.state.multipleItemQueueLength.rate = formData.rate.length;
         this.state.multipleItemQueueLength.financing = formData.financing.length;
+
+        // todo 临时修复老数据
+        if (formData.incomeInfo) {
+          this.state.multipleItemQueueLength.incomeInfo = formData.incomeInfo.length;
+        }
         this.state.multipleItemQueueLength.other = formData.other.length;
 
         this.setState(
@@ -498,6 +505,91 @@ class FormWidget extends React.Component {
     });
   };
 
+  renderIncomeInfo = (queue, ctrl) => {
+    const { form } = this.props;
+
+    /* 融资信息 - incomeInfo */
+    const selectionYearList = this.getSelectionYearList('incomeInfo');
+    return queue.map((item, index) => {
+      return (
+        <div
+          key={index}
+          className="pos-rel mb-10 pt-24"
+          style={{
+            border: '1px solid rgb(217, 217, 217)',
+            borderRadius: '4px',
+            padding: ' 0 10px',
+          }}
+        >
+          <Row gutter={30}>
+            <Col span={6}>
+              <Form.Item label="年份">
+                {form.getFieldDecorator('incomeInfo[' + index + '].year', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择年份',
+                    },
+                  ],
+                })(<YearPicker disabledYearList={selectionYearList} />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="营业收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].doBizCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="工程建设收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].buildingCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="销售收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].saleCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="租金收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].rentCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="物业管理">
+                {form.getFieldDecorator('incomeInfo[' + index + '].estateCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="检测费收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].testCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="餐费收入">
+                {form.getFieldDecorator('incomeInfo[' + index + '].mealCost', {
+                  initialValue: {},
+                })(<IncomeInput />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          {this.renderRemoveItemBtn('incomeInfo', index, ctrl.removeItem)}
+        </div>
+      );
+    });
+  };
+
   renderOtherInfo = (queue, ctrl) => {
     const { form } = this.props;
     /* 其它信息 - other */
@@ -647,6 +739,16 @@ class FormWidget extends React.Component {
             ],
           })(<Input.TextArea rows={4} placeholder="请输入企业概况" />)}
         </Form.Item>
+        <Form.Item label="经营范围">
+          {form.getFieldDecorator('businessScope', {
+            rules: [
+              {
+                required: true,
+                message: '请输入经营范围',
+              },
+            ],
+          })(<Input.TextArea rows={4} placeholder="请输入经营范围" />)}
+        </Form.Item>
         <Form.Item label="企业图片">
           {form.getFieldDecorator('photos')(<UploadImage multiple={true} maxlength={Infinity} />)}
         </Form.Item>
@@ -707,6 +809,14 @@ class FormWidget extends React.Component {
                 queueLength={multipleItemQueueLength.financing}
               >
                 {this.renderBizInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
+              <MultipleItemQueue
+                buttonText="添加营业收入情况"
+                queueLength={multipleItemQueueLength.financing}
+              >
+                {this.renderIncomeInfo}
               </MultipleItemQueue>
             </Tabs.TabPane>
             <Tabs.TabPane forceRender tab="其它信息" key="other">
