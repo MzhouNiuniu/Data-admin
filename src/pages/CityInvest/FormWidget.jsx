@@ -814,7 +814,7 @@ class FormWidget extends React.Component {
             <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
               <MultipleItemQueue
                 buttonText="添加营业收入情况"
-                queueLength={multipleItemQueueLength.financing}
+                queueLength={multipleItemQueueLength.incomeInfo}
               >
                 {this.renderIncomeInfo}
               </MultipleItemQueue>
