@@ -239,7 +239,7 @@ class ProjCooForm extends React.Component {
 
           <Form.Item label="附件">
             {getFieldDecorator('accessory')(
-              <UploadFile disabled={preview} multiple={true} valueType="array"></UploadFile>,
+              <UploadFile disabled={preview} multiple={true}></UploadFile>,
             )}
           </Form.Item>
 

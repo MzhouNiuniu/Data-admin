@@ -83,7 +83,6 @@ class FormWidget extends React.Component {
 
   render() {
     const { preview, form } = this.props;
-
     return (
       <Form onSubmit={this.handleSubmit} style={{ maxWidth: '1200px' }}>
         <fieldset disabled={preview}>

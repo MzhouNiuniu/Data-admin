@@ -512,33 +512,16 @@ class FormWidget extends React.Component {
             padding: ' 0 10px',
           }}
         >
-          <Row>
-            <Col span={6}>
-              <Form.Item label="附件名称">
-                {form.getFieldDecorator('other[' + index + '].name', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入附件名称',
-                    },
-                  ],
-                })(<Input placeholder="请输入附件名称" />)}
-              </Form.Item>
-            </Col>
-            <Col span={17} offset={1}>
-              <Form.Item label="上传附件">
-                {form.getFieldDecorator('other[' + index + '].file', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请上传附件',
-                    },
-                  ],
-                })(<UploadFile />)}
-              </Form.Item>
-            </Col>
-          </Row>
-
+          <Form.Item label="上传附件">
+            {form.getFieldDecorator('other[' + index + ']', {
+              rules: [
+                {
+                  required: true,
+                  message: '请上传附件',
+                },
+              ],
+            })(<UploadFile />)}
+          </Form.Item>
           {this.renderRemoveItemBtn('other', index, ctrl.removeItem)}
         </div>
       );

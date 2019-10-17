@@ -39,7 +39,8 @@ export default class UploadImage extends React.Component {
     useBase64: false,
     disabled: false,
     multiple: false, // 是否可上传多张图片
-    valueType: 'string',
+    // valueType: 'string',
+    valueType: 'raw',
     action: api.fileServer.uploadFile,
     listType: 'text',
     maxlength: 3,
@@ -136,7 +137,6 @@ export default class UploadImage extends React.Component {
         value = value.map(this.transToFileInfo);
       }
     }
-
     const fileList = value.map((item, index) => ({
       uid: -(index + 1),
       name: item.name,
