@@ -1,5 +1,22 @@
 import request from '@/utils/request';
 
+/**
+ * 获取对应名称的cookie
+ * @param name cookie的名称
+ * @returns {null} 不存在时，返回null
+ */
+var getCookie = function(name) {
+  var arr,
+    reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
+
+  if ((arr = document.cookie.match(reg))) {
+    console.log(arr);
+    return unescape(arr[2]);
+  } else {
+    return null;
+  }
+};
+
 export function login(payload) {
   return request('/user/login', {
     method: 'post',
@@ -220,24 +237,7 @@ export function loadRoutes() {
             },
           ],
         },
-        {
-          path: '/User',
-          name: 'User',
-          routes: [
-            {
-              path: 'List',
-              name: 'List',
-            },
-            {
-              path: 'Form',
-              name: 'Form',
-            },
-            {
-              path: 'Form/:id',
-              name: 'FormEdit',
-            },
-          ],
-        },
+
         {
           path: '/System',
           name: 'System',
@@ -292,6 +292,31 @@ export function loadRoutes() {
           ],
         },
       ].forEach(routes.push, routes);
+      const role = getCookie('role');
+      if (role == 'admin') {
+        console.log(role);
+        routes.push({
+          path: '/User',
+          name: 'User',
+          routes: [
+            {
+              path: 'List',
+              name: 'List',
+            },
+            {
+              path: 'Form',
+              name: 'Form',
+            },
+            {
+              path: 'Form/:id',
+              name: 'FormEdit',
+            },
+          ],
+        });
+        console.log('321');
+      } else {
+        console.log(role);
+      }
 
       resolve({
         code: 200,
