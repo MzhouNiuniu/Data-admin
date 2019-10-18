@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { Button, Icon } from 'antd';
 
+// todo 重构重构，参考 src/pages/CityInvest/Income.jsx
 class MultipleItemQueue extends React.Component {
   static propTypes = {
     disabled: propTypes.bool, // 行为：不展示Add按钮

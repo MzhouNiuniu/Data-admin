@@ -11,7 +11,7 @@ import Area from '@components/Form/Area';
 import UploadImage from '@components/Form/Upload/Image';
 import UploadFile from '@components/Form/Upload/File';
 import AuditMessage from '@components/project/AuditMessage';
-import IncomeInput from './IncomeInput';
+import Income from './Income';
 import AddBond from './AddBond';
 
 @connect()
@@ -508,7 +508,7 @@ class FormWidget extends React.Component {
   renderIncomeInfo = (queue, ctrl) => {
     const { form } = this.props;
 
-    /* 融资信息 - incomeInfo */
+    /* 营业收入 - incomeInfo */
     const selectionYearList = this.getSelectionYearList('incomeInfo');
     return queue.map((item, index) => {
       return (
@@ -521,69 +521,21 @@ class FormWidget extends React.Component {
             padding: ' 0 10px',
           }}
         >
-          <Row gutter={30}>
-            <Col span={6}>
-              <Form.Item label="年份">
-                {form.getFieldDecorator('incomeInfo[' + index + '].year', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择年份',
-                    },
-                  ],
-                })(<YearPicker disabledYearList={selectionYearList} />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="营业收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].doBizCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="工程建设收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].buildingCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="销售收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].saleCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="租金收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].rentCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="物业管理">
-                {form.getFieldDecorator('incomeInfo[' + index + '].estateCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="检测费收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].testCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="餐费收入">
-                {form.getFieldDecorator('incomeInfo[' + index + '].mealCost', {
-                  initialValue: {},
-                })(<IncomeInput />)}
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item label="年份" labelCol={{ span: 2 }} wrapperCol={{ span: 6 }} labelAlign="left">
+            {form.getFieldDecorator('incomeInfo[' + index + '].year', {
+              rules: [
+                {
+                  required: true,
+                  message: '请选择年份',
+                },
+              ],
+            })(<YearPicker disabledYearList={selectionYearList} />)}
+          </Form.Item>
+          <Form.Item>
+            {form.getFieldDecorator('incomeInfo[' + index + '].data', {
+              initialValue: [],
+            })(<Income />)}
+          </Form.Item>
           {this.renderRemoveItemBtn('incomeInfo', index, ctrl.removeItem)}
         </div>
       );
