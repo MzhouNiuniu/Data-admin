@@ -628,16 +628,28 @@ class FormWidget extends React.Component {
         </Row>
         <Row>
           <Col span={6}>
-            <Form.Item label="所属政府">
+            <Form.Item label="所在地区">
               {form.getFieldDecorator('area', {
                 initialValue: [],
                 rules: [
                   {
                     required: true,
-                    message: '请选择所属政府',
+                    message: '所在地区',
                   },
                 ],
-              })(<Area placeholder="请选择所属政府" useAddress={false} />)}
+              })(<Area placeholder="所在地区" useAddress={false} />)}
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item label="所属政府">
+              {form.getFieldDecorator('belongGovernment', {
+                rules: [
+                  {
+                    required: true,
+                    message: '所属政府',
+                  },
+                ],
+              })(<Input placeholder="所属政府" />)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -681,16 +693,16 @@ class FormWidget extends React.Component {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label="企业概况">
-          {form.getFieldDecorator('info', {
-            rules: [
-              {
-                required: true,
-                message: '请输入企业概况',
-              },
-            ],
-          })(<Input.TextArea rows={4} placeholder="请输入企业概况" />)}
-        </Form.Item>
+        {/*<Form.Item label="企业概况">*/}
+        {/*{form.getFieldDecorator('info', {*/}
+        {/*rules: [*/}
+        {/*{*/}
+        {/*required: true,*/}
+        {/*message: '请输入企业概况',*/}
+        {/*},*/}
+        {/*],*/}
+        {/*})(<Input.TextArea rows={4} placeholder="请输入企业概况" />)}*/}
+        {/*</Form.Item>*/}
         <Form.Item label="经营范围">
           {form.getFieldDecorator('businessScope', {
             rules: [

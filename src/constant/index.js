@@ -43,12 +43,12 @@ export default {
         value: '省',
       },
       {
-        label: '市',
-        value: '市',
+        label: '地市',
+        value: '地市',
       },
       {
-        label: '区',
-        value: '区',
+        label: '区县',
+        value: '区县',
       },
     ],
     mainType: [
