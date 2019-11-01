@@ -30,3 +30,9 @@ export function del(payload) {
     data: payload,
   });
 }
+
+/* financial 融资信息 */
+// export * as financial from './financial';
+// import * as financial from './financial';
+//
+// export { financial };

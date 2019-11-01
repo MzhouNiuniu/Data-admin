@@ -21,7 +21,7 @@ class BondRecordForm extends React.Component {
 
   componentDidMount() {
     const { records } = this.props;
-    if (records) {
+    if (Array.isArray(records) && records.length) {
       this.setState(
         {
           queueLength: records.length,
@@ -34,6 +34,11 @@ class BondRecordForm extends React.Component {
           });
         },
       );
+    } else {
+      // 现在是从列表点击弹出，默认展示一个
+      this.setState({
+        queueLength: 1,
+      });
     }
   }
 
@@ -62,7 +67,7 @@ class BondRecordForm extends React.Component {
     /* 记录 - records */
     return (
       <Form onSubmit={this.handleSubmit}>
-        <MultipleItemQueue buttonText="添加记录" queueLength={queueLength}>
+        <MultipleItemQueue buttonText="添加记录" queueLength={queueLength} maxHeight="660px">
           {(queue, ctrl) => {
             return queue.map((item, index) => (
               <div
@@ -182,8 +187,12 @@ class BondRecordForm extends React.Component {
 
 class BondRecordManage extends React.Component {
   static propTypes = {
-    records: propTypes.array.isRequired,
+    records: propTypes.array, // isRequired
     setRecords: propTypes.func.isRequired, // 数据流：内(setRecords)->外(更新)->内(获取)
+  };
+
+  static defaultProps = {
+    records: [],
   };
 
   state = {
@@ -219,7 +228,7 @@ class BondRecordManage extends React.Component {
 
     return (
       <>
-        <Button type="primary" size="small" onClick={this.handleOpenModal}>
+        <Button type="primary" onClick={this.handleOpenModal}>
           记录管理
         </Button>
         <Modal
@@ -229,7 +238,6 @@ class BondRecordManage extends React.Component {
           footer={null}
           width="950px"
           onCancel={this.handleCloseModal}
-          style={{ height: '500px' }}
         >
           <BondRecordForm
             records={records}

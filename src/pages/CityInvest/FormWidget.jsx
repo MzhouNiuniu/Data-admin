@@ -714,7 +714,9 @@ class FormWidget extends React.Component {
           })(<Input.TextArea rows={4} placeholder="请输入经营范围" />)}
         </Form.Item>
         <Form.Item label="企业图片">
-          {form.getFieldDecorator('photos')(<UploadImage multiple={true} valueType="string" maxlength={Infinity} />)}
+          {form.getFieldDecorator('photos')(
+            <UploadImage multiple={true} valueType="string" maxlength={Infinity} />,
+          )}
         </Form.Item>
       </>
     );
@@ -745,61 +747,66 @@ class FormWidget extends React.Component {
     console.log(form.getFieldsValue());
 
     return (
-
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
         {!preview && id && <AuditMessage message={auditMessageList} />}
         <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
         {/* 此区域不受查看模式影响 */}
         <Form.Item>
           <fieldset disabled={preview}>
-
-          <Tabs  renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
-
-            <Tabs.TabPane forceRender tab="财务信息" key="financial">
-              <MultipleItemQueue
-              buttonText="添加财务信息"
-              queueLength={multipleItemQueueLength.financial}
-            >
-              {this.renderFinanceInfo}
-            </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="评级信息" key="rate">
-              <MultipleItemQueue
-                buttonText="添加评级信息"
-                queueLength={multipleItemQueueLength.rate}
-              >
-                {this.renderGradeInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
-              <MultipleItemQueue
-                buttonText="添加营业收入情况"
-                queueLength={multipleItemQueueLength.incomeInfo}
-              >
-                {this.renderIncomeInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="其它信息" key="other">
-              <MultipleItemQueue
-                buttonText="添加其它信息"
-                queueLength={multipleItemQueueLength.other}
-              >
-                {this.renderOtherInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-          </Tabs>
+            <Tabs renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
+              <Tabs.TabPane forceRender tab="财务信息" key="financial">
+                <MultipleItemQueue
+                  buttonText="添加财务信息"
+                  queueLength={multipleItemQueueLength.financial}
+                >
+                  {this.renderFinanceInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="评级信息" key="rate">
+                <MultipleItemQueue
+                  buttonText="添加评级信息"
+                  queueLength={multipleItemQueueLength.rate}
+                >
+                  {this.renderGradeInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              {/*<Tabs.TabPane forceRender tab="融资信息" key="financing">*/}
+              {/*  <MultipleItemQueue*/}
+              {/*    buttonText="添加融资信息"*/}
+              {/*    queueLength={multipleItemQueueLength.financing}*/}
+              {/*  >*/}
+              {/*    {this.renderBizInfo}*/}
+              {/*  </MultipleItemQueue>*/}
+              {/*</Tabs.TabPane>*/}
+              <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
+                <MultipleItemQueue
+                  buttonText="添加营业收入情况"
+                  queueLength={multipleItemQueueLength.incomeInfo}
+                >
+                  {this.renderIncomeInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="其它信息" key="other">
+                <MultipleItemQueue
+                  buttonText="添加其它信息"
+                  queueLength={multipleItemQueueLength.other}
+                >
+                  {this.renderOtherInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+            </Tabs>
           </fieldset>
         </Form.Item>
 
-        {!preview?
-        <Form.Item>
-           < Button type="primary" htmlType="submit">
-            保存
+        {!preview ? (
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              保存
             </Button>
             <span>&emsp;</span>
             <Button onClick={this.props.onCancel}>取消</Button>
-        </Form.Item>:null}
-
+          </Form.Item>
+        ) : null}
       </Form>
     );
   }

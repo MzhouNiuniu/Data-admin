@@ -4,7 +4,7 @@ function genRestfulApi(namespace) {
   return {
     create: `/${namespace}/publish`,
     update: `/${namespace}/updateById`,
-    list: `/${namespace}/getDetails`,
+    list: `/${namespace}/getList`,
     detail: `/${namespace}/getDetails`,
     del: `/${namespace}/delById`,
   };

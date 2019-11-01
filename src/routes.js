@@ -80,11 +80,6 @@ module.exports = [
             component: './CityInvest/List',
           },
           {
-            path: 'FinancialList',
-            name: 'FinancialList',
-            component: './CityInvest/FinancialList',
-          },
-          {
             path: 'Form',
             name: 'Form',
             component: './CityInvest/Form',
@@ -96,6 +91,23 @@ module.exports = [
             component: './CityInvest/Form',
           },
 
+          {
+            path: 'FinancialList',
+            name: 'FinancialList',
+            component: './CityInvest/FinancialList',
+          },
+          {
+            hideInMenu: true,
+            path: 'FinancialForm',
+            name: 'FinancialForm',
+            component: './CityInvest/FinancialList/Form',
+          },
+          {
+            hideInMenu: true,
+            path: 'FinancialForm/:id',
+            name: 'FinancialFormEdit',
+            component: './CityInvest/FinancialList/Form',
+          },
         ],
       },
 

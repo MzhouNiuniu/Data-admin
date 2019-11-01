@@ -9,6 +9,7 @@ class MultipleItemQueue extends React.Component {
     queueLength: propTypes.number,
     buttonText: propTypes.string, // 添加按钮的文字
     queueItemGetter: propTypes.func, // 向queue设置数据，默认用不到，queue其实可以使用数字代替
+    maxHeight: propTypes.oneOfType([propTypes.number, propTypes.string]),
   };
 
   static defaultProps = {
@@ -57,14 +58,22 @@ class MultipleItemQueue extends React.Component {
 
   render() {
     const { queue } = this.state;
-    const { children, disabled, buttonText } = this.props;
+    const { children, disabled, buttonText, maxHeight } = this.props;
     if (!children) {
       return null;
     }
     // 第二个参数为ctrl，提供addItem、removeItem、getQueue方法（暂时直接将组件实例暴露了出去）
     return (
       <section>
-        {children(queue, this)}
+        <div
+          style={{
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            maxHeight,
+          }}
+        >
+          {children(queue, this)}
+        </div>
         {!disabled && (
           // global.less，通过hide_disabled实现通过css禁用
           <Button

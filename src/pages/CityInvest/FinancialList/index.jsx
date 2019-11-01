@@ -1,15 +1,14 @@
-import './List.scss';
+import './index.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
-import FormWidget from './FormWidget';
-import AuditButton from '@components/project/AuditButton';
 import LinkButton from '@components/LinkButton';
-import PreviewButton from '@components/project/PreviewButton';
+import AuditButton from '@components/project/AuditButton';
 import DeleteButton from '@components/project/DeleteButton';
 import SearchForm from '@components/project/SearchForm';
+import BondRecordManage from './BondRecordManage';
 
 @connect()
 @Form.create()
@@ -17,9 +16,39 @@ class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
+      width: 50,
+      title: '年份',
+      dataIndex: 'year',
+    },
+    {
       width: 220,
-      title: '标题',
-      dataIndex: 'name',
+      title: '公司名称',
+      dataIndex: 'DataName',
+    },
+    {
+      width: 120,
+      title: '融资种类',
+      dataIndex: 'financingType',
+    },
+    {
+      width: 120,
+      title: '债券代码',
+      dataIndex: 'code',
+    },
+    {
+      width: 120,
+      title: '债券简称',
+      dataIndex: 'abbreviation',
+    },
+    {
+      width: 120,
+      title: '债券类型',
+      dataIndex: 'type',
+    },
+    {
+      width: 120,
+      title: '债券全称',
+      dataIndex: 'fullName',
     },
     {
       title: '审核状态',
@@ -35,19 +64,19 @@ class BaseCrudList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
+            <BondRecordManage
+              records={row.record}
+              setRecords={records => this.setRecords(row, records)}
+            />
+            <span>&emsp;</span>
             <AuditButton
               row={row}
-              api="/companyData/updateStatusById"
+              api="/financialing/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
-            <PreviewButton
-              row={row}
-              FormWidget={FormWidget}
-              onClose={newRow => this.loadDataSource()}
-            />
             <DeleteButton
-              api="/companyData/delById"
+              api="/financialing/delById"
               row={row}
               finallyCallback={this.loadDataSource}
             />
@@ -101,7 +130,7 @@ class BaseCrudList extends React.Component {
       ...searchForm.getFieldsValue(),
     };
     dispatch({
-      type: 'cityInvest/list',
+      type: 'financial/list',
       payload: params,
     }).then(res => {
       if (res.status !== 200) return;
@@ -114,6 +143,30 @@ class BaseCrudList extends React.Component {
         dataSource,
       });
     });
+  };
+
+  setRecords = (row, records) => {
+    const oldRecords = row.record;
+    row.record = records;
+
+    this.props
+      .dispatch({
+        type: 'financial/update',
+        payload: {
+          id: row._id,
+          record: row.record,
+        },
+      })
+      .then(res => {
+        if (res.status !== 200) {
+          row.record = oldRecords;
+          message.error(res.message);
+          return;
+        }
+      })
+      .finally(() => {
+        this.setState({});
+      });
   };
 
   handleSearchFormChange = () => {
@@ -148,7 +201,7 @@ class BaseCrudList extends React.Component {
           )}
         </SearchForm>
         <div className="operator-bar">
-          <LinkButton to="Form"> 添加公司 </LinkButton>
+          <LinkButton to="FinancialForm"> 添加融资信息 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

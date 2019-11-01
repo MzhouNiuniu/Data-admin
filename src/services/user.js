@@ -76,10 +76,6 @@ export function loadRoutes() {
               path: 'List',
               name: 'List',
             },
-            // {
-            //   path: 'FinancialList',
-            //   name: 'FinancialList',
-            // },
             {
               path: 'Form',
               name: 'Form',
@@ -87,6 +83,18 @@ export function loadRoutes() {
             {
               path: 'Form/:id',
               name: 'FormEdit',
+            },
+            {
+              path: 'FinancialList',
+              name: 'FinancialList',
+            },
+            {
+              path: 'FinancialForm',
+              name: 'FinancialForm',
+            },
+            {
+              path: 'FinancialForm/:id',
+              name: 'FinancialFormEdit',
             },
           ],
         },
