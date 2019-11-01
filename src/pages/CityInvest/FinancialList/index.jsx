@@ -5,10 +5,12 @@ import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
 import LinkButton from '@components/LinkButton';
+import PreviewButton from '@components/project/PreviewButton';
 import AuditButton from '@components/project/AuditButton';
 import DeleteButton from '@components/project/DeleteButton';
 import SearchForm from '@components/project/SearchForm';
 import BondRecordManage from './BondRecordManage';
+import FormWidget from './FormWidget';
 
 @connect()
 @Form.create()
@@ -75,6 +77,7 @@ class BaseCrudList extends React.Component {
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
+            <PreviewButton row={row} FormWidget={FormWidget} onClose={this.loadDataSource} />
             <DeleteButton
               api="/financialing/delById"
               row={row}

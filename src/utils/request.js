@@ -69,7 +69,7 @@ request.use(async function AuthMiddleware(ctx, next) {
 request.interceptors.request.use(function fixUndefinedDataMiddle(url, options) {
   const { data } = options;
   for (let k in data) {
-    data[k] === undefined && (data[k] = '');
+    data[k] === undefined && (data[k] = null);
   }
   return options;
 });
