@@ -114,6 +114,7 @@ export default class UploadImage extends React.Component {
   // customRequest = () => { }
 
   getLocaleFileList() {
+    console.log(this.props)
     const { multiple, valueType } = this.props;
     let { value } = this.props;
     if (!value) {
@@ -131,6 +132,7 @@ export default class UploadImage extends React.Component {
         value = [this.transToFileInfo(value)];
       }
     } else {
+      console.log(valueType)
       if (valueType === 'string') {
         value = value.split(this.valueSplitSymbol).map(this.transToFileInfo);
       } else if (valueType === 'array') {

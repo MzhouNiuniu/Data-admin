@@ -115,7 +115,7 @@ class FormWidget extends React.Component {
                   message: '请上传封面',
                 },
               ],
-            })(<UploadImage />)}
+            })(<UploadImage valueType="string" />)}
           </Form.Item>
           {!preview && (
             <Form.Item className="text-center" wrapperCol={{ span: 24 }}>

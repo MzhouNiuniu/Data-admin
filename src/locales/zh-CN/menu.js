@@ -8,6 +8,7 @@ export default {
 
   'menu.CityInvest': '城投数据',
   'menu.CityInvest.List': '公司列表',
+  'menu.CityInvest.FinancialList': '融资信息列表',
   'menu.CityInvest.Form': '添加公司',
   'menu.CityInvest.FormEdit': '编辑公司',
 

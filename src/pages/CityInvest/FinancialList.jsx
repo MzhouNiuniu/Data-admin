@@ -2,13 +2,12 @@ import './List.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Card, Table, Button, Form, Input, message, Modal, Upload, Select, Col } from 'antd';
+import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
+import FormWidget from './FormWidget';
 import AuditButton from '@components/project/AuditButton';
-import StickButton from '@components/project/StickButton';
 import LinkButton from '@components/LinkButton';
 import PreviewButton from '@components/project/PreviewButton';
-import FormWidget from './FormWidget';
 import DeleteButton from '@components/project/DeleteButton';
 import SearchForm from '@components/project/SearchForm';
 
@@ -18,24 +17,9 @@ class BaseCrudList extends React.Component {
   searchForm = null;
   columns = [
     {
-      width: 90,
-      title: '封面',
-      dataIndex: 'cover',
-      render(text) {
-        if (!text) {
-          return '暂未设置';
-        }
-        return <img className="max-width-100" src={text} alt="" />;
-      },
-    },
-    {
       width: 220,
       title: '标题',
-      dataIndex: 'title',
-    },
-    {
-      title: '类型',
-      dataIndex: 'cnType',
+      dataIndex: 'name',
     },
     {
       title: '审核状态',
@@ -53,18 +37,20 @@ class BaseCrudList extends React.Component {
           <>
             <AuditButton
               row={row}
-              api="/news/updateStatusById"
+              api="/companyData/updateStatusById"
               status={row.status}
               finallyCallback={this.loadDataSource}
             />
-            <StickButton
+            <PreviewButton
               row={row}
-              api="/news/stickById"
-              status={row.stick}
+              FormWidget={FormWidget}
+              onClose={newRow => this.loadDataSource()}
+            />
+            <DeleteButton
+              api="/companyData/delById"
+              row={row}
               finallyCallback={this.loadDataSource}
             />
-            <PreviewButton row={row} FormWidget={FormWidget} />
-            <DeleteButton api="/news/delById" row={row} finallyCallback={this.loadDataSource} />
           </>
         );
       },
@@ -98,7 +84,7 @@ class BaseCrudList extends React.Component {
 
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
-    row.cnType = constant.news.typeMap[row.type] || row.status;
+    row.cnType = constant.policy.typeMap[row.type] || row.status;
     row.cnStatus = constant.public.status.audit[row.status] || row.status;
     return row;
   };
@@ -108,13 +94,14 @@ class BaseCrudList extends React.Component {
     const { dispatch } = this.props;
     page = page || pagination.current;
     size = size || pagination.pageSize;
+
     const params = {
       page,
       limit: size,
       ...searchForm.getFieldsValue(),
     };
     dispatch({
-      type: 'news/list',
+      type: 'cityInvest/list',
       payload: params,
     }).then(res => {
       if (res.status !== 200) return;
@@ -130,12 +117,6 @@ class BaseCrudList extends React.Component {
   };
 
   handleSearchFormChange = () => {
-    const { defaultPagination } = this;
-    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
-  };
-
-  handleUploadTplFile = info => {
-    if (info.file.status !== 'done') return;
     const { defaultPagination } = this;
     this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
   };
@@ -160,29 +141,14 @@ class BaseCrudList extends React.Component {
         >
           {form => (
             <>
-              <Form.Item label="标题">
+              <Form.Item label="公司名称">
                 {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
-              </Form.Item>
-              <Form.Item label="类型">
-                {form.getFieldDecorator('type', {
-                  initialValue: 0,
-                })(
-                  <Select placeholder="请选择类型" className="w160px">
-                    {constant.news.type.map(item => (
-                      <Select.Option key={item.value} value={item.value}>
-                        {item.label}
-                      </Select.Option>
-                    ))}
-                  </Select>,
-                )}
               </Form.Item>
             </>
           )}
         </SearchForm>
         <div className="operator-bar">
-          <LinkButton to="Form"> 添加新闻 </LinkButton>
-          <span>&emsp;</span>
-
+          <LinkButton to="Form"> 添加公司 </LinkButton>
           {selection.length > 0 && this.renderBatchOperatorBar()}
         </div>
         <Table

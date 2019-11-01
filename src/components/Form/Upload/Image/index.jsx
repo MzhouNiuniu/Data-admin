@@ -45,13 +45,11 @@ class UploadImage extends React.Component {
 
   render() {
     const { slide } = this.state;
-
-    return (
+    return  (
       <section>
         <UploadFile
           {...this.props}
           useBase64={false}
-          valueType="string"
           listType="picture-card"
           uploadBtnRender={() => (
             <div>

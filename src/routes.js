@@ -80,6 +80,11 @@ module.exports = [
             component: './CityInvest/List',
           },
           {
+            path: 'FinancialList',
+            name: 'FinancialList',
+            component: './CityInvest/FinancialList',
+          },
+          {
             path: 'Form',
             name: 'Form',
             component: './CityInvest/Form',
@@ -90,6 +95,7 @@ module.exports = [
             name: 'FormEdit',
             component: './CityInvest/Form',
           },
+
         ],
       },
 

@@ -121,7 +121,7 @@ class FormWidget extends React.Component {
                   message: '请上传头像',
                 },
               ],
-            })(<UploadImage />)}
+            })(<UploadImage valueType="string" />)}
           </Form.Item>
           {/*<Form.Item label="性别">*/}
           {/*{form.getFieldDecorator('sex', {*/}

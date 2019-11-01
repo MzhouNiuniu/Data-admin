@@ -50,7 +50,7 @@ class Income extends React.Component {
               <div>
                 名称 &ensp;
                 <Input
-                  style={{ width: '134px' }}
+                  style={{ width: '122px' }}
                   value={item.name}
                   onChange={evt => this.handleChange(index, 'name', evt.currentTarget.value)}
                 />
