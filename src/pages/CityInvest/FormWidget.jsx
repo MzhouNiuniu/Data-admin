@@ -209,11 +209,10 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="总资产">
+              <Form.Item label="总资产（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].totalAsset', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入总资产',
                     },
                   ],
@@ -221,23 +220,21 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="净资产">
+              <Form.Item label="净资产（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].netAsset', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入净资产',
                     },
                   ],
-                })(<Input placeholder="请输入净资产" />)}
+                })(<Input placeholder="请输入净资产（亿元）" />)}
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="负债率">
+              <Form.Item label="负债率（%）">
                 {form.getFieldDecorator('financial[' + index + '].liabilities', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入负债率',
                     },
                   ],
@@ -245,11 +242,10 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="营业收入额">
+              <Form.Item label="营业收入额（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].business', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入营业收入',
                     },
                   ],
@@ -257,11 +253,10 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="主营业务收入">
+              <Form.Item label="主营业务收入（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].mainBusiness', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入主营业务收入',
                     },
                   ],
@@ -269,11 +264,10 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="净利润">
+              <Form.Item label="净利润（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].netProfit', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入净利润',
                     },
                   ],
@@ -281,11 +275,10 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="利润总额">
+              <Form.Item label="利润总额（亿元）">
                 {form.getFieldDecorator('financial[' + index + '].totalProfit', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入利润总额',
                     },
                   ],
@@ -333,7 +326,6 @@ class FormWidget extends React.Component {
                 {form.getFieldDecorator('rate[' + index + '].main', {
                   rules: [
                     {
-                      required: true,
                       message: '请选择主体评级',
                     },
                   ],
@@ -353,18 +345,11 @@ class FormWidget extends React.Component {
                 {form.getFieldDecorator('rate[' + index + '].wish', {
                   rules: [
                     {
-                      required: true,
-                      message: '请选择展望评级',
+                      message: '请输入展望评级',
                     },
                   ],
                 })(
-                  <Select placeholder="请选择展望评级">
-                    {constant.cityInvest.rateLevel.map(item => (
-                      <Select.Option key={item.value} value={item.value}>
-                        {item.label}
-                      </Select.Option>
-                    ))}
-                  </Select>,
+                  <Input placeholder="请输入展望评级" />
                 )}
               </Form.Item>
             </Col>
@@ -373,7 +358,6 @@ class FormWidget extends React.Component {
                 {form.getFieldDecorator('rate[' + index + '].organization', {
                   rules: [
                     {
-                      required: true,
                       message: '请输入评级机构',
                     },
                   ],
@@ -385,7 +369,6 @@ class FormWidget extends React.Component {
             {form.getFieldDecorator('rate[' + index + '].report', {
               rules: [
                 {
-                  required: true,
                   message: '请输入评级报告',
                 },
               ],
@@ -645,7 +628,6 @@ class FormWidget extends React.Component {
               {form.getFieldDecorator('belongGovernment', {
                 rules: [
                   {
-                    required: true,
                     message: '所属政府',
                   },
                 ],
@@ -657,7 +639,6 @@ class FormWidget extends React.Component {
               {form.getFieldDecorator('level', {
                 rules: [
                   {
-                    required: true,
                     message: '请选择行政级别',
                   },
                 ],
@@ -707,16 +688,13 @@ class FormWidget extends React.Component {
           {form.getFieldDecorator('businessScope', {
             rules: [
               {
-                required: true,
                 message: '请输入经营范围',
               },
             ],
           })(<Input.TextArea rows={4} placeholder="请输入经营范围" />)}
         </Form.Item>
         <Form.Item label="企业图片">
-          {form.getFieldDecorator('photos')(
-            <UploadImage multiple={true} valueType="string" maxlength={Infinity} />,
-          )}
+          {form.getFieldDecorator('photos')(<UploadImage multiple={true} valueType="string" maxlength={Infinity} />)}
         </Form.Item>
       </>
     );
@@ -747,66 +725,62 @@ class FormWidget extends React.Component {
     console.log(form.getFieldsValue());
 
     return (
+
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
         {!preview && id && <AuditMessage message={auditMessageList} />}
+
         <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
         {/* 此区域不受查看模式影响 */}
         <Form.Item>
           <fieldset disabled={preview}>
-            <Tabs renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
-              <Tabs.TabPane forceRender tab="财务信息" key="financial">
-                <MultipleItemQueue
-                  buttonText="添加财务信息"
-                  queueLength={multipleItemQueueLength.financial}
-                >
-                  {this.renderFinanceInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              <Tabs.TabPane forceRender tab="评级信息" key="rate">
-                <MultipleItemQueue
-                  buttonText="添加评级信息"
-                  queueLength={multipleItemQueueLength.rate}
-                >
-                  {this.renderGradeInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              {/*<Tabs.TabPane forceRender tab="融资信息" key="financing">*/}
-              {/*  <MultipleItemQueue*/}
-              {/*    buttonText="添加融资信息"*/}
-              {/*    queueLength={multipleItemQueueLength.financing}*/}
-              {/*  >*/}
-              {/*    {this.renderBizInfo}*/}
-              {/*  </MultipleItemQueue>*/}
-              {/*</Tabs.TabPane>*/}
-              <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
-                <MultipleItemQueue
-                  buttonText="添加营业收入情况"
-                  queueLength={multipleItemQueueLength.incomeInfo}
-                >
-                  {this.renderIncomeInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-              <Tabs.TabPane forceRender tab="其它信息" key="other">
-                <MultipleItemQueue
-                  buttonText="添加其它信息"
-                  queueLength={multipleItemQueueLength.other}
-                >
-                  {this.renderOtherInfo}
-                </MultipleItemQueue>
-              </Tabs.TabPane>
-            </Tabs>
+
+          <Tabs  renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
+
+            <Tabs.TabPane forceRender tab="财务信息" key="financial">
+              <MultipleItemQueue
+              buttonText="添加财务信息"
+              queueLength={multipleItemQueueLength.financial}
+            >
+              {this.renderFinanceInfo}
+            </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="评级信息" key="rate">
+              <MultipleItemQueue
+                buttonText="添加评级信息"
+                queueLength={multipleItemQueueLength.rate}
+              >
+                {this.renderGradeInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
+              <MultipleItemQueue
+                buttonText="添加营业收入情况"
+                queueLength={multipleItemQueueLength.incomeInfo}
+              >
+                {this.renderIncomeInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+            <Tabs.TabPane forceRender tab="其它信息" key="other">
+              <MultipleItemQueue
+                buttonText="添加其它信息"
+                queueLength={multipleItemQueueLength.other}
+              >
+                {this.renderOtherInfo}
+              </MultipleItemQueue>
+            </Tabs.TabPane>
+          </Tabs>
           </fieldset>
         </Form.Item>
 
-        {!preview ? (
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              保存
+        {!preview?
+        <Form.Item>
+           < Button type="primary" htmlType="submit">
+            保存
             </Button>
             <span>&emsp;</span>
             <Button onClick={this.props.onCancel}>取消</Button>
-          </Form.Item>
-        ) : null}
+        </Form.Item>:null}
+
       </Form>
     );
   }
