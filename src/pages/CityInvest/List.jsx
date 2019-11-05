@@ -35,6 +35,10 @@ class BaseCrudList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
+            <Button type="primary" onClick={() => this.handleOpenInfoManageModal(row)}>
+              信息管理
+            </Button>
+            <span>&emsp;</span>
             <AuditButton
               row={row}
               api="/companyData/updateStatusById"
@@ -80,6 +84,26 @@ class BaseCrudList extends React.Component {
   state = {
     dataSource: [],
     selection: [],
+    infoManageModal: {
+      visible: false,
+      id: '',
+    },
+  };
+
+  handleOpenInfoManageModal = row => {
+    this.setState({
+      infoManageModal: {
+        visible: true,
+        id: row._id,
+      },
+    });
+  };
+  handleCloseInfoManageModal = () => {
+    this.setState({
+      infoManageModal: {
+        visible: false,
+      },
+    });
   };
 
   /* 处理dataSource中的数据项 */
@@ -103,17 +127,18 @@ class BaseCrudList extends React.Component {
     dispatch({
       type: 'cityInvest/list',
       payload: params,
-    }).then(res => {
-      if (res.status !== 200) return;
-      res = res.data;
-      const dataSource = res.docs.map(this.rowPipe);
-      pagination.current = page;
-      pagination.pageSize = size;
-      pagination.total = res.total;
-      this.setState({
-        dataSource,
+    })
+      .then(res => {
+        if (res.status !== 200) return;
+        res = res.data;
+        const dataSource = res.docs.map(this.rowPipe);
+        pagination.current = page;
+        pagination.pageSize = size;
+        pagination.total = res.total;
+        this.setState({
+          dataSource,
+        });
       });
-    });
   };
 
   handleSearchFormChange = () => {
@@ -131,34 +156,54 @@ class BaseCrudList extends React.Component {
 
   render() {
     const { columns, config, pagination } = this;
-    const { dataSource, selection } = this.state;
+    const { dataSource, selection, infoManageModal } = this.state;
 
     return (
-      <Card className="page__list">
-        <SearchForm
-          wrappedComponentRef={ref => (this.searchForm = ref)}
-          onChange={this.handleSearchFormChange}
+      <>
+        <Card className="page__list">
+          <SearchForm
+            wrappedComponentRef={ref => (this.searchForm = ref)}
+            onChange={this.handleSearchFormChange}
+          >
+            {form => (
+              <>
+                <Form.Item label="公司名称">
+                  {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题"/>)}
+                </Form.Item>
+              </>
+            )}
+          </SearchForm>
+          <div className="operator-bar">
+            <LinkButton to="Form"> 添加公司 </LinkButton>
+            {selection.length > 0 && this.renderBatchOperatorBar()}
+          </div>
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            {...config}
+            pagination={pagination}
+            onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
+          />
+        </Card>
+        <Modal
+          width="1000px"
+          destroyOnClose
+          footer={null}
+          // bodyStyle={{
+          //   maxHeight: '700px',
+          //   overflowY: 'auto'
+          // }}
+
+          visible={infoManageModal.visible}
+          onCancel={this.handleCloseInfoManageModal}
         >
-          {form => (
-            <>
-              <Form.Item label="公司名称">
-                {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
-              </Form.Item>
-            </>
-          )}
-        </SearchForm>
-        <div className="operator-bar">
-          <LinkButton to="Form"> 添加公司 </LinkButton>
-          {selection.length > 0 && this.renderBatchOperatorBar()}
-        </div>
-        <Table
-          columns={columns}
-          dataSource={dataSource}
-          {...config}
-          pagination={pagination}
-          onChange={pagination => this.loadDataSource(pagination.current, pagination.pageSize)}
-        />
-      </Card>
+          <FormWidget
+            infoPreview={true}
+            id={infoManageModal.id}
+            onCancel={this.handleCloseInfoManageModal}
+          />
+        </Modal>
+      </>
     );
   }
 }

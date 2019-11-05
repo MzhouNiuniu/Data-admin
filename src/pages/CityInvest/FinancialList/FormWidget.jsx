@@ -6,7 +6,6 @@ import constant from '@constant/index';
 import RangePicker from '@components/Form/DatePicker/RangePicker';
 import UploadFile from '@components/Form/Upload/File';
 import YearPicker from '@components/Form/DatePicker/YearPicker';
-
 @connect()
 @Form.create()
 class FromWidget extends React.Component {
@@ -19,8 +18,10 @@ class FromWidget extends React.Component {
 
   static defaultProps = {
     preview: false,
-    onClose() {},
-    onCancel() {},
+    onClose() {
+    },
+    onCancel() {
+    },
   };
 
   searchCompanyTimer = null;
@@ -35,25 +36,26 @@ class FromWidget extends React.Component {
       dispatch({
         type: 'financial/detail',
         payload: this.props.id,
-      }).then(res => {
-        const formData = res.data && res.data[0];
-        if (!formData) {
-          message.error('数据不存在');
-          this.props.onCancel();
-          return;
-        }
+      })
+        .then(res => {
+          const formData = res.data && res.data[0];
+          if (!formData) {
+            message.error('数据不存在');
+            this.props.onCancel();
+            return;
+          }
 
-        formData.startAndEndTime = [formData.startTime, formData.endTime];
-        delete formData.startTime;
-        delete formData.endTime;
-        this.props.form.setFieldsValue(formData);
-      });
+          formData.startAndEndTime = [formData.startTime, formData.endTime];
+          delete formData.startTime;
+          delete formData.endTime;
+          this.props.form.setFieldsValue(formData);
+        });
     }
 
     // 测试用
     // this.props.form.setFieldsValue({
     //   'year': 2019,
-    //   'DataName': 'JD001',
+    //   'DataName': '扬中市城市建设投资发展总公司',
     //   'financingType': '企业债券',
     //   'code': '11',
     //   'fullName': 'asd',
@@ -119,14 +121,15 @@ class FromWidget extends React.Component {
         dispatch({
           type: 'financial/create',
           payload: formData,
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
+        })
+          .then(res => {
+            if (res.status !== 200) {
+              message.error(res.message);
+              return;
+            }
 
-          this.props.onClose();
-        });
+            this.props.onClose();
+          });
       } else {
         dispatch({
           type: 'financial/update',
@@ -136,14 +139,15 @@ class FromWidget extends React.Component {
             status: 0,
             ...formData,
           },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
+        })
+          .then(res => {
+            if (res.status !== 200) {
+              message.error(res.message);
+              return;
+            }
 
-          this.props.onClose(formData);
-        });
+            this.props.onClose(formData);
+          });
       }
     });
   };
@@ -166,7 +170,7 @@ class FromWidget extends React.Component {
                         message: '请选择年份',
                       },
                     ],
-                  })(<YearPicker placeholder="请选择年份" />)}
+                  })(<YearPicker placeholder="请选择年份"/>)}
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -262,7 +266,7 @@ class FromWidget extends React.Component {
                       message: '请输入债券代码',
                     },
                   ],
-                })(<Input placeholder="请输入债券代码" />)}
+                })(<Input placeholder="请输入债券代码"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -274,7 +278,7 @@ class FromWidget extends React.Component {
                       message: '请输入债券全称',
                     },
                   ],
-                })(<Input placeholder="请输入债券全称" />)}
+                })(<Input placeholder="请输入债券全称"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -286,7 +290,7 @@ class FromWidget extends React.Component {
                       message: '请输入债券简称',
                     },
                   ],
-                })(<Input placeholder="请输入债券简称" />)}
+                })(<Input placeholder="请输入债券简称"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -320,7 +324,7 @@ class FromWidget extends React.Component {
                       message: '请输入发行人',
                     },
                   ],
-                })(<Input placeholder="请输入发行人" />)}
+                })(<Input placeholder="请输入发行人"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -332,7 +336,7 @@ class FromWidget extends React.Component {
                       message: '请输入发行方式',
                     },
                   ],
-                })(<Input placeholder="请输入发行方式" />)}
+                })(<Input placeholder="请输入发行方式"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -344,7 +348,7 @@ class FromWidget extends React.Component {
                       message: '请输入发行规模',
                     },
                   ],
-                })(<Input placeholder="请输入发行规模" />)}
+                })(<Input placeholder="请输入发行规模"/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -358,7 +362,7 @@ class FromWidget extends React.Component {
                       message: '请选择起息/到期时间',
                     },
                   ],
-                })(<RangePicker className="w100" />)}
+                })(<RangePicker className="w100"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -370,7 +374,7 @@ class FromWidget extends React.Component {
                       message: '请输入主承销商',
                     },
                   ],
-                })(<Input placeholder="请输入主承销商" />)}
+                })(<Input placeholder="请输入主承销商"/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -384,7 +388,7 @@ class FromWidget extends React.Component {
                       message: '请输入债券期限',
                     },
                   ],
-                })(<Input placeholder="请输入债券期限" />)}
+                })(<Input placeholder="请输入债券期限"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -396,7 +400,7 @@ class FromWidget extends React.Component {
                       message: '请输入票面利率',
                     },
                   ],
-                })(<Input placeholder="请输入票面利率" />)}
+                })(<Input placeholder="请输入票面利率"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -450,7 +454,7 @@ class FromWidget extends React.Component {
                       message: '请输入还本方式',
                     },
                   ],
-                })(<Input placeholder="请输入还本方式" />)}
+                })(<Input placeholder="请输入还本方式"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -462,7 +466,7 @@ class FromWidget extends React.Component {
                       message: '请输入付息方式',
                     },
                   ],
-                })(<Input placeholder="请输入付息方式" />)}
+                })(<Input placeholder="请输入付息方式"/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -474,22 +478,22 @@ class FromWidget extends React.Component {
                   message: '请输入增信措施',
                 },
               ],
-            })(<Input.TextArea rows={4} placeholder="请输入增信措施" />)}
+            })(<Input.TextArea rows={4} placeholder="请输入增信措施"/>)}
           </Form.Item>
           <Row gutter={30}>
             <Col>
               <Form.Item label="相关文件">
-                {form.getFieldDecorator('aboutFile')(<UploadFile multiple={true} />)}
+                {form.getFieldDecorator('aboutFile')(<UploadFile multiple={true}/>)}
               </Form.Item>
             </Col>
             <Col>
               <Form.Item label="募集说明书">
-                {form.getFieldDecorator('specification')(<UploadFile multiple={true} />)}
+                {form.getFieldDecorator('specification')(<UploadFile multiple={true}/>)}
               </Form.Item>
             </Col>
             <Col>
               <Form.Item label="评级报告">
-                {form.getFieldDecorator('report')(<UploadFile multiple={true} />)}
+                {form.getFieldDecorator('report')(<UploadFile multiple={true}/>)}
               </Form.Item>
             </Col>
           </Row>

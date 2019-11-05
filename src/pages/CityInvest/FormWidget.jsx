@@ -2,7 +2,7 @@ import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'dva';
-import { Row, Col, Form, Input, Button, message, Select, Tabs, Icon } from 'antd';
+import { Row, Col, Form, Input, Button, message, Select, Tabs, Icon, Modal } from 'antd';
 import DatePicker from '@components/Form/DatePicker';
 import YearPicker from '@components/Form/DatePicker/YearPicker';
 import MultipleItemQueue from '@components/Form/MultipleItemQueue';
@@ -19,14 +19,17 @@ import AddBond from './AddBond';
 class FormWidget extends React.Component {
   static propTypes = {
     preview: propTypes.bool, // 是否为预览模式
+    infoPreview: propTypes.bool, // 是否为信息管理模式
     id: propTypes.oneOfType([propTypes.string, propTypes.number]),
     onClose: propTypes.func,
     onCancel: propTypes.func,
   };
 
   static defaultProps = {
-    onClose() {},
-    onCancel() {},
+    onClose() {
+    },
+    onCancel() {
+    },
   };
 
   state = {
@@ -66,13 +69,14 @@ class FormWidget extends React.Component {
         dispatch({
           type: 'cityInvest/create',
           payload: formData,
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
-          this.props.onClose();
-        });
+        })
+          .then(res => {
+            if (res.status !== 200) {
+              message.error(res.message);
+              return;
+            }
+            this.props.onClose();
+          });
       } else {
         dispatch({
           type: 'cityInvest/update',
@@ -82,13 +86,14 @@ class FormWidget extends React.Component {
             status: 0,
             ...formData,
           },
-        }).then(res => {
-          if (res.status !== 200) {
-            message.error(res.message);
-            return;
-          }
-          this.props.onClose(formData); // 编辑时将最新数据发送出去
-        });
+        })
+          .then(res => {
+            if (res.status !== 200) {
+              message.error(res.message);
+              return;
+            }
+            this.props.onClose(formData); // 编辑时将最新数据发送出去
+          });
       }
     });
   };
@@ -99,44 +104,45 @@ class FormWidget extends React.Component {
       dispatch({
         type: 'cityInvest/detail',
         payload: this.props.id,
-      }).then(res => {
-        const formData = res.data && res.data[0];
-        if (!formData) {
-          message.error('数据不存在');
-          this.props.onCancel();
-          return;
-        }
+      })
+        .then(res => {
+          const formData = res.data && res.data[0];
+          if (!formData) {
+            message.error('数据不存在');
+            this.props.onCancel();
+            return;
+          }
 
-        /* 生成地区信息 */
-        {
-          const area = [formData.province, formData.city, formData.district];
-          delete formData.province;
-          delete formData.city;
-          delete formData.district;
-          formData.area = area;
-        }
-
-        this.state.multipleItemQueueLength.financial = formData.financial.length;
-        this.state.multipleItemQueueLength.rate = formData.rate.length;
-        this.state.multipleItemQueueLength.financing = formData.financing.length;
-
-        // todo 临时修复老数据
-        if (formData.incomeInfo) {
-          this.state.multipleItemQueueLength.incomeInfo = formData.incomeInfo.length;
-        }
-        this.state.multipleItemQueueLength.other = formData.other.length;
-
-        this.setState(
+          /* 生成地区信息 */
           {
-            auditMessageList: formData.auditList,
-          },
-          () => {
-            setTimeout(() => {
-              this.props.form.setFieldsValue(formData);
-            }, 0);
-          },
-        );
-      });
+            const area = [formData.province, formData.city, formData.district];
+            delete formData.province;
+            delete formData.city;
+            delete formData.district;
+            formData.area = area;
+          }
+
+          this.state.multipleItemQueueLength.financial = formData.financial.length;
+          this.state.multipleItemQueueLength.rate = formData.rate.length;
+          this.state.multipleItemQueueLength.financing = formData.financing.length;
+
+          // todo 临时修复老数据
+          if (formData.incomeInfo) {
+            this.state.multipleItemQueueLength.incomeInfo = formData.incomeInfo.length;
+          }
+          this.state.multipleItemQueueLength.other = formData.other.length;
+
+          this.setState(
+            {
+              auditMessageList: formData.auditList,
+            },
+            () => {
+              setTimeout(() => {
+                this.props.form.setFieldsValue(formData);
+              }, 0);
+            },
+          );
+        });
     }
   }
 
@@ -205,7 +211,7 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledYearList={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList}/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -216,7 +222,7 @@ class FormWidget extends React.Component {
                       message: '请输入总资产',
                     },
                   ],
-                })(<Input placeholder="请输入总资产" />)}
+                })(<Input placeholder="请输入总资产"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -227,7 +233,7 @@ class FormWidget extends React.Component {
                       message: '请输入净资产',
                     },
                   ],
-                })(<Input placeholder="请输入净资产（亿元）" />)}
+                })(<Input placeholder="请输入净资产（亿元）"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -238,7 +244,7 @@ class FormWidget extends React.Component {
                       message: '请输入负债率',
                     },
                   ],
-                })(<Input placeholder="请输入负债率" />)}
+                })(<Input placeholder="请输入负债率"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -249,7 +255,7 @@ class FormWidget extends React.Component {
                       message: '请输入营业收入',
                     },
                   ],
-                })(<Input placeholder="请输入营业收入" />)}
+                })(<Input placeholder="请输入营业收入"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -260,7 +266,7 @@ class FormWidget extends React.Component {
                       message: '请输入主营业务收入',
                     },
                   ],
-                })(<Input placeholder="请输入主营业务收入" />)}
+                })(<Input placeholder="请输入主营业务收入"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -271,7 +277,7 @@ class FormWidget extends React.Component {
                       message: '请输入净利润',
                     },
                   ],
-                })(<Input placeholder="请输入净利润" />)}
+                })(<Input placeholder="请输入净利润"/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -282,7 +288,7 @@ class FormWidget extends React.Component {
                       message: '请输入利润总额',
                     },
                   ],
-                })(<Input placeholder="请输入利润总额" />)}
+                })(<Input placeholder="请输入利润总额"/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -318,7 +324,7 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledYearList={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList}/>)}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
@@ -349,7 +355,7 @@ class FormWidget extends React.Component {
                     },
                   ],
                 })(
-                  <Input placeholder="请输入展望评级" />
+                  <Input placeholder="请输入展望评级"/>
                 )}
               </Form.Item>
             </Col>
@@ -361,7 +367,7 @@ class FormWidget extends React.Component {
                       message: '请输入评级机构',
                     },
                   ],
-                })(<Input placeholder="请输入评级机构" />)}
+                })(<Input placeholder="请输入评级机构"/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -372,7 +378,7 @@ class FormWidget extends React.Component {
                   message: '请输入评级报告',
                 },
               ],
-            })(<Input.TextArea rows={4} placeholder="请输入评级报告" />)}
+            })(<Input.TextArea rows={4} placeholder="请输入评级报告"/>)}
           </Form.Item>
           {this.renderRemoveItemBtn('rate', index, ctrl.removeItem)}
         </div>
@@ -406,79 +412,79 @@ class FormWidget extends React.Component {
                       message: '请选择年份',
                     },
                   ],
-                })(<YearPicker disabledYearList={selectionYearList} />)}
+                })(<YearPicker disabledYearList={selectionYearList}/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="企业债券">
-                {form.getFieldDecorator('financing[' + index + '].enterpriseBond')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].enterpriseBond')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="公司债券">
-                {form.getFieldDecorator('financing[' + index + '].companyBond')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].companyBond')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="中小企业私募债券">
-                {form.getFieldDecorator('financing[' + index + '].middleBond')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].middleBond')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="非公开发行债券">
-                {form.getFieldDecorator('financing[' + index + '].unpublicBond')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].unpublicBond')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="企业资产支持证券">
                 {form.getFieldDecorator('financing[' + index + '].enterpriseAssetBond')(
-                  <AddBond />,
+                  <AddBond/>,
                 )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="信贷资产支持证券">
-                {form.getFieldDecorator('financing[' + index + '].credit')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].credit')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="超短期融资券（SCP）">
-                {form.getFieldDecorator('financing[' + index + '].SCP')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].SCP')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="短期融资券（CP）">
-                {form.getFieldDecorator('financing[' + index + '].CP')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].CP')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="中期票据（MTN）">
-                {form.getFieldDecorator('financing[' + index + '].MTN')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].MTN')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="定向工具（PPN）">
-                {form.getFieldDecorator('financing[' + index + '].PPN')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].PPN')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="资产支持票据（ABN）">
-                {form.getFieldDecorator('financing[' + index + '].ABN')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].ABN')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="项目收益票据（PRN）">
-                {form.getFieldDecorator('financing[' + index + '].PRN')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].PRN')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="债务融资工具（DFI）">
-                {form.getFieldDecorator('financing[' + index + '].DFI')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].DFI')(<AddBond/>)}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="绿色债务融资工具（GN）">
-                {form.getFieldDecorator('financing[' + index + '].GN')(<AddBond />)}
+                {form.getFieldDecorator('financing[' + index + '].GN')(<AddBond/>)}
               </Form.Item>
             </Col>
           </Row>
@@ -512,12 +518,12 @@ class FormWidget extends React.Component {
                   message: '请选择年份',
                 },
               ],
-            })(<YearPicker disabledYearList={selectionYearList} />)}
+            })(<YearPicker disabledYearList={selectionYearList}/>)}
           </Form.Item>
           <Form.Item>
             {form.getFieldDecorator('incomeInfo[' + index + '].data', {
               initialValue: [],
-            })(<Income />)}
+            })(<Income/>)}
           </Form.Item>
           {this.renderRemoveItemBtn('incomeInfo', index, ctrl.removeItem)}
         </div>
@@ -547,7 +553,7 @@ class FormWidget extends React.Component {
                   message: '请上传附件',
                 },
               ],
-            })(<UploadFile />)}
+            })(<UploadFile/>)}
           </Form.Item>
           {this.renderRemoveItemBtn('other', index, ctrl.removeItem)}
         </div>
@@ -569,7 +575,7 @@ class FormWidget extends React.Component {
                     message: '请输入公司名称',
                   },
                 ],
-              })(<Input placeholder="请输入公司名称" />)}
+              })(<Input placeholder="请输入公司名称"/>)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -581,7 +587,7 @@ class FormWidget extends React.Component {
                     message: '请选择成立日期',
                   },
                 ],
-              })(<DatePicker placeholder="请选择成立日期" />)}
+              })(<DatePicker placeholder="请选择成立日期"/>)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -593,7 +599,7 @@ class FormWidget extends React.Component {
                     message: '请输入注册资本',
                   },
                 ],
-              })(<Input placeholder="请输入注册资本" />)}
+              })(<Input placeholder="请输入注册资本"/>)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -605,7 +611,7 @@ class FormWidget extends React.Component {
                     message: '请输入实际控制人',
                   },
                 ],
-              })(<Input placeholder="请输入实际控制人" />)}
+              })(<Input placeholder="请输入实际控制人"/>)}
             </Form.Item>
           </Col>
         </Row>
@@ -620,7 +626,7 @@ class FormWidget extends React.Component {
                     message: '所在地区',
                   },
                 ],
-              })(<Area placeholder="所在地区" useAddress={false} />)}
+              })(<Area placeholder="所在地区" useAddress={false}/>)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -631,7 +637,7 @@ class FormWidget extends React.Component {
                     message: '所属政府',
                   },
                 ],
-              })(<Input placeholder="所属政府" />)}
+              })(<Input placeholder="所属政府"/>)}
             </Form.Item>
           </Col>
           <Col span={4} offset={1}>
@@ -691,10 +697,11 @@ class FormWidget extends React.Component {
                 message: '请输入经营范围',
               },
             ],
-          })(<Input.TextArea rows={4} placeholder="请输入经营范围" />)}
+          })(<Input.TextArea rows={4} placeholder="请输入经营范围"/>)}
         </Form.Item>
         <Form.Item label="企业图片">
-          {form.getFieldDecorator('photos')(<UploadImage multiple={true} valueType="string" maxlength={Infinity} />)}
+          {form.getFieldDecorator('photos')(<UploadImage multiple={true} valueType="string"
+                                                         maxlength={Infinity}/>)}
         </Form.Item>
       </>
     );
@@ -721,65 +728,80 @@ class FormWidget extends React.Component {
 
   render() {
     const { multipleItemQueueLength, auditMessageList } = this.state;
-    const { id, form, preview } = this.props;
-    console.log(form.getFieldsValue());
+    const { id, form, infoPreview } = this.props;
+    // console.log(form.getFieldsValue());
+
+    let { preview } = this.props;
+    if (infoPreview) {
+      preview = false;
+    }
+
+    const tabStyle = !infoPreview
+      ? null
+      : {
+        maxHeight: '600px',
+        overflowY: 'auto'
+      };
 
     return (
-
       <Form onSubmit={this.handleSubmit} className="city-invest__form">
-        {!preview && id && <AuditMessage message={auditMessageList} />}
+        {
+          !infoPreview && (
+            <>
+              {!preview && id && <AuditMessage message={auditMessageList}/>}
+              <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
+            </>
+          )
+        }
 
-        <fieldset disabled={preview}>{this.renderBaseInfo()}</fieldset>
-        {/* 此区域不受查看模式影响 */}
+        {/* 此区域一直展示，不受影响 */}
         <Form.Item>
           <fieldset disabled={preview}>
-
-          <Tabs  renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
-
-            <Tabs.TabPane forceRender tab="财务信息" key="financial">
-              <MultipleItemQueue
-              buttonText="添加财务信息"
-              queueLength={multipleItemQueueLength.financial}
-            >
-              {this.renderFinanceInfo}
-            </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="评级信息" key="rate">
-              <MultipleItemQueue
-                buttonText="添加评级信息"
-                queueLength={multipleItemQueueLength.rate}
-              >
-                {this.renderGradeInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo">
-              <MultipleItemQueue
-                buttonText="添加营业收入情况"
-                queueLength={multipleItemQueueLength.incomeInfo}
-              >
-                {this.renderIncomeInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-            <Tabs.TabPane forceRender tab="其它信息" key="other">
-              <MultipleItemQueue
-                buttonText="添加其它信息"
-                queueLength={multipleItemQueueLength.other}
-              >
-                {this.renderOtherInfo}
-              </MultipleItemQueue>
-            </Tabs.TabPane>
-          </Tabs>
+            <Tabs renderTabBar={this.renderTabBar} style={{ pointerEvents: 'auto' }}>
+              <Tabs.TabPane forceRender tab="财务信息" key="financial" style={tabStyle}>
+                <MultipleItemQueue
+                  buttonText="添加财务信息"
+                  queueLength={multipleItemQueueLength.financial}
+                >
+                  {this.renderFinanceInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="评级信息" key="rate" style={tabStyle}>
+                <MultipleItemQueue
+                  buttonText="添加评级信息"
+                  queueLength={multipleItemQueueLength.rate}
+                >
+                  {this.renderGradeInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="营业收入情况" key="incomeInfo" style={tabStyle}>
+                <MultipleItemQueue
+                  buttonText="添加营业收入情况"
+                  queueLength={multipleItemQueueLength.incomeInfo}
+                >
+                  {this.renderIncomeInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+              <Tabs.TabPane forceRender tab="其它信息" key="other" style={tabStyle}>
+                <MultipleItemQueue
+                  buttonText="添加其它信息"
+                  queueLength={multipleItemQueueLength.other}
+                >
+                  {this.renderOtherInfo}
+                </MultipleItemQueue>
+              </Tabs.TabPane>
+            </Tabs>
           </fieldset>
         </Form.Item>
 
-        {!preview?
-        <Form.Item>
-           < Button type="primary" htmlType="submit">
-            保存
+        {!preview ?
+          <Form.Item className={infoPreview ? 'text-center' : ''}>
+            < Button type="primary" htmlType="submit">
+              保存
             </Button>
             <span>&emsp;</span>
             <Button onClick={this.props.onCancel}>取消</Button>
-        </Form.Item>:null}
+          </Form.Item> : null}
 
       </Form>
     );

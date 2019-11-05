@@ -5,6 +5,7 @@ import { Upload, Icon, Button } from 'antd';
 import api from '@services/api';
 import publicServices from '@services/public';
 
+// todo 重构
 /**
  * 服务端存储格式：{name:'f1',url:'xxx.com/xxx.png'} 或者 [{name:'f1',url:'xxx.com/xxx.png'}]
  * 2019年8月27日
