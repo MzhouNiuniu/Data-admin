@@ -68,7 +68,6 @@ class FormWidget extends React.Component {
       } else {
         dispatch({
           type: 'organization/update',
-          id: this.props.id,
           payload: {
             id: this.props.id,
             ...formData,

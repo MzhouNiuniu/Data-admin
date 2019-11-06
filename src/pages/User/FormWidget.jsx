@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import UploadImage from '@components/Form/Upload/Image';
 import { Form, Input, Button, message, Icon, Select } from 'antd';
 import { withRouter } from 'dva/router';
+
 @withRouter
 @connect()
 @Form.create()
@@ -44,10 +45,8 @@ class FormWidget extends React.Component {
           this.props.onClose();
         });
       } else {
-        console.log(Object.assign({ id: this.props.location.query.id }, formData));
         dispatch({
           type: 'user/updateById',
-          id: this.props.location.query.id,
           payload: Object.assign({ id: this.props.location.query.id }, formData),
         }).then(res => {
           if (res.status !== 200) {
@@ -61,7 +60,6 @@ class FormWidget extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.location.query.id) {
       const { dispatch } = this.props;
       dispatch({
@@ -73,21 +71,30 @@ class FormWidget extends React.Component {
           this.props.onCancel();
           return;
         }
-        delete res.data.id;
+
+        // delete res.data.password;
         this.props.form.setFieldsValue(res.data);
       });
     }
   }
 
   render() {
-    console.log(this.props);
     const { form } = this.props;
-    const roleList = [{ label: '操作员', value: 'user' }, { label: '管理员', value: 'admin' }];
+    const roleList = [
+      {
+        label: '操作员',
+        value: 'user',
+      },
+      {
+        label: '管理员',
+        value: 'admin',
+      },
+    ];
 
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="头像" className="mb-6">
-          {form.getFieldDecorator('logo')(<UploadImage />)}
+          {form.getFieldDecorator('logo')(<UploadImage valueType="string" />)}
         </Form.Item>
         <Form.Item label="账号">
           {form.getFieldDecorator('userName', {

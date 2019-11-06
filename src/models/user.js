@@ -101,11 +101,11 @@ const UserModel = {
     *detail({ payload }) {
       return userService.detail(payload);
     },
-    *update({ id, payload }) {
-      return userService.update(id, payload);
+    *update({ payload }) {
+      return userService.update(payload);
     },
-    *updateById({ id, payload }) {
-      return userService.updateById(id, payload);
+    *updateById({ payload }) {
+      return userService.updateById(payload);
     },
 
     *del({ payload }) {

@@ -306,7 +306,7 @@ export function loadRoutes() {
         },
       ].forEach(routes.push, routes);
       const role = getCookie('role');
-      if (role == 'admin') {
+      if (1 || role == 'admin') {
         console.log(role);
         routes.push({
           path: '/User',
@@ -339,17 +339,17 @@ export function loadRoutes() {
   });
 }
 
-export function update(id, payload) {
+export function update(payload) {
   return request('/user/updateUser', {
     method: 'post',
     data: payload,
   });
 }
 
-export function updateById(id, payload) {
+export function updateById(payload) {
   return request('/user/updateById', {
     method: 'post',
-    data: Object.assign({ id }, payload),
+    data: payload,
   });
 }
 
