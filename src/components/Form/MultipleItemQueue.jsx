@@ -58,7 +58,7 @@ class MultipleItemQueue extends React.Component {
 
   render() {
     const { queue } = this.state;
-    const { children, disabled, buttonText, maxHeight } = this.props;
+    const { children, disabled, buttonText, maxHeight, queueLength } = this.props;
     if (!children) {
       return null;
     }
@@ -72,7 +72,11 @@ class MultipleItemQueue extends React.Component {
             maxHeight,
           }}
         >
-          {children(queue, this)}
+          {queueLength === 0 && disabled ? (
+            <p style={{ textAlign: 'center' }}>暂无数据</p>
+          ) : (
+            children(queue, this)
+          )}
         </div>
         {!disabled && (
           // global.less，通过hide_disabled实现通过css禁用

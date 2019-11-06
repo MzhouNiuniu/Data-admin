@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { Card, Table, Button, Form, Input, message, Modal, Upload, Select } from 'antd';
 import constant from '@constant';
 import FormWidget from './FormWidget';
+import InfoManageForm from './InfoManageForm';
 import AuditButton from '@components/project/AuditButton';
 import LinkButton from '@components/LinkButton';
 import PreviewButton from '@components/project/PreviewButton';
@@ -14,7 +15,10 @@ import SearchForm from '@components/project/SearchForm';
 @connect()
 @Form.create()
 class BaseCrudList extends React.Component {
+  // $refs
   searchForm = null;
+  infoManageForm = null;
+
   columns = [
     {
       width: 220,
@@ -35,10 +39,15 @@ class BaseCrudList extends React.Component {
       render: (text, row, index) => {
         return (
           <>
-            <Button type="primary" onClick={() => this.handleOpenInfoManageModal(row)}>
-              信息管理
-            </Button>
-            <span>&emsp;</span>
+            {// 1 = 公司审核通过
+            row.companyStatus === 1 && (
+              <>
+                <Button type="primary" onClick={() => this.handleOpenInfoManageModal(row)}>
+                  信息管理
+                </Button>
+                <span>&emsp;</span>
+              </>
+            )}
             <AuditButton
               row={row}
               api="/companyData/updateStatusById"
@@ -90,22 +99,6 @@ class BaseCrudList extends React.Component {
     },
   };
 
-  handleOpenInfoManageModal = row => {
-    this.setState({
-      infoManageModal: {
-        visible: true,
-        id: row._id,
-      },
-    });
-  };
-  handleCloseInfoManageModal = () => {
-    this.setState({
-      infoManageModal: {
-        visible: false,
-      },
-    });
-  };
-
   /* 处理dataSource中的数据项 */
   rowPipe = row => {
     row.cnType = constant.policy.typeMap[row.type] || row.status;
@@ -127,28 +120,69 @@ class BaseCrudList extends React.Component {
     dispatch({
       type: 'cityInvest/list',
       payload: params,
-    })
-      .then(res => {
-        if (res.status !== 200) return;
-        res = res.data;
-        const dataSource = res.docs.map(this.rowPipe);
-        pagination.current = page;
-        pagination.pageSize = size;
-        pagination.total = res.total;
-        this.setState({
-          dataSource,
-        });
+    }).then(res => {
+      if (res.status !== 200) return;
+      res = res.data;
+      const dataSource = res.docs.map(this.rowPipe);
+      pagination.current = page;
+      pagination.pageSize = size;
+      pagination.total = res.total;
+      this.setState({
+        dataSource,
       });
-  };
-
-  handleSearchFormChange = () => {
-    const { defaultPagination } = this;
-    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
+    });
   };
 
   componentDidMount() {
     this.loadDataSource();
   }
+
+  // 搜索表单
+  handleSearchFormChange = () => {
+    const { defaultPagination } = this;
+    this.loadDataSource(defaultPagination.current, defaultPagination.pageSize);
+  };
+
+  // 模态框 - 信息管理
+  handleOpenInfoManageModal = row => {
+    this.setState({
+      infoManageModal: {
+        visible: true,
+        id: row._id,
+      },
+    });
+  };
+  handleCloseInfoManageModal = () => {
+    this.setState({
+      infoManageModal: {
+        visible: false,
+      },
+    });
+  };
+  handleInfoManageFormSubmit = () => {
+    this.infoManageForm
+      .validateFields()
+      .then(formData => {
+        this.props
+          .dispatch({
+            type: 'cityInvest/update',
+            payload: {
+              id: this.state.infoManageModal.id,
+              ...formData,
+            },
+          })
+          .then(res => {
+            if (res.status !== 200) {
+              message.error(res.message);
+              return;
+            }
+
+            message.success('修改成功');
+            this.handleCloseInfoManageModal();
+          });
+      })
+      .catch(() => {});
+  };
 
   renderBatchOperatorBar = () => {
     return null;
@@ -157,7 +191,6 @@ class BaseCrudList extends React.Component {
   render() {
     const { columns, config, pagination } = this;
     const { dataSource, selection, infoManageModal } = this.state;
-
     return (
       <>
         <Card className="page__list">
@@ -168,7 +201,7 @@ class BaseCrudList extends React.Component {
             {form => (
               <>
                 <Form.Item label="公司名称">
-                  {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题"/>)}
+                  {form.getFieldDecorator('keyWords')(<Input placeholder="请输入标题" />)}
                 </Form.Item>
               </>
             )}
@@ -189,19 +222,20 @@ class BaseCrudList extends React.Component {
           width="1000px"
           destroyOnClose
           footer={null}
-          // bodyStyle={{
-          //   maxHeight: '700px',
-          //   overflowY: 'auto'
-          // }}
-
           visible={infoManageModal.visible}
           onCancel={this.handleCloseInfoManageModal}
         >
-          <FormWidget
-            infoPreview={true}
+          <InfoManageForm
+            wrappedComponentRef={ref => (this.infoManageForm = ref)}
             id={infoManageModal.id}
-            onCancel={this.handleCloseInfoManageModal}
           />
+          <div className="text-center">
+            <Button type="primary" onClick={this.handleInfoManageFormSubmit}>
+              保存
+            </Button>
+            <span>&emsp;</span>
+            <Button onClick={this.handleCloseInfoManageModal}>取消</Button>
+          </div>
         </Modal>
       </>
     );

@@ -1,7 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { Timeline, Button, Modal, Alert } from 'antd';
-import Permission from '@components/Permission';
 
 class AuditMessage extends React.Component {
   static propTypes = {
