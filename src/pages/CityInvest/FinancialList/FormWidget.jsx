@@ -6,6 +6,8 @@ import constant from '@constant/index';
 import RangePicker from '@components/Form/DatePicker/RangePicker';
 import UploadFile from '@components/Form/Upload/File';
 import YearPicker from '@components/Form/DatePicker/YearPicker';
+import AuditMessage from '@components/project/AuditMessage';
+
 @connect()
 @Form.create()
 class FromWidget extends React.Component {
@@ -26,6 +28,7 @@ class FromWidget extends React.Component {
   companyDataSource = [];
   state = {
     companyNameDataSource: [], // companyDataSource的简略版，只包含公司名称
+    auditMessageList: [],
   };
 
   componentDidMount() {
@@ -41,7 +44,10 @@ class FromWidget extends React.Component {
           this.props.onCancel();
           return;
         }
-
+        console.log(formData.auditList);
+        this.setState({
+          auditMessageList: formData.auditList,
+        });
         formData.startAndEndTime = [formData.startTime, formData.endTime];
         delete formData.startTime;
         delete formData.endTime;
@@ -140,18 +146,19 @@ class FromWidget extends React.Component {
             return;
           }
 
-          this.props.onClose(formData);
+          this.props.onClose();
         });
       }
     });
   };
 
   render() {
-    const { form, preview } = this.props;
-    const { companyNameDataSource } = this.state;
+    const { form, preview, id } = this.props;
+    const { companyNameDataSource, auditMessageList } = this.state;
 
     return (
       <Form onSubmit={this.handleSubmit}>
+        {!preview && id && <AuditMessage message={auditMessageList} />}
         <fieldset disabled={preview}>
           <Row gutter={30}>
             <div className="clearfix">

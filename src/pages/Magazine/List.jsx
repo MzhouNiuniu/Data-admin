@@ -32,21 +32,21 @@ class BaseCrudList extends React.Component {
       title: '标题',
       dataIndex: 'name',
     },
-    {
-      width: 360,
-      title: '链接',
-      dataIndex: 'url',
-      render(text) {
-        if (!text) {
-          return '暂未设置';
-        }
-        return (
-          <a className="text-break-all" href={text} target="_blank">
-            {text}
-          </a>
-        );
-      },
-    },
+    // {
+    //   width: 360,
+    //   title: '链接',
+    //   dataIndex: 'url',
+    //   render(text) {
+    //     if (!text) {
+    //       return '暂未设置';
+    //     }
+    //     return (
+    //       <a className="text-break-all" href={text} target="_blank">
+    //         {text}
+    //       </a>
+    //     );
+    //   },
+    // },
     // {
     //   title: '审核状态',
     //   dataIndex: 'cnStatus',

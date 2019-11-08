@@ -33,10 +33,10 @@ class BaseCrudList extends React.Component {
       title: '姓名',
       dataIndex: 'name',
     },
-    {
-      title: '性别',
-      dataIndex: 'sex',
-    },
+    // {
+    //   title: '性别',
+    //   dataIndex: 'sex',
+    // },
     {
       width: 220,
       title: '研究方向',
