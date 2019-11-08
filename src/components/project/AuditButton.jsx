@@ -122,9 +122,8 @@ class AuditButton extends React.Component {
 
   render() {
     const { visible } = this.state;
-    const { row } = this.props;
+    const { row, api } = this.props;
     const status = Number(this.props.status);
-
     // 审核通过不显示
     if (status === 1) {
       return null;
@@ -160,9 +159,16 @@ class AuditButton extends React.Component {
 
         {status === 2 && (
           <>
-            <LinkButton type="primary" to={`Form/${row._id}`}>
-              编辑
-            </LinkButton>
+            {api == '/financialing/updateStatusById' ? (
+              <LinkButton type="primary" to={`FinancialForm/${row._id}`}>
+                编辑
+              </LinkButton>
+            ) : (
+              <LinkButton type="primary" to={`Form/${row._id}`}>
+                编辑
+              </LinkButton>
+            )}
+
             <span>&emsp;</span>
           </>
         )}

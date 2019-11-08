@@ -141,79 +141,51 @@ class InfoManage extends React.Component {
             </Col>
             <Col span={6}>
               <Form.Item label="总资产（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].totalAsset', {
-                  rules: [
-                    {
-                      message: '请输入总资产',
-                    },
-                  ],
-                })(<Input placeholder="请输入总资产" />)}
+                {form.getFieldDecorator('financial[' + index + '].totalAsset', {})(
+                  <Input placeholder="请输入总资产" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="净资产（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].netAsset', {
-                  rules: [
-                    {
-                      message: '请输入净资产',
-                    },
-                  ],
-                })(<Input placeholder="请输入净资产（亿元）" />)}
+                {form.getFieldDecorator('financial[' + index + '].netAsset', {})(
+                  <Input placeholder="请输入净资产（亿元）" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="负债率（%）">
-                {form.getFieldDecorator('financial[' + index + '].liabilities', {
-                  rules: [
-                    {
-                      message: '请输入负债率',
-                    },
-                  ],
-                })(<Input placeholder="请输入负债率" />)}
+                {form.getFieldDecorator('financial[' + index + '].liabilities', {})(
+                  <Input placeholder="请输入负债率" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="营业收入额（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].business', {
-                  rules: [
-                    {
-                      message: '请输入营业收入',
-                    },
-                  ],
-                })(<Input placeholder="请输入营业收入" />)}
+                {form.getFieldDecorator('financial[' + index + '].business', {})(
+                  <Input placeholder="请输入营业收入" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="主营业务收入（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].mainBusiness', {
-                  rules: [
-                    {
-                      message: '请输入主营业务收入',
-                    },
-                  ],
-                })(<Input placeholder="请输入主营业务收入" />)}
+                {form.getFieldDecorator('financial[' + index + '].mainBusiness', {})(
+                  <Input placeholder="请输入主营业务收入" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="净利润（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].netProfit', {
-                  rules: [
-                    {
-                      message: '请输入净利润',
-                    },
-                  ],
-                })(<Input placeholder="请输入净利润" />)}
+                {form.getFieldDecorator('financial[' + index + '].netProfit', {})(
+                  <Input placeholder="请输入净利润" />,
+                )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="利润总额（亿元）">
-                {form.getFieldDecorator('financial[' + index + '].totalProfit', {
-                  rules: [
-                    {
-                      message: '请输入利润总额',
-                    },
-                  ],
-                })(<Input placeholder="请输入利润总额" />)}
+                {form.getFieldDecorator('financial[' + index + '].totalProfit', {})(
+                  <Input placeholder="请输入利润总额" />,
+                )}
               </Form.Item>
             </Col>
           </Row>

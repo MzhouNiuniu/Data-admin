@@ -40,7 +40,7 @@ class BaseCrudList extends React.Component {
         return (
           <>
             {// 1 = 公司审核通过
-            row.companyStatus === 1 && (
+            row.status === 1 && (
               <>
                 <Button type="primary" onClick={() => this.handleOpenInfoManageModal(row)}>
                   信息管理
@@ -163,6 +163,7 @@ class BaseCrudList extends React.Component {
     this.infoManageForm
       .validateFields()
       .then(formData => {
+        console.log(formData);
         this.props
           .dispatch({
             type: 'cityInvest/update',
