@@ -144,7 +144,7 @@ class FormWidget extends React.Component {
               ],
             })(
               <Select placeholder="请选择主体评级">
-                {['省级', '市级', '区级'].map(item => (
+                {['省级', '地市级', '区县级'].map(item => (
                   <Select.Option key={item} value={item}>
                     {item}
                   </Select.Option>

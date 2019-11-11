@@ -39,16 +39,16 @@ export default {
     ],
     govLevel: [
       {
-        label: '省',
-        value: '省',
+        label: '省级',
+        value: '省级',
       },
       {
-        label: '地市',
-        value: '地市',
+        label: '地市级',
+        value: '地市级',
       },
       {
-        label: '区县',
-        value: '区县',
+        label: '区县级',
+        value: '区县级',
       },
     ],
     mainType: [

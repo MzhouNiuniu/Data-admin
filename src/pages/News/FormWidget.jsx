@@ -133,7 +133,15 @@ class FormWidget extends React.Component {
               </Form.Item>
             </Col>
           </Row>
-
+          <Form.Item label="关联公司">
+            {form.getFieldDecorator('source', {
+              rules: [
+                {
+                  message: '请输关联公司',
+                },
+              ],
+            })(<Input placeholder="请输入来源" />)}
+          </Form.Item>
           <Form.Item label="内容">
             {form.getFieldDecorator('content', {
               rules: [
