@@ -1,12 +1,13 @@
 import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
-import { connect } from 'dva';
-import { Row, Col, Form, Input, Button, message, Select } from 'antd';
+import {connect} from 'dva';
+import {Row, Col, Form, Input, Button, message, Select} from 'antd';
 import UploadFile from '@components/Form/Upload/File';
 import Editor from '@components/Form/Editor';
 import AuditMessage from '@components/project/AuditMessage';
 import constant from '@constant';
+import UploadImage from '@components/Form/Upload/Image';
 
 @connect()
 @Form.create()
@@ -24,13 +25,15 @@ class FormWidget extends React.Component {
   };
 
   static defaultProps = {
-    onClose() {},
-    onCancel() {},
+    onClose() {
+    },
+    onCancel() {
+    },
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const { form } = this.props;
+    const {form} = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -40,8 +43,7 @@ class FormWidget extends React.Component {
         return;
       }
       // 提取图片
-      formData.cover = this.editor.getFirstImage();
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       if (!this.props.id) {
         dispatch({
           type: 'professionReport/create',
@@ -74,7 +76,7 @@ class FormWidget extends React.Component {
 
   componentDidMount() {
     if (this.props.id) {
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       dispatch({
         type: 'professionReport/detail',
         payload: this.props.id,
@@ -95,11 +97,11 @@ class FormWidget extends React.Component {
   }
 
   render() {
-    const { auditMessageList } = this.state;
-    const { id, form, preview } = this.props;
+    const {auditMessageList} = this.state;
+    const {id, form, preview} = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        {!preview && id && <AuditMessage message={auditMessageList} />}
+        {!preview && id && <AuditMessage message={auditMessageList}/>}
         <fieldset disabled={preview}>
           <Row>
             <Col span={19}>
@@ -111,7 +113,7 @@ class FormWidget extends React.Component {
                       message: '请输入标题',
                     },
                   ],
-                })(<Input placeholder="请输入标题" />)}
+                })(<Input placeholder="请输入标题"/>)}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
@@ -136,6 +138,19 @@ class FormWidget extends React.Component {
             </Col>
           </Row>
           <Row>
+            <Col >
+              <Form.Item label="封面">
+                {form.getFieldDecorator('cover', {
+                  rules: [
+                    {
+                      message: '请上传封面',
+                    },
+                  ],
+                })(<UploadImage valueType="string"/>)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
             <Col span={4}>
               <Form.Item label="研究人">
                 {form.getFieldDecorator('human', {
@@ -145,7 +160,7 @@ class FormWidget extends React.Component {
                       message: '请输入研究人',
                     },
                   ],
-                })(<Input placeholder="请输入研究人" />)}
+                })(<Input placeholder="请输入研究人"/>)}
               </Form.Item>
             </Col>
             <Col span={19} offset={1}>
@@ -157,10 +172,11 @@ class FormWidget extends React.Component {
                       message: '请输入研究人所属机构',
                     },
                   ],
-                })(<Input placeholder="请输入研究人所属机构" />)}
+                })(<Input placeholder="请输入研究人所属机构"/>)}
               </Form.Item>
             </Col>
           </Row>
+
           <Form.Item label="简介">
             {form.getFieldDecorator('brief', {
               rules: [
@@ -169,7 +185,7 @@ class FormWidget extends React.Component {
                   message: '请输入简介',
                 },
               ],
-            })(<Input.TextArea placeholder="请输入简介" />)}
+            })(<Input.TextArea placeholder="请输入简介"/>)}
           </Form.Item>
           <Form.Item label="内容">
             {form.getFieldDecorator('content', {
@@ -188,7 +204,7 @@ class FormWidget extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="附件">
-            {form.getFieldDecorator('accessory')(<UploadFile multiple={true} />)}
+            {form.getFieldDecorator('accessory')(<UploadFile multiple={true}/>)}
           </Form.Item>
           {!preview && (
             <Form.Item>

@@ -1,8 +1,8 @@
 import './Form.scss';
 import React from 'react';
 import propTypes from 'prop-types';
-import { connect } from 'dva';
-import { Row, Col, Form, Input, Button, message, Select } from 'antd';
+import {connect} from 'dva';
+import {Row, Col, Form, Input, Button, message, Select} from 'antd';
 import Editor from '@components/Form/Editor';
 import constant from '@constant';
 import AuditMessage from '@components/project/AuditMessage';
@@ -19,27 +19,31 @@ class FormWidget extends React.Component {
   };
 
   static defaultProps = {
-    onClose() {},
-    onCancel() {},
+    onClose() {
+    },
+    onCancel() {
+    },
   };
 
   state = {
     AuditMessage: [],
+    status: 0
   };
   handleSubmit = e => {
     e.preventDefault();
-    const { form } = this.props;
+    const {form} = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
       }
-      if (!form.isFieldsTouched()) {
-        this.props.onCancel();
-        return;
-      }
+      // if (!form.isFieldsTouched()) {
+      //   this.props.onCancel();
+      //   return;
+      // }
       // 提取图片
+      formData.content = this.editor.state.editorState.toHTML()
       formData.cover = this.editor.getFirstImage();
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       if (!this.props.id) {
         dispatch({
           type: 'news/create',
@@ -72,7 +76,7 @@ class FormWidget extends React.Component {
 
   componentDidMount() {
     if (this.props.id) {
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       dispatch({
         type: 'news/detail',
         payload: this.props.id,
@@ -86,6 +90,7 @@ class FormWidget extends React.Component {
 
         this.setState({
           auditMessageList: formData.auditList,
+          status: formData.status
         });
         this.props.form.setFieldsValue(formData);
       });
@@ -93,11 +98,12 @@ class FormWidget extends React.Component {
   }
 
   render() {
-    const { auditMessageList } = this.state;
-    const { id, form, preview } = this.props;
+    const {auditMessageList, status} = this.state;
+    const {id, form, preview} = this.props;
+    console.log(status)
     return (
       <Form onSubmit={this.handleSubmit}>
-        {!preview && id && <AuditMessage message={auditMessageList} />}
+        {!preview && id && status == 2 ? <AuditMessage message={auditMessageList}/> : null}
         <fieldset disabled={preview}>
           <Row>
             <Col span={19}>
@@ -109,7 +115,7 @@ class FormWidget extends React.Component {
                       message: '请输入标题',
                     },
                   ],
-                })(<Input placeholder="请输入标题" />)}
+                })(<Input placeholder="请输入标题"/>)}
               </Form.Item>
             </Col>
             <Col span={4} offset={1}>
@@ -140,7 +146,7 @@ class FormWidget extends React.Component {
                   message: '请输关联公司',
                 },
               ],
-            })(<Input placeholder="请输入来源" />)}
+            })(<Input placeholder="请输入来源"/>)}
           </Form.Item>
           <Form.Item label="内容">
             {form.getFieldDecorator('content', {
