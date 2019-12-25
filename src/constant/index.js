@@ -73,8 +73,8 @@ export default {
         value: '文旅投',
       },
       {
-        label: '工投',
-        value: '工投',
+        label: '房投',
+        value: '房投',
       },
       {
         label: '农投',

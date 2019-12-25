@@ -105,6 +105,7 @@ const BasicLayout = props => {
           <div className="basic-layout__route-tab">
             <RouteContext.Consumer>{value => <RouteTab context={value} />}</RouteContext.Consumer>
           </div>
+
           {children}
         </>
       ) : (

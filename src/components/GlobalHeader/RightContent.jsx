@@ -18,7 +18,14 @@ const GlobalHeaderRight = props => {
 
   return (
     <div className={className}>
+      <a
+        href="https://new.cnzz.com/v1/login.php?siteid=1278255991"
+        style={{ display: 'inline-block' }}
+      >
+        城投访问量数据统计表
+      </a>
       <Avatar />
+
       <SelectLang className={styles.action} />
     </div>
   );
